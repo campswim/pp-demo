@@ -3,8 +3,10 @@
 import { createContext, useContext, useState } from 'react';
 
 type LoggedInContextType = {
-  isLoggedIn: boolean;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  loggedIn: boolean;
+  setLoggedIn: (loggedIn: boolean) => void;
+  role: 'guest' | 'member' | 'admin';
+  setRole: (role: 'guest' | 'member' | 'admin') => void;
 };
 
 type LoggedInProviderProps = {
@@ -14,10 +16,11 @@ type LoggedInProviderProps = {
 const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined);
 
 export function LoggedInProvider({ children }: LoggedInProviderProps) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
+  const [role, setRole] = useState<'guest' | 'member' | 'admin'>('admin');
 
   return (
-    <LoggedInContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <LoggedInContext.Provider value={{ loggedIn, setLoggedIn, role, setRole }}>
       {children}
     </LoggedInContext.Provider>
   );
@@ -25,8 +28,7 @@ export function LoggedInProvider({ children }: LoggedInProviderProps) {
 
 export const useLoggedIn = () => {
   const context = useContext(LoggedInContext);
-  if (context === undefined) {
-    throw new Error('useLoggedIn must be used within a LoggedInProvider');
-  }
-  return context;
+
+  if (context === undefined) throw new Error('useLoggedIn must be used within a LoggedInProvider');
+  else return context;
 };
