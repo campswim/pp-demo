@@ -37,39 +37,37 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
 
   return (
     <nav className='flex flex-col items-center justify-end min-h-40 pb-6'>
-      <h1 className='text-white text-3xl font-bold'>Phone & Pin</h1>
+      <h1 className='text-white text-3xl font-bold'>
+        <Link href='/' className='hover:text-blue-500'>
+          Phone & Pin
+        </Link>
+      </h1>
       <div className="flex items-center gap-4 border-t-2 border-white">
         {items && items.length > 0 && items.map(item => (
           canRender(item) && (
-            <div key={item.id} className='flex flex-col relative'>
+            <div key={item.id} className='flex flex-col relative group'>
               <div
-                onClick={() => toggleSubMenu(item.id)}
+                onMouseEnter={() => toggleSubMenu(item.id)}
                 className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}
               >
                 <Link
                   href={item.url}
                   className={`text-lg font-semibold ${isActive(item.url)}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleLinkClick(item.url);
-                  }}
+                  onClick={() => handleLinkClick(item.url)}
                 >
                   {item.name}
                 </Link>
               </div>
 
               {item.subItems && item.subItems.length > 0 && activeItem === item.id && (
-                <div className='absolute left-5 top-7 w-full flex flex-col gap-1 whitespace-nowrap'>                  
-                {item.subItems.map(sub => (
+                <div className='absolute left-5 top-7 w-full flex flex-col gap-1 whitespace-nowrap'>                    
+                  {item.subItems.map(sub => (
                     canRender(sub) && (
                       <Link
                         key={sub.id}
                         href={sub.url}
                         className={`text-sm text-gray-300 hover:text-blue-500 ${isActive(sub.url)}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleLinkClick(sub.url, true);
-                        }}
+                        onClick={() => handleLinkClick(sub.url, true)}
                       >
                         {sub.name}
                       </Link>
