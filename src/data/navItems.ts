@@ -26,7 +26,7 @@ export const navItems: NavItem[] = [
     name: 'Dashboard', 
     url: '/admin/dashboard',
     subItems: [
-      { id: 9, type: 'admin', name: 'User Management', url: '/admin/users' },
+      { id: 9, type: 'admin', name: 'Users', url: '/admin/users' },
       { id: 10, type: 'admin', name: 'Reports', url: '/admin/reports' },
       { id: 11, type: 'admin', name: 'Logs', url: '/admin/logs' }
     ]
