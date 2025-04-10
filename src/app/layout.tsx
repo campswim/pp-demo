@@ -33,7 +33,7 @@ export default function RootLayout({
         <LoggedInProvider>
           <Navbar items={navItems} />
         </LoggedInProvider>
-        <main className='flex min-h-screen flex-col items-center justify-between p-24'>
+        <main className='flex w-[90%] m-auto min-h-screen flex-col items-center justify-between md:w-3/4'>
           {children}
         </main>
       </body>

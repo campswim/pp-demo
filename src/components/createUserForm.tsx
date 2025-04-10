@@ -20,10 +20,12 @@ export default function NewUserForm() {
   }, [state])
 
   return (
-      <form 
-        action={formAction}
-        className='w-full max-w-[80%] flex flex-col gap-y-4 p-8 pb-16 shadow rounded relative'
-      >
+    <form 
+      action={formAction}
+      className='md:w-[40%] md:p-8 mt-6 md:m-4 border p-3 md:border-gray-30 rounded relative'
+    >
+      <fieldset className='flex flex-col gap-y-4'>
+        <legend className='text-#ededed text-lg mb-4'>Add a User</legend>
         <input 
           type='text' 
           name='email' 
@@ -42,10 +44,13 @@ export default function NewUserForm() {
           type='submit' 
           className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
             Go!
-          </button>
-          {error && 
-              <p className='text-orange-400 absolute left-[-20%] right-[-20%] bottom-[-30px] rounded p-8'>{error}</p>
-          }
-      </form>
+        </button>
+        {error && 
+          <p className='text-orange-400 absolute left-[-20%] right-[-20%] bottom-[-30px] rounded p-8'>
+            {error}
+          </p>
+        }
+      </fieldset>
+    </form>
   )
 }

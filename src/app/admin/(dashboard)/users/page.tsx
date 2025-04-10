@@ -1,34 +1,14 @@
-import { getUsers } from '@/utils/actions'
-import NewUserForm from '@/components/createUser'
-
-interface User {
-  id: string
-  email: string | null
-  password: string | null
-  createdAt: Date
-  updatedAt: Date
-}
+import { getUsers, deactivateUser } from '@/utils/actions'
+import NewUserForm from '@/components/createUserForm'
+import UsersList from '@/components/usersList'
 
 export default async function Users() {
   const users = await getUsers()
 
   return (
-    <div>
-      <div>
-        {/* <h2 className='text-3xl font-bold'>Create a New User</h2> */}
-        <NewUserForm />
-      </div>
-      {users && users.length > 0 && (
-        <div>
-          <ul>
-            {users.map((user: User) => (
-              <li key={user.id}>
-                {user.id || 'N/A'} | {user.email || 'N/A'}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+    <div className='flex flex-col md:flex-row justify-between w-[90%] md:w-3/4'>
+      <UsersList users={users} />
+      <NewUserForm />
     </div>
   )
 }
