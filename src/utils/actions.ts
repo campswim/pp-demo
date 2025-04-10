@@ -1,25 +1,47 @@
 'use server'
 
-import { prisma } from '@/lib/prisma'
+import db from '@/utils/db'
+import { revalidatePath } from 'next/cache'
 
-export type User = {
-  username: string
-  password: string
+interface User {
   email: string
+  password: string
 }
 
-export const createUser = async (formData: FormData) => {
+interface CreaeUserFormState {
+  success?: boolean
+  error?: string | null
+}
+
+export const getUsers = async () => {
+  'use server'
+  const users = await db.user.findMany()
+  return users
+}
+
+export const createUser = async (prevState: CreaeUserFormState, formData: FormData): Promise<CreaeUserFormState> => {
   'use server'
 
-  const user: User = {
-    username: formData.get('username') as string,
-    password: formData.get('password') as string,
-    email: formData.get('email') as string,
+  try {
+    const user: User = {
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+    }
+
+    await db.user.create({
+      data: { ...user }
+    })
+
+    revalidatePath('/admin/users')
+    return { success: true, error: null }
+  } catch (error) {
+    console.error('Error creating user:', error)
+
+    if ((error as { code: string; meta?: { target?: string[] } }).code === 'P2002' && (error as { code: string; meta?: { target?: string[] } }).meta?.target?.includes('email')) {
+      return { success: false, error: 'This email is already in use. Please choose another and try again.' }
+    }
+
+     // Handle other types of errors
+    return { success: false, error: 'User creation failed' }
   }
-
-  const userToDb = await prisma.user.create({
-    data: { user }
-  })
-
-  console.log({userToDb});
 }
