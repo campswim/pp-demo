@@ -40,13 +40,14 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
   }
 
   return (
-    <nav className='flex flex-col items-center justify-end min-h-40 pb-6'>
-      <h1 className='text-white text-3xl font-bold'>
+    <nav className='flex flex-col justify-end min-h-40 pb-6'>
+      <h1 className='text-white text-3xl font-bold w-[90%] mx-auto'>
         <Link href='/' className='hover:text-blue-500'>
           Phone & Pin
         </Link>
       </h1>
-      <div className="flex items-center gap-4 border-t-2 border-white">
+      <span className='border-t-2 border-white'></span>
+      <div className="flex items-center gap-4 w-[90%] mx-auto">
         {items && items.length > 0 && items.map(item => (
           canRender(item) && (
             <div
@@ -67,13 +68,13 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
 
               {/* Show submenu only if the parent is hovered (activeItemId) */}
               {item.subItems && item.subItems.length > 0 && activeItemId === item.id && (
-                <div className='absolute left-5 top-7 w-full flex flex-col gap-1 whitespace-nowrap  bg-gray-500 p-3 rounded-md shadow-lg'>
+                <div className='absolute left-5 top-7 w-[13rem] flex flex-col gap-1 whitespace-nowrap bg-black p-3 rounded shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
                   {item.subItems.map(sub => (
                     canRender(sub) && (
                       <Link
                         key={sub.id}
                         href={sub.url}
-                        className={`text-sm text-gray-300 hover:text-blue-500 ${isActive(sub.url)}`}
+                        className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
                         onClick={() => handleLinkClick(sub.url)}
                       >
                         {sub.name}
