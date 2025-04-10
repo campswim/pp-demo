@@ -67,7 +67,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
 
               {/* Show submenu only if the parent is hovered (activeItemId) */}
               {item.subItems && item.subItems.length > 0 && activeItemId === item.id && (
-                <div className='absolute left-5 top-7 w-full flex flex-col gap-1 whitespace-nowrap bg-black p-3 rounded-md shadow-lg'>
+                <div className='absolute left-5 top-7 w-full flex flex-col gap-1 whitespace-nowrap  bg-gray-500 p-3 rounded-md shadow-lg'>
                   {item.subItems.map(sub => (
                     canRender(sub) && (
                       <Link

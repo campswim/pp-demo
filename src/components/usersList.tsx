@@ -33,7 +33,7 @@ const UsersList = ({ users }: UserListProps) => {
                 <td className="px-4 py-2 align-bottom">{user.email}</td>
                 <td className="px-4 py-2 align-bottom">{user.createdAt.toLocaleString()}</td>
                 <td className="px-4 py-2 align-bottom">{user.updatedAt.toLocaleString()}</td>
-                <td className="px-4 py-2 pr-0 align-bottom">
+                <td className="px-4 py-2 pr-0 align-bottom w-[5rem]">
                   <DeleteUserButton userId={user.id} />
                 </td>              
               </tr>
