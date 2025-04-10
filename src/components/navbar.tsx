@@ -1,39 +1,43 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import { NavItem } from '@/data/navItems';
-import { useLoggedIn } from '@/context/loggedIn';
+import { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { NavItem } from '@/data/navItems'
+import { useLoggedIn } from '@/context/loggedIn'
 
 interface NavbarProps {
-  items: NavItem[];
+  items: NavItem[]
 }
 
 const Navbar: React.FC<NavbarProps> = ({ items }) => {
-  const [pathname, setPathname] = useState<string>(usePathname());
-  const [activeItem, setActiveItem] = useState<number | null>(null);
-  const isActive = (pagename: string) => pathname === pagename ? 'text-blue-500' : '';
-  const { loggedIn, role } = useLoggedIn();
+  const [pathname, setPathname] = useState<string>(usePathname())
+  const [activeItemId, setActiveItemId] = useState<number | null>(null)
+  const { loggedIn, role } = useLoggedIn()
+
+  const isActive = (pagename: string) => pathname === pagename ? 'text-blue-500' : ''
 
   // Check if the item can be rendered based on the user's role.
   const canRender = (item: NavItem) => {
-    if (!loggedIn && role === 'guest') return item.type === 'public';
-    if (loggedIn && role === 'member') return item.type === 'private';
-    if (loggedIn && role === 'admin') return item.type == 'admin';
-    return false;
-  };
+    if (!loggedIn && role === 'guest') return item.type === 'public'
+    if (loggedIn && role === 'member') return item.type === 'private'
+    if (loggedIn && role === 'admin') return item.type == 'admin'
+    return false
+  }
 
-  // Toggle the sub-menu for the given item.
-  const toggleSubMenu = (id: number) => {
-    setActiveItem(prev => (prev === id ? null : id));
-  };
+  // Handle mouse hover for parent and submenu
+  const handleGroupMouseEnter = (id: number) => {
+    setActiveItemId(id) // Show submenu when hovering over parent
+  }
 
-  // Manually set the pathname, so that the active link is updated.
-  const handleLinkClick = (url: string, closeSubMenu: boolean = false) => {
-    setPathname(url);
-    if (closeSubMenu) setActiveItem(null);
-  };
+  const handleGroupMouseLeave = () => {
+    setActiveItemId(null) // Hide submenu when mouse leaves both parent and submenu
+  }
+
+  // Manually set the pathname and update active item when a link is clicked.
+  const handleLinkClick = (url: string) => {
+    setPathname(url) // Update pathname on click
+  }
 
   return (
     <nav className='flex flex-col items-center justify-end min-h-40 pb-6'>
@@ -45,11 +49,13 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
       <div className="flex items-center gap-4 border-t-2 border-white">
         {items && items.length > 0 && items.map(item => (
           canRender(item) && (
-            <div key={item.id} className='flex flex-col relative group'>
-              <div
-                onMouseEnter={() => toggleSubMenu(item.id)}
-                className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}
-              >
+            <div
+              key={item.id}
+              className='flex flex-col relative group'
+              onMouseEnter={() => handleGroupMouseEnter(item.id)}
+              onMouseLeave={handleGroupMouseLeave}
+            >
+              <div className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}>
                 <Link
                   href={item.url}
                   className={`text-lg font-semibold ${isActive(item.url)}`}
@@ -59,15 +65,16 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
                 </Link>
               </div>
 
-              {item.subItems && item.subItems.length > 0 && activeItem === item.id && (
-                <div className='absolute left-5 top-7 w-full flex flex-col gap-1 whitespace-nowrap'>                    
+              {/* Show submenu only if the parent is hovered (activeItemId) */}
+              {item.subItems && item.subItems.length > 0 && activeItemId === item.id && (
+                <div className='absolute left-5 top-7 w-full flex flex-col gap-1 whitespace-nowrap bg-black p-3 rounded-md shadow-lg'>
                   {item.subItems.map(sub => (
                     canRender(sub) && (
                       <Link
                         key={sub.id}
                         href={sub.url}
                         className={`text-sm text-gray-300 hover:text-blue-500 ${isActive(sub.url)}`}
-                        onClick={() => handleLinkClick(sub.url, true)}
+                        onClick={() => handleLinkClick(sub.url)}
                       >
                         {sub.name}
                       </Link>
@@ -80,6 +87,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
         ))}
       </div>
     </nav>
-  );
+  )
 }
-export default Navbar;
+
+export default Navbar
