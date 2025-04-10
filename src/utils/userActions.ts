@@ -8,7 +8,7 @@ interface User {
   password: string
 }
 
-interface CreaeUserFormState {
+interface CreateUserFormState {
   success?: boolean
   error?: string | null
 }
@@ -19,7 +19,7 @@ export const getUsers = async () => {
   return users
 }
 
-export const createUser = async (prevState: CreaeUserFormState, formData: FormData): Promise<CreaeUserFormState> => {
+export const createUser = async (prevState: CreateUserFormState, formData: FormData): Promise<CreateUserFormState> => {
   'use server'
 
   try {
@@ -43,5 +43,21 @@ export const createUser = async (prevState: CreaeUserFormState, formData: FormDa
 
      // Handle other types of errors
     return { success: false, error: 'User creation failed' }
+  }
+}
+
+export const deleteUser = async (userId: string) => {
+  'use server'
+
+  try {
+    await db.user.delete({
+      where: { id: userId }
+    })
+
+    revalidatePath('/admin/users')
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting user:', error)
+    return { success: false, error: 'User deletion failed' }
   }
 }

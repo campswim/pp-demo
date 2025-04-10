@@ -2,12 +2,24 @@
 
 import { useState, useEffect, useActionState } from 'react'
 import { createUser } from '@/utils/userActions'
+import { GridLoader } from "react-spinners"
+
+interface CreateUserFormState {
+  success?: boolean;
+  error?: string | null;
+}
 
 const initialState = { success: false, error: null }
 
 export default function NewUserForm() {
-  const [state, formAction] = useActionState(createUser, initialState)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('');
+  const actionWrapper = async (prevState: CreateUserFormState, formData: FormData) => {
+    const result = await createUser(prevState, formData)
+    setLoading(false)
+    return result
+  }
+  const [state, formAction] = useActionState(actionWrapper, initialState)
 
   useEffect(() => {
     if (state.error) {
@@ -22,6 +34,7 @@ export default function NewUserForm() {
   return (
     <form 
       action={formAction}
+      onSubmit={() => setLoading(true)}
       className='w-full lg:w-[30%] md:p-8 border p-3 md:border-gray-30 rounded relative'
       autoComplete='off'
     >
@@ -43,11 +56,19 @@ export default function NewUserForm() {
           className='border shadow rounded py-2 px-3 placeholder:text-gray-500 text-white'
           autoComplete='off'
         />
-        <button 
-          type='submit' 
-          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-            Go!
-        </button>
+        {loading ? (
+          <div className='flex justify-center'>
+            <GridLoader color='#36d7b7' size={10}/>
+          </div>
+        )
+        :
+        (
+          <button 
+            type='submit' 
+            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
+              Go!
+          </button>
+        )}
         {error && 
           <p className='text-orange-400 absolute left-[-20%] right-[-20%] bottom-[-30px] rounded p-8'>
             {error}
