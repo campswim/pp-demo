@@ -1,3 +1,5 @@
+import { deactivateUser } from '@/utils/userActions'
+
 interface User {
   id: string
   email: string | null
@@ -13,7 +15,7 @@ interface UserListProps {
 const UsersList = ({ users }: UserListProps) => {
   return (
     users && users.length > 0 && (
-      <div className='flex flex-col w-full md:p-8 md:m-4 md:border md:border-gray-30 rounded'>
+      <div className='flex flex-col w-full lg:w-[75%] md:p-8 md:border md:border-gray-30 rounded'>
         {users.map((user: User, idx: number) => (
           <div key={user.id} className='flex justify-between items-end py-2 md:p-4 border-b border-gray-30'>
             <p className='whitespace-nowrap'>{idx + 1}</p>
