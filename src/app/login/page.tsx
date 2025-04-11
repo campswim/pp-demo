@@ -12,11 +12,13 @@ export default function Login() {
           Username
         </label> */}
         <input
-          type='text'
-          id='username'
-          placeholder='Username'
+          type='email'
+          id='email'
+          name='email'
+          placeholder='Email'
           className='w-full border shadow rounded py-2 px-3 placeholder:text-gray-500 text-white'
           autoComplete='on'
+          required
         />
       </div>
       <div className='mb-4 w-full'>
@@ -26,9 +28,11 @@ export default function Login() {
         <input
           type='password'
           id='password'
+          name='password'
           placeholder='Password'
           className='w-full border shadow rounded py-2 px-3 placeholder:text-gray-500 text-white'
           autoComplete='on'
+          required
         />
       </div>
       <button
