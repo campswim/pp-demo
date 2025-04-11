@@ -42,3 +42,4 @@ next-env.d.ts
 
 # Exclude Prisma generated files
 /src/generated/
+/prisma/migrations/
