@@ -61,3 +61,24 @@ export const deleteUser = async (userId: string) => {
     return { success: false, error: 'User deletion failed' }
   }
 }
+
+export const login = async (formData: FormData) => {
+  'use server'
+
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  // Find the user by email.
+  const user = await db.user.findUnique({
+    where: { email }
+  })
+
+  if (!user) return { success: false, error: 'User not found.' }
+
+  // Verify the password.
+  const isPasswordValid = password === user.password // Replace with actual password hashing and comparison logic
+
+  if (!isPasswordValid) return { success: false, error: 'Invalid password.' }
+
+  
+}

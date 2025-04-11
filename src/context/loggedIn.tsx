@@ -16,8 +16,8 @@ type LoggedInProviderProps = {
 const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined);
 
 export function LoggedInProvider({ children }: LoggedInProviderProps) {
-  const [loggedIn, setLoggedIn] = useState(true);
-  const [role, setRole] = useState<'guest' | 'member' | 'admin'>('admin');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [role, setRole] = useState<'guest' | 'member' | 'admin'>('guest');
 
   return (
     <LoggedInContext.Provider value={{ loggedIn, setLoggedIn, role, setRole }}>
