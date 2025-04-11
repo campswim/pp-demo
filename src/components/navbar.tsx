@@ -20,7 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
   // Check if the item can be rendered based on the user's role.
   const canRender = (item: NavItem) => {
     if (!loggedIn && role === 'guest') return item.type === 'public'
-    if (loggedIn && role === 'member') return item.type === 'private'
+    if (loggedIn && role === 'user') return item.type === 'private'
     if (loggedIn && role === 'admin') return item.type == 'admin'
     return false
   }
@@ -38,6 +38,8 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
   const handleLinkClick = (url: string) => {
     setPathname(url) // Update pathname on click
   }
+
+  // console.log({loggedIn, role})
 
   return (
     <nav className='flex flex-col justify-end min-h-40 pb-6'>
