@@ -9,7 +9,6 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { id: 1, type: 'public', name: 'Register', url: '/register' },
   { id: 2, type: 'public', name: 'Log In', url: '/login' },
-  { id: 3, type: 'private', name: 'Log Out', url: '/logout' },
   { id: 4, type: 'private', name: 'Profile', url: '/profile' },
   {
     id: 5,
@@ -20,6 +19,7 @@ export const navItems: NavItem[] = [
       { id: 8, type: 'admin', name: 'Notifications', url: '/admin/notifications' }
     ]
   },
+  { id: 3, type: 'private', name: 'Log Out', url: '/logout' },
   { 
     id: 6, 
     type: 'admin', 
