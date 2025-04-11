@@ -2,29 +2,31 @@
 
 import db from '@/utils/db'
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+import { User } from '@/generated/prisma'
 
-interface User {
-  email: string
-  password: string
-}
-
-interface CreateUserFormState {
+interface Props {
   success?: boolean
   error?: string | null
 }
 
-export const getUsers = async () => {
+export const getUsers = async (): Promise<User[]> => {
   'use server'
   const users = await db.user.findMany()
+
   return users
 }
 
-export const createUser = async (prevState: CreateUserFormState, formData: FormData): Promise<CreateUserFormState> => {
+export const createUser = async (prevState: Props, formData: FormData): Promise<Props> => {
   'use server'
 
+  type NewUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>
+
   try {
-    const user: User = {
+    const user: NewUser = {
       email: formData.get('email') as string,
+      role: formData.get('role') as string,
       password: formData.get('password') as string,
     }
 
@@ -68,17 +70,24 @@ export const login = async (formData: FormData) => {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
 
+  console.log({email, password})
+  
   // Find the user by email.
   const user = await db.user.findUnique({
-    where: { email }
+    where: { email },
+  })
+  
+  if (!user || user.password !== password) {
+    // TODO: Add hashed password comparison and error handling
+    throw new Error('Invalid email or password');
+  }
+  
+  (await cookies()).set('auth', JSON.stringify({ id: user.id, loggedIn: true, role: user.role }), {
+    httpOnly: true,
+    path:'/',
+    secure: true,
+    sameSite: 'lax'
   })
 
-  if (!user) return { success: false, error: 'User not found.' }
-
-  // Verify the password.
-  const isPasswordValid = password === user.password // Replace with actual password hashing and comparison logic
-
-  if (!isPasswordValid) return { success: false, error: 'Invalid password.' }
-
-  
+  redirect('/')
 }
