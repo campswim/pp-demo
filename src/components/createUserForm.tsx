@@ -48,6 +48,13 @@ export default function NewUserForm() {
           className='border shadow rounded py-2 px-3 placeholder:text-gray-500 text-white' 
           autoComplete='off'
         />
+        <input
+          type='select'
+          name='role'
+          placeholder='Role'
+          className=''
+          autoComplete='off'
+        />
         <input 
           type='text'
           name='password' 
