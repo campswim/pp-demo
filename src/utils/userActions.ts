@@ -83,7 +83,7 @@ export const signup = async (state: FormState, formData: FormData) => {
   // 3. Check if the user already exists.
   const existingUser = await db.user.findUnique({ where: { email }})
 
-  if (existingUser) return { errors: { email: ['Email is already registered.'] }}
+  if (existingUser) return { errors: { email: ['This email has already registered.'] }}
 
   // 3. Insert the user into the database.
   const newUser = await db.user.create({
@@ -113,8 +113,8 @@ export const signup = async (state: FormState, formData: FormData) => {
     sameSite: 'lax'
   })
 
-  // 6. Redirect to the dashboard.
-  redirect('/login')
+  // 6. Return a success message.
+  return { message: 'Welcome to the Phone & Pin demo', newUser }
 }
 
 export const login = async (req: NextRequest) => {
@@ -136,4 +136,10 @@ export const login = async (req: NextRequest) => {
     console.error('Error during login:', error)
     return NextResponse.json({ message: 'Iinternal Server Error' }, { status: 500 })
   }
+}
+
+export const logout = async () => {
+  const cookieStore = await cookies()
+  cookieStore.delete('auth');
+  redirect('/login')
 }
