@@ -1,12 +1,34 @@
 'use client'
 
+import { useActionState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { signup } from '@/utils/userActions'
-import { useActionState } from 'react'
 
 export default function Login() {
   const [state, action, pending] = useActionState(signup, undefined)
-  
-  return (
+  const router = useRouter()
+  let username = state?.newUser?.email?.split('@')[0]
+  username = username ? username[0]?.toUpperCase() + username?.slice(1) : ''
+
+  useEffect(() => {
+    if (state?.message) {
+      const timeout = setTimeout(() => {
+        router.push('/')
+      }, 4000)
+      return () => clearTimeout(timeout)
+    }
+  })
+
+  return state?.message ? 
+  (
+    <div className='flex flex-col items-center w-1/4 mx-auto md:p-8 p-3'>
+      <h2 className='text-lg font-bold mb-4'>{username ? state.message + ', ' + username : state.message}.</h2>
+      {/* <p className='text-gray-500'>{state?.errors?.email}</p>
+      <p className='text-gray-500'>{state?.errors?.password}</p> */}
+    </div>
+  )
+  :
+  (
     <form 
       action={action}
       className='flex flex-col items-center w-1/4 mx-auto md:p-8 p-3' 
