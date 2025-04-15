@@ -1,9 +1,14 @@
-import { login } from '@/utils/userActions'
+'use client'
+
+import { signup } from '@/utils/userActions'
+import { useActionState } from 'react'
 
 export default function Login() {
+  const [state, action, pending] = useActionState(signup, undefined)
+  
   return (
     <form 
-      action={login}
+      action={action}
       className='flex flex-col items-center w-1/4 mx-auto md:p-8 p-3' 
       autoComplete='on'
     >
@@ -36,10 +41,22 @@ export default function Login() {
         />
       </div>
       <button
+        disabled={pending}
         type='submit'
         className='w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-        Log In
+        Register
       </button>
+      {state?.errors?.email && <p>{state.errors.email}</p>}
+      {state?.errors?.password && (
+        <div>
+          <p>Password must:</p>
+          <ul>
+            {state.errors.password.map((error) => (
+              <li key={error}>- {error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </form>
   )
 }

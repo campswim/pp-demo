@@ -35,7 +35,7 @@ export default function NewUserForm() {
     <form 
       action={formAction}
       onSubmit={() => setLoading(true)}
-      className='w-full lg:w-[30%] md:p-8 border p-3 relative'
+      className='w-full xl:w-[30%] md:p-8 border p-3 relative'
       autoComplete='off'
     >
       <fieldset className='flex flex-col gap-y-4'>

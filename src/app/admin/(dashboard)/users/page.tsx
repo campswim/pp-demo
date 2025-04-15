@@ -6,7 +6,7 @@ export default async function Users() {
   const users = await getUsers()
 
   return (
-    <div className='flex flex-col items-center justify-between lg:flex-row lg:items-start lg:justify-center gap-10'>
+    <div className='flex flex-col items-center justify-between xl:flex-row lg:items-start lg:justify-center gap-10'>
       <UsersList users={users} />
       <NewUserForm />
     </div>
