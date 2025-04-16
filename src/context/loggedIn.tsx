@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 
 type Role = 'guest' | 'user' | 'admin'
 
@@ -21,6 +21,11 @@ const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined
 export function LoggedInProvider({ children, initialRole = 'guest' }: LoggedInProviderProps) {
   const [role, setRole] = useState<Role>(initialRole)
   const [loggedIn, setLoggedIn] = useState<boolean>(initialRole !== 'guest')
+
+  useEffect(() => {
+    setRole(initialRole !== role ? initialRole : role)
+    setLoggedIn(initialRole !== 'guest')
+  }, [initialRole, role])
 
   return (
     <LoggedInContext.Provider value={{ loggedIn, setLoggedIn, role, setRole }}>

@@ -159,8 +159,10 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
     }
   ))
 
-  // 6. Return a success message.
-  return { message: 'Welcome back to the Phone & Pin demo', user }
+  // // 6. Return a success message.
+  // return { message: 'Welcome back to the Phone & Pin demo', user }
+
+  redirect('/')
 
 }
 
