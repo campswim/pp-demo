@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { NavItem } from '@/data/navItems'
 import { useLoggedIn } from '@/context/loggedIn'
+import { logout } from '@/utils/userActions'
+import { useRouter } from 'next/navigation'
 
 interface NavbarProps {
   items: NavItem[]
@@ -14,7 +16,9 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
   const [pathname, setPathname] = useState<string>(usePathname())
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
   const { loggedIn, role } = useLoggedIn()
+  const router = useRouter()
 
+  // Check if the current pathname matches the item URL.
   const isActive = (pagename: string) => pathname === pagename ? 'text-blue-500' : ''
 
   // Check if the item can be rendered based on the user's role.
@@ -39,8 +43,6 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
     setPathname(url) // Update pathname on click
   }
 
-  // console.log({loggedIn, role})
-
   return (
     <nav className='flex flex-col justify-end min-h-40 pb-6'>
       <h1 className='text-white text-3xl font-bold w-[90%] mx-auto'>
@@ -59,13 +61,27 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
               onMouseLeave={handleGroupMouseLeave}
             >
               <div className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}>
-                <Link
-                  href={item.url}
-                  className={`text-lg font-semibold ${isActive(item.url)}`}
-                  onClick={() => handleLinkClick(item.url)}
-                >
-                  {item.name}
-                </Link>
+                { item.url !== '/logout' ? (
+                  <Link
+                    href={item.url}
+                    className={`text-lg font-semibold ${isActive(item.url)}`}
+                    onClick={() => handleLinkClick(item.url)}
+                  >
+                    {item.name}
+                  </Link>
+                )
+                :
+                (
+                  <Link href='/' onClick={async (e) => {
+                    e.preventDefault()
+                    const result = await logout()
+                    if (result.status === 200) {
+                      router.push('/login')  // Navigate after server action
+                    }
+                  }}>
+                    {item.name}
+                  </Link>
+                )}
               </div>
 
               {/* Show submenu only if the parent is hovered (activeItemId) */}

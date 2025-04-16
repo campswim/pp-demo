@@ -1,6 +1,6 @@
 'use client';
 
-import { GridLoader } from "react-spinners"
+import { GridLoader } from 'react-spinners'
 import { useState, useEffect } from 'react';
 
 export default function Loading(): React.ReactNode {

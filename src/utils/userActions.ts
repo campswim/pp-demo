@@ -1,7 +1,6 @@
 'use server'
 
 import db from '@/utils/db'
-import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { revalidatePath } from 'next/cache'
@@ -10,16 +9,19 @@ import { redirect } from 'next/navigation'
 import { User } from '@/generated/prisma'
 import { SignupFormSchema, FormState } from '@/lib/definitions'
 
+// Define the type for the actions' return object.
 interface Props {
   success?: boolean
   error?: string | null
 }
 
+// Get all users from the database.
 export const getUsers = async (): Promise<User[]> => {
   const users = await db.user.findMany()
   return users
 }
 
+// Create a single user in the database.
 export const createUser = async (prevState: Props, formData: FormData): Promise<Props> => {
   type NewUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>
 
@@ -48,6 +50,7 @@ export const createUser = async (prevState: Props, formData: FormData): Promise<
   }
 }
 
+// Delete a single user from the database.
 export const deleteUser = async (userId: string) => {
   try {
     await db.user.delete({
@@ -62,6 +65,7 @@ export const deleteUser = async (userId: string) => {
   }
 }
 
+// Sign a user up.
 export const signup = async (state: FormState, formData: FormData): Promise<FormState> => {
   const secretKey = process.env.JWT_SECRET
   if (!secretKey) throw new Error('JWT_SECRET is not defined in environment variables.')
@@ -117,6 +121,7 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   return { message: 'Welcome to the Phone & Pin demo', user: newUser }
 }
 
+// Log a user in.
 export const login = async (state: FormState, formData: FormData): Promise<FormState> => {
   const secretKey = process.env.JWT_SECRET
   if (!secretKey) throw new Error('JWT_SECRET is not defined in environment variables.')
@@ -166,9 +171,9 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
 
 }
 
+// 7. Log a user out.
 export const logout = async () => {
-
-  console.log('ian in logout')
+  'use server'
 
   // Instantiate the cookie store.
   const cookieStore = await cookies()
@@ -176,16 +181,16 @@ export const logout = async () => {
   // Get the user from the cookie.
   const authCookie = cookieStore.get('auth')
 
-  // If there is no coookie, the user isn't logge in.
-  if (!authCookie) return { message: 'There is no auth cookie.' }
-  
+  // If there is no coookie, the user isn't logged in.
+if (!authCookie) return { status: 400, message: 'No auth cookie found.' }
+
   // Parse the cookie value.
   const authData = JSON.parse(authCookie.value)
 
   console.log({authData})
 
   // If the cookie exists but loggedIn has been set to false, the user isn't logged in.
-  if (!authData.loggedIn) return { message: 'You are already logged out.' }
+  if (!authData.loggedIn) return { status: 400, message: 'Already logged out.' }
 
   // Get the userId from the cookie to use in indicating that the user is logged out.
   const userId = authData.id
@@ -193,8 +198,6 @@ export const logout = async () => {
   // Get the email from the db and the username from the email.
   const user = await db.user.findUnique({ where: { id: userId }, select: { email: true } })
   const username = user?.email ? user?.email?.split('@')[0] : '';
-
-  console.log({username})
 
   // Clear the cookie.
   cookieStore.delete('auth');
@@ -205,6 +208,6 @@ export const logout = async () => {
     data: { loggedIn: false }
   })
 
-  // Relay the logout message.
-  return { message: `See you next time${username ? ', ' + username[0].toUpperCase() + username.slice(1) : ''}.` }
+  // // Relay the logout message.
+  return { status: 200, message: `See you next time${username ? ', ' + username[0].toUpperCase() + username.slice(1) : ''}.` }
 }
