@@ -33,10 +33,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LoggedInProvider initialRole={role}>
           <Navbar items={navItems} />
+          <main className='flex flex-col w-[90%] m-auto min-h-screen'>
+            {children}
+          </main>
         </LoggedInProvider>
-        <main className='flex flex-col w-[90%] m-auto min-h-screen'>
-          {children}
-        </main>
       </body>
     </html>
   )
