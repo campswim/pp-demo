@@ -25,6 +25,10 @@ body {
   font-family: var(--font-geist-mono), serif;
 }
 
+a:hover {
+  color: var(--color-blue-500);
+}
+
 .custom-scrollbar::-webkit-scrollbar {
     display: none;
   }
