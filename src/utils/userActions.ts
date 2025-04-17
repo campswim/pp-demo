@@ -15,6 +15,10 @@ interface Props {
   error?: string | null
 }
 
+export const getUser = async (id: string) => {
+  return await db.user.findUnique({ where: { id } })
+}
+
 // Get all users from the database.
 export const getUsers = async (): Promise<User[]> => {
   const users = await db.user.findMany()
@@ -186,8 +190,6 @@ if (!authCookie) return { status: 400, message: 'No auth cookie found.' }
 
   // Parse the cookie value.
   const authData = JSON.parse(authCookie.value)
-
-  console.log({authData})
 
   // If the cookie exists but loggedIn has been set to false, the user isn't logged in.
   if (!authData.loggedIn) return { status: 400, message: 'Already logged out.' }
