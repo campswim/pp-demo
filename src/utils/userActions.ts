@@ -2,12 +2,13 @@
 
 import db from '@/utils/db'
 import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { User } from '@/generated/prisma'
 import { SignupFormSchema, FormState } from '@/lib/definitions'
+import { JWTPayload } from './types'
+import { generateAccessToken, generateRefreshToken } from './auth'
+import { getCookie, setCookie, deleteCookie } from './cookie'
 
 // Define the type for the actions' return object.
 interface Props {
@@ -15,14 +16,22 @@ interface Props {
   error?: string | null
 }
 
-export const getUser = async (id: string) => {
+// Get user by ID.
+export const getUserById = async (id: string) => {
+  if (!id) throw new Error('No ID was provided to the get-user-by-email function.')
   return await db.user.findUnique({ where: { id } })
 }
 
+// Get user by email.
+export const getUserByEmail = async (email: string) => {
+  if (!email) throw new Error('No email was provided to the get-user-by-email function.')
+  return await db.user.findUnique({ where: { email }})
+}
+
 // Get all users from the database.
-export const getUsers = async (): Promise<User[]> => {
-  const users = await db.user.findMany()
-  return users
+export const getUsers = async (auth: JWTPayload | null): Promise<User[]> => {
+  if (!auth || auth.userRole !== 'admin') throw new Error('Unauthorized')
+  return await db.user.findMany()
 }
 
 // Create a single user in the database.
@@ -69,11 +78,8 @@ export const deleteUser = async (userId: string) => {
   }
 }
 
-// Sign a user up.
+// Register a user.
 export const signup = async (state: FormState, formData: FormData): Promise<FormState> => {
-  const secretKey = process.env.JWT_SECRET
-  if (!secretKey) throw new Error('JWT_SECRET is not defined in environment variables.')
-
   // 1a. Validate form fields.
   const validatedFields = SignupFormSchema.safeParse({
     // name: formData.get('name'),
@@ -91,7 +97,7 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   // 3. Check if the user already exists.
   const existingUser = await db.user.findUnique({ where: { email }})
 
-  if (existingUser) return { errors: { email: ['This email has already registered.'] }}
+  if (existingUser) return { errors: { email: ['This email has already been registered.'] }}
 
   // 3. Insert the user into the database.
   const newUser = await db.user.create({
@@ -102,24 +108,18 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
     select: { id: true, email: true, role: true }
   })
 
-  // 4. Generate a JWT token.
-  const token: string = jwt.sign({ userId: newUser.id, email: newUser.email }, secretKey, { expiresIn: '1h' })
+  // 4. Generate the access and refresh tokens.
+  const payload = {
+    userId: newUser.id,
+    email: newUser.email,
+    role: newUser.role
+  }
+  const accessToken: string = await generateAccessToken(payload)
+  const refreshToken: string = await generateRefreshToken(payload)
 
-  // 5. Set the token in cookies.
-  const cookieStore = await cookies()
-  cookieStore.set('auth', JSON.stringify(
-    {
-      id: newUser.id,
-      loggedIn: true,
-      role: newUser.role,
-      token
-    }
-  ), {
-    httpOnly: true,
-    path: '/',
-    secure: true,
-    sameSite: 'lax'
-  })
+  // 5. Set the access and refresh tokens in cookies.
+  await setCookie('auth', accessToken)
+  await setCookie('refresh', refreshToken)
 
   // 6. Return a success message.
   return { message: 'Welcome to the Phone & Pin demo', user: newUser }
@@ -127,9 +127,6 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
 
 // Log a user in.
 export const login = async (state: FormState, formData: FormData): Promise<FormState> => {
-  const secretKey = process.env.JWT_SECRET
-  if (!secretKey) throw new Error('JWT_SECRET is not defined in environment variables.')
-
   // 1a. Validate form fields.
   const validateFields = SignupFormSchema.safeParse({
     email: formData.get('email'),
@@ -141,15 +138,23 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
 
   // 2. Get the user from the db.
   const { email, password } = validateFields.data
-  const user = await db.user.findUnique({ where: { email }, select: { id: true, email: true, password: true, role: true } })
+  const user = await getUserByEmail(email)
   if (!user) return { errors: { email: ['This email is not registered.'] } }
 
   // 3. Check if the password is correct.
   const isPasswordValid = await bcrypt.compare(password, user.password)
   if (!isPasswordValid) return { errors: { password: ['The password is incorrect.'] } }
 
-  // 4. Generate a JWT token.
-  const token: string = jwt.sign({ userId: user.id, email: user.email }, secretKey, { expiresIn: '1h' })
+  console.log({user});
+
+  // 4. Generate access and refresh tokens.
+  const payload = {
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+  }
+  const accessToken: string = await generateAccessToken(payload)
+  const refreshToken: string = await generateRefreshToken(payload)
 
   // 5. Mark the user as logged in.
   await db.user.update({
@@ -157,59 +162,48 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
     data: { loggedIn: true }
   })
 
-  // 6. Set the token in cookies.
-  const cookieStore = await cookies()
-  cookieStore.set('auth', JSON.stringify(
-    {
-      id: user.id,
-      loggedIn: true,
-      role: user.role,
-      token
-    }
-  ))
-
-  // // 6. Return a success message.
-  // return { message: 'Welcome back to the Phone & Pin demo', user }
+  // 6. Set the access and refresh tokens in cookies.
+  await setCookie('auth', accessToken )
+  await setCookie('refresh', refreshToken )
 
   redirect('/')
-
 }
 
-// 7. Log a user out.
+// Log a user out.
 export const logout = async () => {
-  'use server'
-
-  // Instantiate the cookie store.
-  const cookieStore = await cookies()
-
   // Get the user from the cookie.
-  const authCookie = cookieStore.get('auth')
+  const authCookie = await getCookie('auth')
 
   // If there is no coookie, the user isn't logged in.
-if (!authCookie) return { status: 400, message: 'No auth cookie found.' }
+  if (!authCookie) return { status: 400, message: 'No auth cookie found.' }
+
+  console.log({authCookie});
 
   // Parse the cookie value.
-  const authData = JSON.parse(authCookie.value)
+  const authCookieResolved = authCookie;
+  const authData: JWTPayload | null = authCookieResolved ? JSON.parse(authCookieResolved.value) : null;
 
   // If the cookie exists but loggedIn has been set to false, the user isn't logged in.
-  if (!authData.loggedIn) return { status: 400, message: 'Already logged out.' }
+  if (!authData) return { status: 400, message: 'Already logged out.' }
 
-  // Get the userId from the cookie to use in indicating that the user is logged out.
-  const userId = authData.id
-
-  // Get the email from the db and the username from the email.
-  const user = await db.user.findUnique({ where: { id: userId }, select: { email: true } })
-  const username = user?.email ? user?.email?.split('@')[0] : '';
+  const username: string = authData?.email ? authData?.email?.split('@')[0] : '';
 
   // Clear the cookie.
-  cookieStore.delete('auth');
+  await deleteCookie('auth');
   
   // Mark the user as logged out in the db.
   await db.user.update({
-    where: { id: userId },
+    where: { id: authData?.id },
     data: { loggedIn: false }
   })
 
   // // Relay the logout message.
   return { status: 200, message: `See you next time${username ? ', ' + username[0].toUpperCase() + username.slice(1) : ''}.` }
+}
+
+// Refresh a user's access token.
+export const refreshAccessToken = async () => {
+  const refreshTokenCookie = await getCookie('refresh')
+
+  console.log({refreshTokenCookie})
 }
