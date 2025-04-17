@@ -1,48 +1,32 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect } from 'react'
-
-interface LoggedInUser{
-  id?: string
-  loggedIn?: boolean
-  role?: 'guest' | 'user' | 'admin'
-  token?: string
-}
+import { JWTPayload as LoggedInUser } from '@/utils/types'
 
 type LoggedInContextType = {
-  loggedIn: boolean
-  setLoggedIn: (loggedIn: boolean) => void
-  role: 'guest' | 'user' | 'admin'
-  setRole: (role: 'guest' | 'user' | 'admin') => void
-  token?: string
-  setToken: (token?: string) => void
-  id?: string
-  setID: (id?: string) => void
+  role: string
+  setRole: (role: string) => void
 }
 
 type LoggedInProviderProps = {
   children: React.ReactNode
-  user?: LoggedInUser
+  user: LoggedInUser | null
 }
 
 const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined)
 
 export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
-  const [loggedIn, setLoggedIn] = useState<boolean>(user?.loggedIn ?? false)
-  const [role, setRole] = useState<'guest' | 'user' | 'admin'>(user?.role ?? 'guest')
-  const [token, setToken] = useState<string | undefined>(user?.token)
-  const [id, setID] = useState<string | undefined>(user?.id)
+  const [id, setID] = useState<string>(user?.id)
+  const [role, setRole] = useState<string>(user?.role ?? 'guest')
   const initialRole = user?.role ?? 'guest'
 
   useEffect(() => {
     setID(user?.id !== id ? user?.id : id)
     setRole(role !== initialRole ? initialRole : role)
-    setLoggedIn(user?.loggedIn ?? false)
-    setToken(user?.token)
   }, [user, initialRole, role, id])
 
   return (
-    <LoggedInContext.Provider value={{ loggedIn, setLoggedIn, role, setRole, token, setToken, id, setID}}>
+    <LoggedInContext.Provider value={{ role, setRole }}>
       {children}
     </LoggedInContext.Provider>
   )
