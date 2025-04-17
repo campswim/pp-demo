@@ -1,11 +1,11 @@
-import { getUser } from '@/utils/userActions'
+import { getUserById } from '@/utils/userActions'
 import { User } from '@/generated/prisma'
 import { validateAuthCookie } from '@/utils/auth'
 
 
 export default async function Profile() {
   const decoded = await validateAuthCookie()
-  const user: User | null = decoded ? await getUser(decoded.userId) : null
+  const user: User | null = decoded ? await getUserById(decoded.userId) : null
 
   return (
     <div>
