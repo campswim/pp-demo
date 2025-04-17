@@ -24,8 +24,8 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
   // Check if the item can be rendered based on the user's role.
   const canRender = (item: NavItem) => {
     if (!loggedIn && role === 'guest') return item.type === 'public'
-    if (loggedIn && role === 'user') return item.type === 'private'
-    if (loggedIn && role === 'admin') return item.type == 'admin'
+    if (loggedIn && role === 'user') return item.type === 'private' || item.type === 'user'
+    if (loggedIn && role === 'admin') return item.type === 'admin' || item.type === 'user'
     return false
   }
 

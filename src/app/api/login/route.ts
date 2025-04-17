@@ -10,8 +10,6 @@ export async function POST(req: NextRequest) {
     const { email, password } = await req.json()
     const user = await db.user.findUnique({ where: { email } })
 
-    console.log({email, password, user})
-
     if (!user || !user.password) return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
