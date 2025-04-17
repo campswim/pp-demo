@@ -26,12 +26,12 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode}>) {
   const cookieStore = await cookies()
   const authCookie = cookieStore.get('auth')  
-  const { role = 'guest' } = authCookie && authCookie.value ? JSON.parse(authCookie.value) : {}
+  const user = authCookie && authCookie.value ? JSON.parse(authCookie.value) : {}
 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <LoggedInProvider initialRole={role}>
+        <LoggedInProvider user={user}>
           <Navbar items={navItems} />
           <main className='flex flex-col w-[90%] m-auto min-h-screen'>
             {children}
