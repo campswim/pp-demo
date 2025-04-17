@@ -4,7 +4,7 @@ import "./globals.css"
 import Navbar from "@/components/navbar"
 import { navItems } from '@/data/navItems'
 import { LoggedInProvider } from "@/context/loggedIn"
-import { cookies } from 'next/headers'
+import { validateAuthCookie } from '@/utils/auth'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +24,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode}>) {
-  const cookieStore = await cookies()
-  const authCookie = cookieStore.get('auth')  
-  const user = authCookie && authCookie.value ? JSON.parse(authCookie.value) : {}
-
+  const user = await validateAuthCookie()
+    
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
