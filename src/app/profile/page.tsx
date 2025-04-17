@@ -1,17 +1,20 @@
-'use client'
+import { getUser } from '@/utils/userActions'
+import { User } from '@/generated/prisma'
+import { validateAuthCookie } from '@/utils/auth'
 
-import { useLoggedIn } from '@/context/loggedIn'
 
-export default function Profile() {
-
-  const { loggedIn, role } = useLoggedIn()
-
-  console.log({ loggedIn, role })
+export default async function Profile() {
+  const decoded = await validateAuthCookie()
+  const user: User | null = decoded ? await getUser(decoded.userId) : null
 
   return (
     <div>
-      <h1>Profile</h1>
-      <p>This is the profile page.</p>
+      <p>ID: {user?.id || 'N/A'}</p>
+      <p>Email: {user?.email || 'N/A'}</p>
+      <p>Role: {user?.role || 'N/A'}</p>
+      <p>Logged In: {user?.loggedIn ? 'Yes' : 'No'}</p>
+      <p>Created: {user?.createdAt?.toLocaleString() || 'N/A'}</p>
+      <p>Updated: {user?.updatedAt?.toLocaleString() || 'N/A'}</p>
     </div>
   )
 }
