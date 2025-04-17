@@ -1,20 +1,20 @@
+'use server'
+
+import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
-import jwt, {JwtPayload } from 'jsonwebtoken'
+import { JWTPayload } from './types'
 
-interface JWTPayload extends JwtPayload {
-  userId: string
-  email: string
-  iat: number
-  exp: number
-}
-
-const getSecretKey = (): string => {
-  const secret = process.env.JWT_SECRET
+const getSecretKey = (type: string): string => {
+  const secret = type === 'access' ? process.env.JWT_SECRET : type === 'refresh' ? process.env.REFRESH_SECRET : ''
   if (!secret) throw new Error('JWT_SECRET is not defined.')
   return secret
 }
 
-export async function validateAuthCookie(): Promise<JWTPayload | null> {
+export const generateAccessToken = async (payload: JWTPayload): Promise<string> => jwt.sign(payload, getSecretKey('access'), { expiresIn: '1h' })
+
+export const generateRefreshToken = async (payload: JWTPayload): Promise<string> => jwt.sign(payload, getSecretKey('refresh'), { expiresIn: '30d' })
+
+export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
   const cookieStore = await cookies()
   const authData = cookieStore.get('auth')?.value
 
@@ -22,9 +22,11 @@ export async function validateAuthCookie(): Promise<JWTPayload | null> {
 
   try {
     const parsed = JSON.parse(authData)
-    if (!parsed.token) return null
 
-    const decoded = jwt.verify(parsed.token, getSecretKey()) as JWTPayload
+    if (!parsed.value) return null
+
+    const secret = getSecretKey('access')
+    const decoded = jwt.verify(parsed.value, secret) as unknown as JWTPayload
 
     // Runtime type guard: check for the expected shape.
     if (typeof decoded !== 'object' || !decoded || !decoded.userId || !decoded.email) {
