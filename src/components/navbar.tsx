@@ -15,7 +15,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ items }) => {
   const [pathname, setPathname] = useState<string>(usePathname())
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
-  const { loggedIn, role } = useLoggedIn()
+  const { role } = useLoggedIn()
   const router = useRouter()
 
   // Check if the current pathname matches the item URL.
@@ -23,9 +23,9 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
 
   // Check if the item can be rendered based on the user's role.
   const canRender = (item: NavItem) => {
-    if (!loggedIn && role === 'guest') return item.type === 'public'
-    if (loggedIn && role === 'user') return item.type === 'private' || item.type === 'user'
-    if (loggedIn && role === 'admin') return item.type === 'admin' || item.type === 'user'
+    if (role === 'guest') return item.type === 'public'
+    if (role === 'user') return item.type === 'private' || item.type === 'user'
+    if (role === 'admin') return item.type === 'admin' || item.type === 'user'
     return false
   }
 
@@ -76,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
                     e.preventDefault()
                     const result = await logout()
                     if (result.status === 200) {
-                      router.push('/login')  // Navigate after server action
+                      router.push('/login')
                     }
                   }}>
                     {item.name}
