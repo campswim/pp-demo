@@ -5,7 +5,9 @@ import { validateAuthCookie } from '@/utils/auth'
 
 export default async function Profile() {
   const decoded = await validateAuthCookie()
-  const user: User | null = decoded ? await getUserById(decoded.userId) : null
+  const user: User | null = decoded?.payload?.userId 
+    ? await getUserById(decoded.payload.userId) 
+    : null
 
   return (
     <div>
