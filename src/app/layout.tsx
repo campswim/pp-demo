@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/navbar'
@@ -8,6 +7,7 @@ import { LoggedInProvider } from '@/context/loggedIn'
 import { validateAuthCookie, validateRefreshCookie } from '@/utils/auth'
 import { JWTPayload } from '@/utils/types'
 import RefreshSession from '@/components/refreshSession'
+import Logout from '@/components/logout'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode}>) {
   // Get the auth cookie -> { valid, payload, reason } 
   const authCookie = await validateAuthCookie()
-  let user: JWTPayload | null = null, needsRefresh = false
+  let user: JWTPayload | null = null, needsRefresh = false, needsLogout = false
 
   if (authCookie?.valid === false) { // The auth cookie is invalid.
     if (authCookie?.reason === 'jwt expired') { // The auth cookie has expired.
@@ -37,8 +37,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       const refreshCookie = await validateRefreshCookie()
 
       if (refreshCookie?.valid === false) { // The refresh cookie is invalid (probably expired).
-        // Redirect to /logout.
-        redirect('/logout')
+        // Log the user out (which deletes the cookies.)
+        user = refreshCookie?.payload ? refreshCookie.payload : null
+        needsLogout = true
       } else { // The refresh cookie is valid.
         // Compare the IDs of the expired access token and refresh token before refreshing the access token.
         const accessTokenId = authCookie?.payload?.userId
@@ -53,18 +54,20 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         }
       }
     } else { // The auth cookie is invalid for another reason.
-      // Redirect to /logout.
-      redirect('/logout')
+      // Log the user out (which deletes the cookies.)
+      user = authCookie?.payload ? authCookie.payload : null
+      needsLogout = true
     }
   } else { // The auth cookie is valid.
     user = authCookie?.payload ?? null
   }
-      
+  
   return (
     <html lang='en'>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <LoggedInProvider user={user || null}>
           {needsRefresh && user && <RefreshSession payload={user} />}
+          {needsLogout && user && <Logout userId={user?.userId} />}
           <Navbar items={navItems} />
           <main className='flex flex-col w-[90%] m-auto min-h-screen'>
             {children}
