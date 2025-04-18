@@ -37,7 +37,8 @@ export const deleteCookie = async (key: string): Promise<void> => {
   const cookieStore = await cookies()
 
   try {
-    cookieStore.delete({ name: key, maxAge: -1, path: '/' })
+    cookieStore.delete(key)
+    // cookieStore.delete({ name: key, maxAge: -1, path: '/' })
   } catch (err) {
     console.error(`Failed to delete the cookie with key of ${key}`, err)
     throw new Error(`Failed to delete the cookie with key of ${key}`)

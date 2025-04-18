@@ -12,7 +12,7 @@ const getSecretKey = (type: string): string => {
 
 export const generateAccessToken = async (payload: JWTPayload): Promise<string> => jwt.sign(payload, getSecretKey('access'), { expiresIn: '15s' })
 
-export const generateRefreshToken = async (payload: JWTPayload): Promise<string> => jwt.sign(payload, getSecretKey('refresh'), { expiresIn: '30d' })
+export const generateRefreshToken = async (payload: JWTPayload): Promise<string> => jwt.sign(payload, getSecretKey('refresh'), { expiresIn: '30s' })
 
 // Validate the auth cookie, set on sign-up or log-in.
 export const validateAuthCookie = async (): Promise<ValidationResult> => {
@@ -67,7 +67,7 @@ export const validateRefreshCookie = async (): Promise<ValidationResult> => {
     if (!parsed.value) return { valid: false, reason: 'invalid' }
 
     const secret = getSecretKey('refresh')
-    const decoded = jwt.verify(parsed.value, secret) as unknown as JWTPayload
+    const decoded = jwt.decode(parsed.value) as unknown as JWTPayload
 
     // Runtime type guard: check for the expected shape.
     if (typeof decoded !== 'object' || !decoded || !decoded.userId || !decoded.email) {
@@ -75,7 +75,17 @@ export const validateRefreshCookie = async (): Promise<ValidationResult> => {
       return { valid: false, reason: 'invalid' }
     }
 
-    return { valid: true, payload: decoded }
+    try {
+      jwt.verify(parsed.value, secret)
+      return { valid: true, payload: decoded }
+    } catch (err) {
+      console.warn('validateRefreshCookie inner catch block: ', err)
+      return {
+        valid: false,
+        payload: decoded,
+        reason: err instanceof Error ? err.message : 'Unknown error in validateRefreshCookie.' 
+      }
+    }
   } catch (err) {
     console.warn('validateRefreshCookie catch block: ', err)
     return { 

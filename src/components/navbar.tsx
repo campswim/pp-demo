@@ -15,7 +15,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ items }) => {
   const [pathname, setPathname] = useState<string>(usePathname())
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
-  const { role } = useLoggedIn()
+  const { userId, role } = useLoggedIn()
   const router = useRouter()
 
   // Check if the current pathname matches the item URL.
@@ -74,8 +74,14 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
                 (
                   <Link href='/' onClick={async (e) => {
                     e.preventDefault()
-                    const result = await logout()
-                    if (result.status === 200) {
+
+                    console.log('in navbar: ', {userId})
+                    
+                    const result = await logout(userId)
+
+                    console.log({result})
+
+                    if (result?.status === 200) {
                       router.push('/login')
                     }
                   }}>

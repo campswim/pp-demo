@@ -4,6 +4,8 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import { JWTPayload as LoggedInUser } from '@/utils/types'
 
 type LoggedInContextType = {
+  userId: string
+  setUserId: (userId: string) => void
   role: string
   setRole: (role: string) => void
 }
@@ -16,17 +18,17 @@ type LoggedInProviderProps = {
 const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined)
 
 export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
-  const [id, setID] = useState<string>(user?.id)
+  const [userId, setUserId] = useState<string>(user?.userId ?? '')
   const [role, setRole] = useState<string>(user?.role ?? 'guest')
   const initialRole = user?.role ?? 'guest'
 
   useEffect(() => {
-    setID(user?.id !== id ? user?.id : id)
+    setUserId(user?.userId !== userId ? user?.userId ?? '' : userId)
     setRole(role !== initialRole ? initialRole : role)
-  }, [user, initialRole, role, id])
+  }, [user, initialRole, role, userId])
 
   return (
-    <LoggedInContext.Provider value={{ role, setRole }}>
+    <LoggedInContext.Provider value={{ userId, setUserId, role, setRole }}>
       {children}
     </LoggedInContext.Provider>
   )

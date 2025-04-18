@@ -162,34 +162,25 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
 }
 
 // Log a user out.
-export const logout = async () => {
-  // Get the user from the cookie.
-  const authCookie = await getCookie('auth')
-
-  // If there is no coookie, the user isn't logged in.
-  if (!authCookie) return { status: 400, message: 'No auth cookie found.' }
-
-  // Parse the cookie value.
-  const authCookieResolved = authCookie;
-  const authData: JWTPayload | null = authCookieResolved ? JSON.parse(authCookieResolved.value) : null;
-
-  // If the cookie exists but loggedIn has been set to false, the user isn't logged in.
-  if (!authData) return { status: 400, message: 'Already logged out.' }
-
-  const username: string = authData?.email ? authData?.email?.split('@')[0] : '';
+export const logout = async (userId: string) => {  
+  if (!userId) return { status: 304 }
 
   // Clear the access and refresh cookies.
-  await deleteCookie('auth');
-  await deleteCookie('refresh')
-  
-  // Mark the user as logged out in the db.
-  await db.user.update({
-    where: { id: authData?.userId },
-    data: { loggedIn: false }
-  })
+  try {
+    await deleteCookie('auth');
+    await deleteCookie('refresh')
+    
+    // Mark the user as logged out in the db.
+    await db.user.update({
+      where: { id: userId },
+      data: { loggedIn: false }
+    })
 
-  // // Relay the logout message.
-  return { status: 200, message: `See you next time${username ? ', ' + username[0].toUpperCase() + username.slice(1) : ''}.` }
+    return { status: 200 }
+  } catch (err) {
+    console.warn('Logout failed: ', err)
+  }
+
 }
 
 // Refresh the user's session.
