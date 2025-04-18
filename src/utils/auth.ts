@@ -2,7 +2,7 @@
 
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
-import { JWTPayload } from './types'
+import { JWTPayload, ValidationResult } from './types'
 
 const getSecretKey = (type: string): string => {
   const secret = type === 'access' ? process.env.JWT_SECRET : type === 'refresh' ? process.env.REFRESH_SECRET : ''
@@ -14,16 +14,16 @@ export const generateAccessToken = async (payload: JWTPayload): Promise<string> 
 
 export const generateRefreshToken = async (payload: JWTPayload): Promise<string> => jwt.sign(payload, getSecretKey('refresh'), { expiresIn: '30d' })
 
-export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
+export const validateAuthCookie = async (): Promise<ValidationResult> => {
   const cookieStore = await cookies()
   const authData = cookieStore.get('auth')?.value
 
-  if (!authData) return null
+  if (!authData) return { valid: false, reason: 'missing' }
 
   try {
     const parsed = JSON.parse(authData)
 
-    if (!parsed.value) return null
+    if (!parsed.value) return { valid: false, reason: 'invalid' }
 
     const secret = getSecretKey('access')
     const decoded = jwt.verify(parsed.value, secret) as unknown as JWTPayload
@@ -31,19 +31,13 @@ export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
     // Runtime type guard: check for the expected shape.
     if (typeof decoded !== 'object' || !decoded || !decoded.userId || !decoded.email) {
       console.warn('The decoded JWT is missing expected properties.')
-      return null
+      return { valid: false, reason: 'invalid' }
     }
 
-    const now = Math.floor(Date.now() / 1000)
-    if (decoded.exp && decoded.exp < now) {
-      console.warn('Token has expired.')
-      return null
-    }
-
-    return decoded as JWTPayload
+    return { valid: true, payload: decoded }
 
   } catch (err) {
-    console.error('Auth validation error:', err)
-    return null
+    console.warn('validateAuthCookie catch block: ', err)
+    return { valid: false, reason: err instanceof Error ? err.message : 'Unknown error in validateAuthCookie.' }
   }
 }
