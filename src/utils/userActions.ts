@@ -6,15 +6,9 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { User } from '@/generated/prisma'
 import { SignupFormSchema, FormState } from '@/lib/definitions'
-import { JWTPayload } from './types'
-import { generateAccessToken, generateRefreshToken } from './auth'
+import { JWTPayload, UserActionsProps } from '@/utils/types'
+import { generateAccessToken, generateRefreshToken, refreshAccessToken, refreshRefreshToken } from './auth'
 import { getCookie, setCookie, deleteCookie } from './cookie'
-
-// Define the type for the actions' return object.
-interface Props {
-  success?: boolean
-  error?: string | null
-}
 
 // Get user by ID.
 export const getUserById = async (id: string) => {
@@ -35,8 +29,8 @@ export const getUsers = async (role: string): Promise<User[]> => {
 }
 
 // Create a single user in the database.
-export const createUser = async (prevState: Props, formData: FormData): Promise<Props> => {
-  type NewUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>
+export const createUser = async (prevState: UserActionsProps, formData: FormData): Promise<UserActionsProps> => {
+  type NewUser = Omit<User, 'id' | 'loggedIn' | 'createdAt' | 'updatedAt'>
 
   try {
     const user: NewUser = {
@@ -184,12 +178,13 @@ export const logout = async () => {
 
   const username: string = authData?.email ? authData?.email?.split('@')[0] : '';
 
-  // Clear the cookie.
+  // Clear the access and refresh cookies.
   await deleteCookie('auth');
+  await deleteCookie('refresh')
   
   // Mark the user as logged out in the db.
   await db.user.update({
-    where: { id: authData?.id },
+    where: { id: authData?.userId },
     data: { loggedIn: false }
   })
 
@@ -197,9 +192,8 @@ export const logout = async () => {
   return { status: 200, message: `See you next time${username ? ', ' + username[0].toUpperCase() + username.slice(1) : ''}.` }
 }
 
-// Refresh a user's access token.
-export const refreshAccessToken = async () => {
-  const refreshTokenCookie = await getCookie('refresh')
-
-  console.log({refreshTokenCookie})
+// Refresh the user's session.
+export const refreshSession = async (payload: JWTPayload): Promise<void>=> {  
+  await refreshAccessToken(payload)
+  await refreshRefreshToken(payload)
 }
