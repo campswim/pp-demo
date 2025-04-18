@@ -29,8 +29,8 @@ export const getUserByEmail = async (email: string) => {
 }
 
 // Get all users from the database.
-export const getUsers = async (auth: JWTPayload | null): Promise<User[]> => {
-  if (!auth || auth.userRole !== 'admin') throw new Error('Unauthorized')
+export const getUsers = async (role: string): Promise<User[]> => {
+  if (!role || role !== 'admin') throw new Error(`Your role of ${role} does not provide access to this resource.`)
   return await db.user.findMany()
 }
 
@@ -145,8 +145,6 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
   const isPasswordValid = await bcrypt.compare(password, user.password)
   if (!isPasswordValid) return { errors: { password: ['The password is incorrect.'] } }
 
-  console.log({user});
-
   // 4. Generate access and refresh tokens.
   const payload = {
     userId: user.id,
@@ -176,8 +174,6 @@ export const logout = async () => {
 
   // If there is no coookie, the user isn't logged in.
   if (!authCookie) return { status: 400, message: 'No auth cookie found.' }
-
-  console.log({authCookie});
 
   // Parse the cookie value.
   const authCookieResolved = authCookie;
