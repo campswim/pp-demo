@@ -12,7 +12,7 @@ import { getCookie, setCookie, deleteCookie } from './cookie'
 
 // Get user by ID.
 export const getUserById = async (id: string) => {
-  if (!id) throw new Error('No ID was provided to the get-user-by-email function.')
+  if (!id) throw new Error('No ID was provided to the get-user-by-id function.')
   return await db.user.findUnique({ where: { id } })
 }
 
