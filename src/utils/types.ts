@@ -1,5 +1,6 @@
 import { JwtPayload } from 'jsonwebtoken'
 
+// The JWT payload object.
 export interface JWTPayload extends JwtPayload {
   userId: string
   email: string
@@ -8,11 +9,21 @@ export interface JWTPayload extends JwtPayload {
   exp?: number
 }
 
-export type ValidationResult = 
-  | { valid: true, payload: JWTPayload }
-  | { valid: false, reason: string }
+// The auth and refresh cookies' result after validation.
+export type ValidationResult = { 
+  valid: boolean, 
+  payload?: JWTPayload, 
+  reason?: string 
+}
 
+// The cookie object.
 export type Cookie = {
   value: string;
   expires?: Date
+}
+
+// Define the type for the user actions' return object.
+export interface UserActionsProps {
+  success?: boolean
+  error?: string | null
 }
