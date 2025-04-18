@@ -8,6 +8,10 @@ export interface JWTPayload extends JwtPayload {
   exp?: number
 }
 
+export type ValidationResult = 
+  | { valid: true, payload: JWTPayload }
+  | { valid: false, reason: string }
+
 export type Cookie = {
   value: string;
   expires?: Date
