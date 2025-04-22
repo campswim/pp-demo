@@ -1,18 +1,8 @@
 import DeleteUserButton from '@/components/deleteUserButton'
+import { User } from '@/generated/prisma'
 
-interface User {
-  id: string
-  email: string | null
-  password: string | null
-  createdAt: Date
-  updatedAt: Date
-}
-
-interface UserListProps {
-  users: User[]
-}
-
-const UsersList = ({ users }: UserListProps) => {
+// const UsersList = (users: User[]) => {
+const UsersList = ({ users }: { users: User[] }) => {
   return (
     users && users.length > 0 && (
       <div className='flex w-full overflow-x-auto lg:overflow-visible'>
