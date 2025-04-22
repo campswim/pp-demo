@@ -6,7 +6,7 @@ import { type JWTPayload } from 'jose'
 export type LoggedInUser = {
   userId: string
   role: string
-} & JWTPayload
+}
 
 type LoggedInContextType = {
   userId: string
@@ -17,7 +17,7 @@ type LoggedInContextType = {
 
 type LoggedInProviderProps = {
   children: React.ReactNode
-  user: LoggedInUser | null
+  user: (JWTPayload & Partial<{ userId: string; role: string }>) | null
 }
 
 const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined)
