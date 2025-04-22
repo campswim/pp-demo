@@ -28,8 +28,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   // Get the auth cookie -> { valid, payload, reason } 
   const user = await validateAuthCookie()
 
-  console.log({user})
-
   // Make the user is marked as logged out in the database.
   if (!user) {
     const cookie = await getCookie('user-id')
@@ -41,7 +39,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         body: JSON.stringify({ expiredUserId }),
       })
     }
-
   }
   
   return (
