@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import db from '@/utils/db'
 
-const secretKey = process.env.JWT_SECRET as string
+const secretKey = process.env.ACCESS_SECRET as string
 
 export async function POST(req: NextRequest) {
   try {

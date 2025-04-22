@@ -6,9 +6,9 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { User } from '@/generated/prisma'
 import { SignupFormSchema, FormState } from '@/lib/definitions'
-import { JWTPayload, UserActionsProps } from '@/utils/types'
-import { generateAccessToken, generateRefreshToken, refreshAccessToken, refreshRefreshToken } from './auth'
-import { getCookie, setCookie, deleteCookie } from './cookie'
+import { UserActionsProps } from '@/utils/types'
+import { generateAccessToken, generateRefreshToken } from './auth'
+import { setCookie, deleteCookie } from './cookie'
 
 // Get user by ID.
 export const getUserById = async (id: string) => {
@@ -144,7 +144,7 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
     userId: user.id,
     email: user.email,
     role: user.role,
-  }
+  }  
   const accessToken: string = await generateAccessToken(payload)
   const refreshToken: string = await generateRefreshToken(payload)
 
@@ -162,8 +162,8 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
 }
 
 // Log a user out.
-export const logout = async (userId: string) => {  
-  if (!userId) return { status: 304 }
+export const logout = async (id: string | null = null): Promise<void> => {
+  if (!id) throw new Error('No ID was provided to the logout method.')
 
   // Clear the access and refresh cookies.
   try {
@@ -172,19 +172,16 @@ export const logout = async (userId: string) => {
     
     // Mark the user as logged out in the db.
     await db.user.update({
-      where: { id: userId },
+      where: { id: id || undefined },
       data: { loggedIn: false }
     })
-
-    return { status: 200 }
   } catch (err) {
     console.warn('Logout failed: ', err)
   }
-
 }
 
-// Refresh the user's session.
-export const refreshSession = async (payload: JWTPayload): Promise<void>=> {  
-  await refreshAccessToken(payload)
-  await refreshRefreshToken(payload)
-}
+// // Refresh the user's session.
+// export const refreshSession = async (payload: JWTPayload): Promise<void>=> {  
+//   await refreshAccessToken(payload)
+//   await refreshRefreshToken(payload)
+// }

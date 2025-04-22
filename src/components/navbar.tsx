@@ -24,7 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
   // Check if the item can be rendered based on the user's role.
   const canRender = (item: NavItem) => {
     if (role === 'guest') return item.type === 'public'
-    if (role === 'user') return item.type === 'private' || item.type === 'user'
+    if (role === 'user') return item.type === 'user'
     if (role === 'admin') return item.type === 'admin' || item.type === 'user'
     return false
   }
@@ -73,17 +73,9 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
                 :
                 (
                   <Link href='/' onClick={async (e) => {
-                    e.preventDefault()
-
-                    console.log('in navbar: ', {userId})
-                    
-                    const result = await logout(userId)
-
-                    console.log({result})
-
-                    if (result?.status === 200) {
-                      router.push('/login')
-                    }
+                    e.preventDefault()                    
+                    await logout(userId)
+                    router.push('/login')
                   }}>
                     {item.name}
                   </Link>

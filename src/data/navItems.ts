@@ -1,6 +1,6 @@
 export interface NavItem {
   id: number;
-  type: 'public' | 'private' | 'user' | 'admin';
+  type: 'public' | 'user' | 'admin';
   name: string;
   url: string;
   subItems?: NavItem[];
@@ -10,10 +10,10 @@ export const navItems: NavItem[] = [
   { id: 1, type: 'public', name: 'Register', url: '/signup' },
   { id: 2, type: 'public', name: 'Log In', url: '/login' },
   { id: 3, type: 'user', name: 'Demo', url: 'demo' },
-  { id: 4, type: 'private', name: 'Profile', url: '/profile' },
+  { id: 4, type: 'user', name: 'Profile', url: '/user/profile' },
   {
     id: 5,
-    type: 'private',
+    type: 'admin',
     name: 'Settings',
     url: '/settings',
     subItems: [
@@ -31,14 +31,5 @@ export const navItems: NavItem[] = [
       { id: 12, type: 'admin', name: 'Logs', url: '/admin/logs' }
     ]
   },
-  {
-    id: 7,
-    type: 'admin',
-    name: 'Settings',
-    url: '/admin/settings',
-    subItems: [
-      { id: 13, type: 'admin', name: 'Notifications', url: '/admin/notifications' }
-    ]
-  },
-  { id: 8, type: 'user', name: 'Log Out', url: '/logout' },
+  { id: 8, type: 'user', name: 'Log Out', url: '/user/logout' },
 ];
