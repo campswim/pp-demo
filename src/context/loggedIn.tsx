@@ -1,7 +1,12 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect } from 'react'
-import { JWTPayload as LoggedInUser } from '@/utils/types'
+import { type JWTPayload } from 'jose'
+
+export type LoggedInUser = {
+  userId: string
+  role: string
+} & JWTPayload
 
 type LoggedInContextType = {
   userId: string
