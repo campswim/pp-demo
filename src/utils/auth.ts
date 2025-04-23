@@ -2,7 +2,7 @@
 
 // import jwt from 'jsonwebtoken'
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose'
-import { getCookie, setCookie } from '@/utils/cookie'
+import { getCookie } from '@/utils/cookie'
 
 export const getSecretKey = async (type: string): Promise<Uint8Array> => {
   const secret = type === 'access' 
@@ -45,13 +45,9 @@ export const refreshAccessToken = async (refreshToken: JWTPayload): Promise<stri
       role: refreshToken?.role
     }
     const newAccessToken = await generateAccessToken(payload)
-
-    if (newAccessToken) {
-      await setCookie('auth', newAccessToken)
-      return newAccessToken
-    } else return null
+    return newAccessToken ?? null
   } catch (err) {
-    console.warn('Error in the refreshAccessToken function: ', err)
+    console.warn('Error in the refresh-access-token function: ', err)
     return null
   }
 }
@@ -68,11 +64,7 @@ export const refreshRefreshToken = async (refreshToken: JWTPayload): Promise<str
 
   try {
     const newRefreshToken = await generateRefreshToken(payload)
-
-    if (newRefreshToken) {
-      await setCookie('refresh', newRefreshToken)
-      return newRefreshToken
-    } else return null
+    return newRefreshToken ?? null
   } catch (err) {
     console.warn('Error in the refreshRefreshToken function: ', err)
     return null
@@ -87,10 +79,13 @@ export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
   if (!accessToken) return null
 
   try {
+    const parsed = JSON.parse(accessToken)
+    if (!parsed.value) return null
+
     const secret = await getSecretKey('access')
     if (!secret) return null
 
-    const { payload } = await jwtVerify(accessToken, secret)
+    const { payload } = await jwtVerify(parsed.value, secret)
 
     // Runtime type guard: check for the expected shape.
     if (!payload || typeof payload !== 'object' || !payload.userId || !payload.email) {
@@ -113,9 +108,8 @@ export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
   // if (!refreshData) return { valid: false, reason: 'missing' }
   if (!refreshData) return null
 
-    try {
+  try {
     const parsed = JSON.parse(refreshData)
-
     if (!parsed.value) return null
 
     const secret = await getSecretKey('refresh')
@@ -128,7 +122,8 @@ export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
       console.warn('The decoded JWT is missing expected properties.')
       return null
     }
-
+    
+    // Middleware will refresh the access and refresh tokens based on this payload.
     return payload
   } catch (err) {
     console.warn('Error parsing or validating the refresh cookie', err)
