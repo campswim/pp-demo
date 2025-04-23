@@ -21,7 +21,7 @@ export default async function Users() {
   const role: string = typeof user?.role === 'string' ? user.role : ''
   const users = role ? await getUsers(role) : null
 
-  if (role !== 'admin') redirect(`/unauthorized?role=${role}`) 
+  if (role !== 'admin') redirect(role ? `/unauthorized?role=${role}` : '/unauthorized') 
 
   return (
     <div className='flex flex-col items-center justify-between xl:flex-row lg:items-start lg:justify-center gap-10'>

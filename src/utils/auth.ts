@@ -82,18 +82,15 @@ export const refreshRefreshToken = async (refreshToken: JWTPayload): Promise<str
 // Validate the auth cookie, set on sign-up or log-in.
 export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
   const authCookie = await getCookie('auth')
-  const authData = authCookie?.value
+  const accessToken = authCookie?.value
 
-  if (!authData) return null
+  if (!accessToken) return null
 
   try {
-    const parsed = JSON.parse(authData)
-    if (!parsed.value) return null
-
     const secret = await getSecretKey('access')
     if (!secret) return null
 
-    const { payload } = await jwtVerify(parsed.value, secret)
+    const { payload } = await jwtVerify(accessToken, secret)
 
     // Runtime type guard: check for the expected shape.
     if (!payload || typeof payload !== 'object' || !payload.userId || !payload.email) {
