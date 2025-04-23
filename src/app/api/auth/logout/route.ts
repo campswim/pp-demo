@@ -1,12 +1,10 @@
 import { NextResponse } from 'next/server'
 import db from '@/utils/db'
 
-export const POST = async (request: Request) => {
+const POST = async (request: Request) => {
   const { userId } = await request.json()
 
-  if (!userId) {
-    return new Response('User ID is required', { status: 400 })
-  }
+  if (!userId) return new Response('User ID is required', { status: 400 })
 
   try {
     await db.user.update({
@@ -20,3 +18,4 @@ export const POST = async (request: Request) => {
   return NextResponse.json({ status: 200 })
 }
 
+export default POST
