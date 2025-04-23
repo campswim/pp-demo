@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
               onMouseLeave={handleGroupMouseLeave}
             >
               <div className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}>
-                { item.url !== '/logout' ? (
+                { item.url !== '/user/logout' ? (
                   <Link
                     href={item.url}
                     className={`text-lg font-semibold ${isActive(item.url)}`}
@@ -73,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
                 :
                 (
                   <Link href='/' onClick={async (e) => {
-                    e.preventDefault()                    
+                    e.preventDefault()
                     await logout(userId)
                     router.push('/login')
                   }}>
