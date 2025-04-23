@@ -1,30 +1,17 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import { getUserById } from '@/utils/userActions'
-import { User } from '@/generated/prisma'
-import { useLoggedIn } from '@/context/loggedIn'
+import { redirect } from 'next/navigation'
+import { type User } from '@/generated/prisma'
+import { type JWTPayload } from 'jose'
+import { validateAuthCookie } from '@/utils/auth';
+import Profile from '@/components/profile'
 
-
-export default function Profile() {
-  const [user, setUser] = useState<User | null>(null)
-  const { userId } = useLoggedIn()
-
-  useEffect(() => {
-    (async () => {
-      const userData = await getUserById(userId);
-      setUser(userData);
-    })();
-  })
+const UserProfile = async () => {
+  const user: JWTPayload | null = await validateAuthCookie()
+  if (!user) redirect('/login')
+  const userId: string | null = typeof user?.userId === 'string' ? user.userId : null
+  const userData: User | null = userId ? await getUserById(userId) : null;
   
-  return (
-    <div>
-      <p>ID: {user?.id || 'N/A'}</p>
-      <p>Email: {user?.email || 'N/A'}</p>
-      <p>Role: {user?.role || 'N/A'}</p>
-      <p>Logged In: {user?.loggedIn ? 'Yes' : 'No'}</p>
-      <p>Created: {user?.createdAt?.toLocaleString() || 'N/A'}</p>
-      <p>Updated: {user?.updatedAt?.toLocaleString() || 'N/A'}</p>
-    </div>
-  )
+  return <Profile user={userData} />
 }
+
+export default UserProfile
