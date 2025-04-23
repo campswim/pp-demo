@@ -28,13 +28,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   // Get the auth cookie -> { valid, payload, reason } 
   const user = await validateAuthCookie()
 
-  // Make the user is marked as logged out in the database.
+  // Mark the user as logged out in the database.
   if (!user) {
     const cookie = await getCookie('user-id')
     const expiredUserId = cookie?.value
 
     if (expiredUserId) {
-      fetch('/api/update-db', {
+      fetch('/api/logout', {
         method: 'POST',
         body: JSON.stringify({ expiredUserId }),
       })
