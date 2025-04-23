@@ -155,8 +155,8 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
   })
 
   // 6. Set the access and refresh tokens in cookies.
-  await setCookie('auth', accessToken )
-  await setCookie('refresh', refreshToken )
+  await setCookie('auth', accessToken)
+  await setCookie('refresh', refreshToken)
 
   redirect('/')
 }
