@@ -164,7 +164,7 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
 // Log a user out.
 export const logout = async (id: string | null = null): Promise<void> => {
   if (!id) throw new Error('No ID was provided to the logout method.')
-
+  
   // Clear the access and refresh cookies.
   try {
     await deleteCookie('auth');
