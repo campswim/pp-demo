@@ -34,8 +34,8 @@ export async function middleware() {
     const newRefreshToken = await refreshRefreshToken(refreshCookie)
 
     if (newAccessToken && newRefreshToken) {
-      response.cookies.set('auth', newAccessToken, await cookieConfig())
-      response.cookies.set('refresh', newRefreshToken, await cookieConfig())
+      response.cookies.set('auth', JSON.stringify({ value: newAccessToken }), await cookieConfig())
+      response.cookies.set('refresh', JSON.stringify({ value: newRefreshToken}), await cookieConfig())
     }
   }
 
