@@ -64,7 +64,7 @@ export const parseCookieValue = async (name: string): Promise<JWTPayload | null>
 
       if (!secret) return null
       const encoder = new TextEncoder()
-      const secretKey = encoder.encode(secret)
+      const secretKey = encoder.encode(String(secret))
       const verified = await jwtVerify(parsed.value, secretKey)
       payload = verified?.payload
     } catch (err) {
