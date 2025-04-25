@@ -1,7 +1,7 @@
 import { getUserById } from '@/utils/userActions'
 import { redirect } from 'next/navigation'
 import { type User } from '@/generated/prisma'
-import { type JWTPayload } from 'jose'
+import type { JWTPayload } from '@/lib/schemata'
 import { validateAuthCookie } from '@/utils/auth';
 import Profile from '@/components/profile'
 
