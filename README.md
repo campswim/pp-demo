@@ -11,16 +11,18 @@ I. Frontend
 
 II. Backend
 
+  A. Supabase: an open-source backend-as-a-service (BaaS) platform that provides an easy way to set up a fully functional backend for web and mobile applications, including an auto-generated REST API based on the structure of the database.
+
+  B. Zod: a schema-validation library designed for TypeScript, helping developers define and validate data structures, ensuring type safety at both compile time and runtime.
+
 III. Database
 
   A. Postgres: an open-source SQL database.
 
-  B. Supabase: an open-source backend-as-a-service (BaaS) platform that provides an easy way to set up a fully functional backend for web and mobile applications, including an auto-generated REST API based on the structure of the database.
-
-  C. Prisma: an open-source ORM (Object-Relational Mapping) tool that allows for the querying and manipulation of database using JavaScript or TypeScript, without needing to write raw SQL queries, by generating a strongly typed API based on the database's schema.
+  B. Prisma: an open-source ORM (Object-Relational Mapping) tool that allows for the querying and manipulation of databases using JavaScript or TypeScript, without needing to write raw SQL queries, by generating a strongly typed API based on the database's schema.
   
-    - Prisma server: A standalone infrastructure component sitting on top of your database.
-    - Prisma client: An auto-generated library that connects to the Prisma server and lets you read, write and stream data in your database. It is used for data access in your applications.
+    - Prisma server: A standalone infrastructure component sitting on top of the database.
+    - Prisma client: An auto-generated library that connects to the Prisma server, allowing the reading, writing and streaming of data in the database. It is used for data access in applications.
 
 ## Instructions
 
@@ -110,3 +112,14 @@ As an administrator, I’d like to:
   - [ ] the deployment of the demo in a production environment;
   - [ ] the use of the settings page to alter the UI;
   - [ ] all third-party services, their purposes, their costs, and the credentials required to access them.
+
+## Auth Flow
+
+| Event | Who runs it | Actions |
+|:-----------|:--------------|:-----------|
+| Login | Server Action | Set auth & refresh cookies + set loggedIn = true in DB |
+| Request with valid token| Middleware | Allow request |
+| Request with expired access token | Middleware | Refresh auth cookies |
+| Request with expired refresh token | Middleware | Clear auth cookies; set expired-user-id cookie (frontend) |
+| Manual Logout | Server Action | Clear auth cookies + set loggedIn = false in DB. |
+| Auto-logout (tokens expired) | Logged-in Context + Server Action | Detect expired-user-id cookie and call logout, which clears the cookie and redirects to /login |
