@@ -1,9 +1,10 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { jwtVerify, decodeJwt, type JWTPayload } from 'jose'
-import { Cookie } from './types'
-import { getSecretKey } from '@/utils/auth'
+import { decodeJwt } from 'jose'
+import { ZodSchema } from 'zod'
+import { ParsedCookieSchema, GenericPayloadSchema } from '@/lib/schemata'
+import { Cookie } from '@/lib/types'
 
 export const cookieConfig = async (env: boolean = process.env.NODE_ENV === 'production') => ({
   httpOnly: true,
@@ -14,10 +15,8 @@ export const cookieConfig = async (env: boolean = process.env.NODE_ENV === 'prod
 
 export const getCookie = async (key: string): Promise<Cookie | null> => {
   if (!key) throw new Error('No key was provided to the cookie getter.')
-  
-  const cookieStore = await cookies()
-  const cookie = cookieStore.get(key)
-  return cookie ?? null;
+  const cookie = (await cookies()).get(key)
+  return cookie && cookie.value && typeof cookie.value === 'string' ? cookie : null
 }
 
 export const setCookie = async (key: string, value: string): Promise<void> => {
@@ -47,42 +46,66 @@ export const deleteCookie = async (key: string): Promise<void> => {
   }
 }
 
-// Parse a cookie and return its value, if it exists.
-export const parseCookieValue = async (name: string, token: boolean = false): Promise<JWTPayload | null> => {
-  const cookie = await getCookie(name)
-  const cookieData = cookie?.value
-  let payload: JWTPayload | null = null
-    
-  if (!cookieData) return null
+export const validateCookieAgainstSchema = async <T>(key: string, schema: ZodSchema<T>): Promise<T | null> => {
+  if (!key) throw new Error('No key was provided to validateCookieAgainstSchema.')
 
-  try {
-    const parsed = JSON.parse(cookieData)
+    const cookie = (await cookies()).get(key)
+    if (!cookie || !cookie.value || typeof cookie.value !== 'string') return null
 
-    if (!parsed.value) return null
-
-    try {
-      if (token) {
-        const secret = await getSecretKey('refresh')
-        if (!secret) return null
-        const encoder = new TextEncoder()
-        const secretKey = encoder.encode(String(secret))
-        const verified = await jwtVerify(parsed.value, secretKey)
-        payload = verified?.payload
-      } else {
-        payload = parsed;
-      }
-    } catch (err) {
-      console.warn('JWT verification failed, returning unverified payload.', err)
-      payload = decodeJwt(parsed.value) as JWTPayload
-    }
-
-    // Runtime type guard: check for the expected shape.
-    if (token && typeof payload !== 'object' || !payload || !payload.userId || !payload.email) {
-      console.warn('The decoded JWT is missing expected properties.')
+    const parsed = schema.safeParse(cookie.value)
+    if (!parsed.success) {
+      console.warn(`Cookie validation failed for key "${key}":`, parsed.error.flatten())
       return null
     }
 
-    return payload
+  return parsed.data
+}
+
+// Parse a cookie and return its value, if it exists.
+export const parseCookieValue = async (key: string, token: boolean = false): Promise<Record<string, unknown> | null> => {
+  if (!key) throw new Error('No key was provided to parseCookieValue')
+
+  const cookie = await getCookie(key)
+  if (!cookie) return null
+
+  try {
+    const parsedCookie = ParsedCookieSchema.safeParse(JSON.parse(cookie.value))
+    if (!parsedCookie.success) {
+      console.warn('Cookie missing or has an invalid value field.', parsedCookie.error.flatten())
+      return null
+    }
+
+    const rawValue = parsedCookie.data.value
+
+    if (token) {
+      try {
+        const decoded = decodeJwt(rawValue)
+        const validatedDecoded = GenericPayloadSchema.safeParse(decoded)
+        if (!validatedDecoded.success) {
+          console.warn('Decoded JWT payload is invalid.', validatedDecoded.error.flatten())
+          return null
+        }
+
+        return validatedDecoded.data
+      } catch (err) {
+        console.warn('Failed to decode JWT payload.', err)
+        return null
+      }
+    } else {
+      try {
+        const parsedValue = JSON.parse(rawValue)
+        const validatedParsed = GenericPayloadSchema.safeParse(parsedValue)
+        if (!validatedParsed.success) {
+          console.warn('Parsed plain cookie value is invlaid.', validatedParsed.error.flatten())
+          return null
+        }
+
+        return validatedParsed.data
+      } catch (err) {
+        console.warn('Failed to parse non-token cookie value.', err)
+        return null
+      }
+    }
   } catch (err) {
     console.warn('Error parsing or validating the refresh cookie', err)
     return null
