@@ -12,7 +12,7 @@ export interface MyJWTPayload extends JWTPayload {
 // The auth and refresh cookies' result after validation.
 export type ValidationResult = { 
   valid: boolean, 
-  payload?: JWTPayload, 
+  payload?: MyJWTPayload, 
   reason?: string 
 }
 
