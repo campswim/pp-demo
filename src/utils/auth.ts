@@ -4,6 +4,8 @@
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose'
 import { getCookie } from '@/utils/cookie'
 
+type CodeError = Error & { code?: string }
+
 export const getSecretKey = async (type: string): Promise<Uint8Array> => {
   const secret = type === 'access' 
     ? process.env.ACCESS_SECRET 
@@ -21,7 +23,7 @@ export const generateAccessToken = async (payload: JWTPayload): Promise<string> 
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('15s')
+    .setExpirationTime('30m') // -> production setting = 1h
     .sign(secret)
 }
 
@@ -30,7 +32,7 @@ export const generateRefreshToken = async (payload: JWTPayload): Promise<string>
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('30d')
+    .setExpirationTime('1h') // -> production setting = 30d
     .sign(secret)
 }
 
@@ -95,7 +97,8 @@ export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
 
     return payload
   } catch (err) {
-    console.warn('Error parsing or validating the auth cookie.', err)
+    const error = err as CodeError
+    console.warn('Error parsing or validating the auth cookie: ', error.code)
     return null
   }
 }
@@ -105,7 +108,6 @@ export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
   const refreshCookie = await getCookie('refresh')
   const refreshData = refreshCookie?.value
 
-  // if (!refreshData) return { valid: false, reason: 'missing' }
   if (!refreshData) return null
 
   try {
@@ -126,7 +128,8 @@ export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
     // Middleware will refresh the access and refresh tokens based on this payload.
     return payload
   } catch (err) {
-    console.warn('Error parsing or validating the refresh cookie', err)
+    const error = err as CodeError
+    console.warn('Error parsing or validating the refresh cookie: ', error.code)
     return null
   }
 }
