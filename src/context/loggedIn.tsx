@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { MyJWTPayload } from 'jose'
+import type { JWTPayload } from '@/lib/schemata'
 import { validateAuthCookie } from '@/utils/auth'
 import { logout } from '@/utils/userActions'
 
@@ -20,29 +20,21 @@ type LoggedInContextType = {
 
 type LoggedInProviderProps = {
   children: React.ReactNode
-  user: (MyJWTPayload & Partial<{ userId: string; role: string }>) | null
+  user: (JWTPayload & Partial<{ userId: string; role: string }>) | null
 }
 
 const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined)
 
 export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
-
-  console.log('-------------- LoggedInContext Start ------------------')
-
   const [userId, setUserId] = useState<string | null>(user?.userId || null)
   const [role, setRole] = useState<string | null>(user?.role || 'guest')
   // const initialRole = role ?? 'guest'
   const pathname = usePathname()
 
-  // useEffect(() => {
-  //   setUserId(user?.userId !== userId ? user?.userId ?? null : userId)
-  //   setRole(role !== initialRole ? initialRole : role)
-  // }, [user, initialRole, role, userId])
-
   useEffect(() => {
     // Get the auth cookie.
     const getAuthCookie = async () => {
-      const user: MyJWTPayload | null = await validateAuthCookie() 
+      const user: JWTPayload | null = await validateAuthCookie() 
       
       if (user) {
         const newId: string | null = user?.userId ?? null
@@ -53,20 +45,17 @@ export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
         }
       } else {
         const expiredId = document.cookie.split('; ').find(row => row.startsWith('user-id'))?.split('=')[1]
-        console.log({ expiredId })
 
+        // If there is an expired user ID, call logout to remove it, toggle loggedIn to false in the db, and redirect to login.
         if (expiredId) (async () => await logout(expiredId))()
 
+        // Reset the user's ID and role to guest, when tokens have expired.
         setUserId(null)
         setRole('guest')
       }
     }
     getAuthCookie()
   }, [userId, pathname])
-
-  console.log({userId, role})
-
-  console.log('-------------- LoggedInContext End ------------------')
 
   return (
     <LoggedInContext.Provider value={{ userId, setUserId, role, setRole }}>
