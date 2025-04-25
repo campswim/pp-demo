@@ -5,8 +5,8 @@ import bcrypt from 'bcryptjs'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { User } from '@/generated/prisma'
-import { SignupFormSchema, FormState } from '@/lib/definitions'
-import { UserActionsProps } from '@/utils/types'
+import { SignupFormSchema, FormState } from '@/lib/schemata'
+import { UserActionsProps } from '@/lib/types'
 import { generateAccessToken, generateRefreshToken } from './auth'
 import { setCookie, deleteCookie } from './cookie'
 
@@ -183,9 +183,3 @@ export const logout = async (id: string | null = null): Promise<void> => {
 
   redirect('/login')
 }
-
-// // Refresh the user's session.
-// export const refreshSession = async (payload: JWTPayload): Promise<void>=> {  
-//   await refreshAccessToken(payload)
-//   await refreshRefreshToken(payload)
-// }
