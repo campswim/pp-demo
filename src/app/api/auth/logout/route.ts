@@ -4,6 +4,8 @@ import db from '@/utils/db'
 const POST = async (request: Request) => {
   const { userId } = await request.json()
 
+  console.log({userId})
+
   if (!userId) return new Response('User ID is required', { status: 400 })
 
   try {
