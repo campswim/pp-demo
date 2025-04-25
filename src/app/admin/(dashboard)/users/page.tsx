@@ -11,7 +11,7 @@
 import { redirect } from 'next/navigation'
 import { validateAuthCookie } from '@/utils/auth'
 import { getUsers } from '@/utils/userActions'
-import { type JWTPayload } from 'jose'
+import type { JWTPayload } from '@/lib/schemata'
 import NewUserForm from '@/components/createUserForm'
 import UsersList from '@/components/usersList'
 
