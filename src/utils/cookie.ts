@@ -48,32 +48,36 @@ export const deleteCookie = async (key: string): Promise<void> => {
 }
 
 // Parse a cookie and return its value, if it exists.
-export const parseCookieValue = async (name: string): Promise<JWTPayload | null> => {
+export const parseCookieValue = async (name: string, token: boolean = false): Promise<JWTPayload | null> => {
   const cookie = await getCookie(name)
   const cookieData = cookie?.value
   let payload: JWTPayload | null = null
     
   if (!cookieData) return null
+
   try {
     const parsed = JSON.parse(cookieData)
 
     if (!parsed.value) return null
 
     try {
-      const secret = await getSecretKey('refresh')
-
-      if (!secret) return null
-      const encoder = new TextEncoder()
-      const secretKey = encoder.encode(String(secret))
-      const verified = await jwtVerify(parsed.value, secretKey)
-      payload = verified?.payload
+      if (token) {
+        const secret = await getSecretKey('refresh')
+        if (!secret) return null
+        const encoder = new TextEncoder()
+        const secretKey = encoder.encode(String(secret))
+        const verified = await jwtVerify(parsed.value, secretKey)
+        payload = verified?.payload
+      } else {
+        payload = parsed;
+      }
     } catch (err) {
       console.warn('JWT verification failed, returning unverified payload.', err)
       payload = decodeJwt(parsed.value) as JWTPayload
     }
 
     // Runtime type guard: check for the expected shape.
-    if (typeof payload !== 'object' || !payload || !payload.userId || !payload.email) {
+    if (token && typeof payload !== 'object' || !payload || !payload.userId || !payload.email) {
       console.warn('The decoded JWT is missing expected properties.')
       return null
     }
