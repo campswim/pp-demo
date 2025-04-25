@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang='en'>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <LoggedInProvider user={user || null} >
+        <LoggedInProvider user={user || null}>
           {/* {needsRefresh && user && <RefreshSession payload={user} />}
           {needsLogout && user && <Logout userId={user?.userId} />} */}
           <Navbar items={navItems} />

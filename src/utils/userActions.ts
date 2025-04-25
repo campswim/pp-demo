@@ -169,15 +169,19 @@ export const logout = async (id: string | null = null): Promise<void> => {
   try {
     await deleteCookie('auth');
     await deleteCookie('refresh')
-    
+    await deleteCookie('user-id')
+
     // Mark the user as logged out in the db.
     await db.user.update({
       where: { id: id || undefined },
       data: { loggedIn: false }
     })
+
   } catch (err) {
     console.warn('Logout failed: ', err)
   }
+
+  redirect('/login')
 }
 
 // // Refresh the user's session.
