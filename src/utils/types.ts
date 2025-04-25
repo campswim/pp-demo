@@ -1,13 +1,13 @@
-import { type JWTPayload } from 'jose'
+import type { JWTPayload } from 'jose'
 
-// // The JWT payload object.
-// export interface JWTPayload extends JWTPayload {
-//   userId: string
-//   email: string
-//   role: string
-//   iat?: number
-//   exp?: number
-// }
+// The JWT payload object.
+export interface MyJWTPayload extends JWTPayload {
+  userId: string
+  email: string
+  role: string
+  iat?: number
+  exp?: number
+}
 
 // The auth and refresh cookies' result after validation.
 export type ValidationResult = { 
