@@ -1,13 +1,15 @@
 'use server'
 
 // import jwt from 'jsonwebtoken'
-import { SignJWT, jwtVerify, type JWTPayload } from 'jose'
-import { getCookie } from '@/utils/cookie'
+import { SignJWT, jwtVerify } from 'jose'
+import { JWTPayloadSchema, JWTPayload,  AuthCookieSchema } from '@/lib/schemata'
+import type {  } from '@/lib/schemata'
+import { validateCookieAgainstSchema } from '@/utils/cookie'
 
 type CodeError = Error & { code?: string }
 
 export const getSecretKey = async (type: string): Promise<Uint8Array> => {
-  const secret = type === 'access' 
+  const secret = type === 'auth' 
     ? process.env.ACCESS_SECRET 
     : type === 'refresh' 
     ? process.env.REFRESH_SECRET 
@@ -19,7 +21,7 @@ export const getSecretKey = async (type: string): Promise<Uint8Array> => {
 }
 
 export const generateAccessToken = async (payload: JWTPayload): Promise<string> => {
-  const secret = await getSecretKey('access')
+  const secret = await getSecretKey('auth')
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -75,61 +77,121 @@ export const refreshRefreshToken = async (refreshToken: JWTPayload): Promise<str
 
 // Validate the auth cookie, set on sign-up or log-in.
 export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
-  const authCookie = await getCookie('auth')
-  const accessToken = authCookie?.value
+  const accessToken = await validateCookieAgainstSchema('auth', AuthCookieSchema)
+  if (!accessToken || !accessToken.value) return null
 
-  if (!accessToken) return null
+  // Get the secret for JTW verification.
+  const secret = await getSecretKey('auth')
+  if (!secret) {
+    console.warn('No secret returned by getSecretKey.')
+    return null
+  }
 
   try {
-    const parsed = JSON.parse(accessToken)
-    if (!parsed.value) return null
-
-    const secret = await getSecretKey('access')
-    if (!secret) return null
-
-    const { payload } = await jwtVerify(parsed.value, secret)
-
-    // Runtime type guard: check for the expected shape.
-    if (!payload || typeof payload !== 'object' || !payload.userId || !payload.email) {
-      console.warn('The decoded JWT is missing expected properties.')
+    // Verify the access token.
+    const { payload } = await jwtVerify(accessToken, secret)
+  
+    // Check the payload against a Zod shema.
+    const parsedPayload = JWTPayloadSchema.safeParse(payload)
+    if (!parsedPayload.success) {
+      console.warn('Invalid JWT payload:', parsedPayload.error.flatten())
       return null
     }
 
-    return payload
+    return parsedPayload.data
   } catch (err) {
     const error = err as CodeError
-    console.warn('Error parsing or validating the auth cookie: ', error.code)
+    console.warn('Error parsing or validating the auth cookie:', error.code)
     return null
   }
 }
 
-// Validate the refresh cookie, set on sign-up or log-in.
 export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
-  const refreshCookie = await getCookie('refresh')
-  const refreshData = refreshCookie?.value
+  const refreshToken = await validateCookieAgainstSchema('refresh', AuthCookieSchema)
+  if (!refreshToken || !refreshToken.value) return null
 
-  if (!refreshData) return null
+  // Get the secret for JTW verification.
+  const secret = await getSecretKey('refresh')
+  if (!secret) {
+    console.warn('No secret returned by getSecretKey.')
+    return null
+  }
 
   try {
-    const parsed = JSON.parse(refreshData)
-    if (!parsed.value) return null
+    // Verify the refresh token.
+    const { payload } = await jwtVerify(refreshToken, secret)
 
-    const secret = await getSecretKey('refresh')
-    if (!secret) return null
-
-    const { payload } = await jwtVerify(parsed.value, secret)
-
-    // Runtime type guard: check for the expected shape.
-    if (typeof payload !== 'object' || !payload || !payload.userId || !payload.email) {
-      console.warn('The decoded JWT is missing expected properties.')
+    // Check the payload against a Zod schema.
+    const parsedPayload = JWTPayloadSchema.safeParse(payload)
+    if (!parsedPayload.success) {
+      console.warn('Invalid JWT payload:', parsedPayload.error?.flatten())
       return null
     }
-    
-    // Middleware will refresh the access and refresh tokens based on this payload.
-    return payload
+
+    return parsedPayload.data
   } catch (err) {
     const error = err as CodeError
-    console.warn('Error parsing or validating the refresh cookie: ', error.code)
+    console.warn('Error parsing or validatin the refresh cookie:', error.code)
     return null
   }
 }
+
+// // Validate the auth cookie, set on sign-up or log-in. [Not in use: see the eponymous version, which uses Zod to parse.]
+// export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
+//   const authCookie = await getCookie('auth')
+//   const accessToken = authCookie?.value
+
+//   if (!accessToken) return null
+
+//   try {
+//     const parsed = JSON.parse(accessToken)
+//     if (!parsed.value) return null
+
+//     const secret = await getSecretKey('access')
+//     if (!secret) return null
+
+//     const { payload } = await jwtVerify(parsed.value, secret)
+//     const result = JWTPayloadSchema.safeParse(payload)
+
+//     if (!result.success) {
+//       console.warn('The decode JWT is invalid:', result.error)
+//       return null
+//     }
+
+//     return result.data
+//   } catch (err) {
+//     const error = err as CodeError
+//     console.warn('Error parsing or validating the auth cookie: ', error.code)
+//     return null
+//   }
+// }
+
+// // Validate the refresh cookie, set on sign-up or log-in. [Not in use: see the eponymous version, which uses Zod to parse.]
+// export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
+//   const refreshCookie = await getCookie('refresh')
+//   const refreshData = refreshCookie?.value
+
+//   if (!refreshData || !refreshData.value) return null
+
+//   try {
+//     const parsed = JSON.parse(refreshData)
+//     if (!parsed.value) return null
+
+//     const secret = await getSecretKey('refresh')
+//     if (!secret) return null
+
+//     const { payload } = await jwtVerify(parsed.value, secret)
+//     const result = JWTPayloadSchema.safeParse(payload)
+
+//     if (!result.success) {
+//       console.warn('The decode JWT is invalid:', result.error)
+//       return null
+//     }
+
+//     return result.data
+//   } catch (err) {
+//     const error = err as CodeError
+//     console.warn('Error parsing or validating the refresh cookie: ', error.code)
+//     return null
+//   }
+// }
