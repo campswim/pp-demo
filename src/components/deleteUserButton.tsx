@@ -28,20 +28,20 @@ const DeleteUserButton = ({ userId }: { userId: string }) => {
   }
 
   return (
-    <>
-      <p 
+    <td className='px-4 py-2 pr-0 align-bottom whitespace-nowrap'>
+      <div 
         className='md:hidden cursor-pointer' 
         onClick={handleDelete}
       >
         {error ? error : isDeleting ? <GridLoader /> : 'X'}
-      </p>
-      <p 
-        className='hidden md:block md:border border-white rounded md:p-2 cursor-pointer hover:bg-blue-500 hover:border-black transition-colors duration-300'
+      </div>
+      <div 
+        className='hidden text-center md:block md:border border-white rounded md:p-2 cursor-pointer hover:bg-blue-500 hover:border-black transition-colors duration-300'
         onClick={handleDelete}
       >
         {error ? error : isDeleting ? <GridLoader color='#36d7b7' size={5} /> : 'Delete'}
-      </p>    
-    </>
+      </div>    
+    </td>
   )
 }
 
