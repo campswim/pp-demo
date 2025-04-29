@@ -5,10 +5,10 @@ import bcrypt from 'bcryptjs'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { User } from '@/generated/prisma'
-import { SignupFormSchema, FormState } from '@/lib/schemata'
+import { SignupFormSchema, FormState, JWTPayload, Cookie } from '@/lib/schemata'
 import { UserActionsProps } from '@/lib/types'
-import { generateAccessToken, generateRefreshToken } from './auth'
-import { setCookie, deleteCookie } from './cookie'
+import { generateAccessToken, generateRefreshToken, validateAuthCookie } from './auth'
+import { getCookie, setCookie, deleteCookie } from './cookie'
 
 // Get user by ID.
 export const getUserById = async (id: string) => {
@@ -182,4 +182,11 @@ export const logout = async (id: string | null = null): Promise<void> => {
   }
 
   redirect('/login')
+}
+
+// Get the user's session.
+export const getUserSession = async (): Promise<JWTPayload | null> => {
+  const authCookie: Cookie | null = await getCookie('auth')
+  const user: JWTPayload | null = await validateAuthCookie(authCookie)
+  return user ?? null
 }

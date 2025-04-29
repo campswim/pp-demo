@@ -4,7 +4,7 @@ import './globals.css'
 import Navbar from '@/components/navbar'
 import { navItems } from '@/data/navItems'
 import { LoggedInProvider } from '@/context/loggedIn'
-import { validateAuthCookie } from '@/utils/auth'
+import { getUserSession } from '@/utils/userActions'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -24,8 +24,7 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode}>) {
-  // Get the auth cookie -> { valid, payload, reason } 
-  const user = await validateAuthCookie()
+  const user = await getUserSession()
   
   return (
     <html lang='en'>

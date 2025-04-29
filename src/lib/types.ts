@@ -7,11 +7,11 @@ export type ValidationResult = {
   reason?: string 
 }
 
-// The cookie object.
-export type Cookie = {
-  value: string;
-  expires?: Date
-}
+// // The cookie object.
+// export type Cookie = {
+//   value: string;
+//   expires?: Date
+// }
 
 // Define the type for the user actions' return object.
 export interface UserActionsProps {

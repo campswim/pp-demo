@@ -34,6 +34,13 @@ export type FormState =
     }
   | undefined
 
+export const CookieSchema = z.object({
+  value: z.string().optional(),
+  expires: z.number().optional()
+})
+
+export type Cookie = z.infer<typeof CookieSchema>
+
 // 1a. Create a schema for the inner JWT payload.
 export const JWTPayloadSchema = z.object({
   userId: z.string(),

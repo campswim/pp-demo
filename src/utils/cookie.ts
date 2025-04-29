@@ -2,9 +2,8 @@
 
 import { cookies } from 'next/headers'
 import { decodeJwt } from 'jose'
-import { ZodSchema } from 'zod'
-import { ParsedCookieSchema, GenericPayloadSchema } from '@/lib/schemata'
-import { Cookie } from '@/lib/types'
+import { ZodSchema, ZodError, SafeParseSuccess } from 'zod'
+import { ParsedCookieSchema, GenericPayloadSchema, Cookie } from '@/lib/schemata'
 
 export const cookieConfig = async (env: boolean = process.env.NODE_ENV === 'production') => ({
   httpOnly: true,
@@ -15,7 +14,8 @@ export const cookieConfig = async (env: boolean = process.env.NODE_ENV === 'prod
 
 export const getCookie = async (key: string): Promise<Cookie | null> => {
   if (!key) throw new Error('No key was provided to the cookie getter.')
-  const cookie = (await cookies()).get(key)
+  const cookieStore = await cookies()
+  const cookie = cookieStore.get(key)
   return cookie && cookie.value && typeof cookie.value === 'string' ? cookie : null
 }
 
@@ -46,17 +46,14 @@ export const deleteCookie = async (key: string): Promise<void> => {
   }
 }
 
-export const validateCookieAgainstSchema = async <T>(key: string, schema: ZodSchema<T>): Promise<T | null> => {
-  if (!key) throw new Error('No key was provided to validateCookieAgainstSchema.')
+export const validateCookieAgainstSchema = async <T>(cookie: Cookie, key: string, schema: ZodSchema<T>): Promise<T | null> => {
+  if (!cookie || !cookie.value || typeof cookie.value !== 'string') return null
 
-    const cookie = (await cookies()).get(key)
-    if (!cookie || !cookie.value || typeof cookie.value !== 'string') return null
-
-    const parsed = schema.safeParse(cookie.value)
-    if (!parsed.success) {
-      console.warn(`Cookie validation failed for key "${key}":`, parsed.error.flatten())
-      return null
-    }
+  const parsed = schema.safeParse(cookie?.value)
+  if (!parsed.success) {
+    console.warn(`Cookie validation failed for key "${key}":`, parsed.error.flatten())
+    return null
+  }
 
   return parsed.data
 }
@@ -65,21 +62,36 @@ export const validateCookieAgainstSchema = async <T>(key: string, schema: ZodSch
 export const parseCookieValue = async (key: string, token: boolean = false): Promise<Record<string, unknown> | null> => {
   if (!key) throw new Error('No key was provided to parseCookieValue')
 
-  const cookie = await getCookie(key)
+  const cookie: Cookie | null = await getCookie(key)
   if (!cookie) return null
 
+  let rawValue: string | null = null
+
   try {
-    const parsedCookie = ParsedCookieSchema.safeParse(JSON.parse(cookie.value))
+    const parsedCookie = cookie.value ? ParsedCookieSchema.safeParse(JSON.parse(cookie.value)) : { success: false, error: new Error('Cookie value is undefined') }
     if (!parsedCookie.success) {
-      console.warn('Cookie missing or has an invalid value field.', parsedCookie.error.flatten())
+      if (parsedCookie.error instanceof ZodError) {
+        console.warn('Cookie missing or has an invalid value field.', parsedCookie.error.flatten())
+      } else {
+        console.warn('Cookie missing or has an invalid value field.', parsedCookie.error)
+      }
       return null
     }
 
-    const rawValue = parsedCookie.data.value
+    if (!parsedCookie.success) {
+      console.warn('Cookie parsing failed.', parsedCookie.error)
+      return null
+    }
+    if (parsedCookie.success) {
+      rawValue = (parsedCookie as SafeParseSuccess<{ value: string }>).data.value
+      // Proceed with rawValue
+    } else {
+      return null
+    }
 
     if (token) {
       try {
-        const decoded = decodeJwt(rawValue)
+        const decoded = rawValue ? decodeJwt(rawValue) : null
         const validatedDecoded = GenericPayloadSchema.safeParse(decoded)
         if (!validatedDecoded.success) {
           console.warn('Decoded JWT payload is invalid.', validatedDecoded.error.flatten())
@@ -93,7 +105,7 @@ export const parseCookieValue = async (key: string, token: boolean = false): Pro
       }
     } else {
       try {
-        const parsedValue = JSON.parse(rawValue)
+        const parsedValue = rawValue ? JSON.parse(rawValue) : null
         const validatedParsed = GenericPayloadSchema.safeParse(parsedValue)
         if (!validatedParsed.success) {
           console.warn('Parsed plain cookie value is invlaid.', validatedParsed.error.flatten())

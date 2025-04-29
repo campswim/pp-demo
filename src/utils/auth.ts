@@ -3,7 +3,7 @@
 // import jwt from 'jsonwebtoken'
 import { SignJWT, jwtVerify } from 'jose'
 import { JWTPayloadSchema, JWTPayload,  AuthCookieSchema } from '@/lib/schemata'
-import type {  } from '@/lib/schemata'
+import type { Cookie } from '@/lib/schemata'
 import { validateCookieAgainstSchema } from '@/utils/cookie'
 
 type CodeError = Error & { code?: string }
@@ -25,16 +25,16 @@ export const generateAccessToken = async (payload: JWTPayload): Promise<string> 
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('30m') // -> production setting = 1h
+    .setExpirationTime('1h') // -> production setting = 1h
     .sign(secret)
 }
 
-export const generateRefreshToken = async (payload: JWTPayload): Promise<string> => {
+export const generateRefreshToken = async (payload: JWTPayload): Promise<string> => {  
   const secret = await getSecretKey('refresh')
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('1h') // -> production setting = 30d
+    .setExpirationTime('30d') // -> production setting = 30d
     .sign(secret)
 }
 
@@ -76,9 +76,9 @@ export const refreshRefreshToken = async (refreshToken: JWTPayload): Promise<str
 }
 
 // Validate the auth cookie, set on sign-up or log-in.
-export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
-  const accessToken = await validateCookieAgainstSchema('auth', AuthCookieSchema)
-  if (!accessToken || !accessToken.value) return null
+export const validateAuthCookie = async (cookie: Cookie | null = null): Promise<JWTPayload | null> => {
+  const accessToken = cookie ? await validateCookieAgainstSchema(cookie, 'auth', AuthCookieSchema) : null
+  if (!accessToken) return null
 
   // Get the secret for JTW verification.
   const secret = await getSecretKey('auth')
@@ -106,9 +106,9 @@ export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
   }
 }
 
-export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
-  const refreshToken = await validateCookieAgainstSchema('refresh', AuthCookieSchema)
-  if (!refreshToken || !refreshToken.value) return null
+export const validateRefreshCookie = async (cookie: Cookie | null = null): Promise<JWTPayload | null> => {  
+  const refreshToken = cookie ? await validateCookieAgainstSchema(cookie, 'refresh', AuthCookieSchema) : null
+  if (!refreshToken) return null
 
   // Get the secret for JTW verification.
   const secret = await getSecretKey('refresh')
@@ -124,14 +124,14 @@ export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
     // Check the payload against a Zod schema.
     const parsedPayload = JWTPayloadSchema.safeParse(payload)
     if (!parsedPayload.success) {
-      console.warn('Invalid JWT payload:', parsedPayload.error?.flatten())
+      console.warn('Invalid JWT payload:', parsedPayload.error.flatten())
       return null
     }
 
     return parsedPayload.data
   } catch (err) {
     const error = err as CodeError
-    console.warn('Error parsing or validatin the refresh cookie:', error.code)
+    console.warn('Error parsing or validating the refresh cookie:', error.code)
     return null
   }
 }
@@ -147,7 +147,7 @@ export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
 //     const parsed = JSON.parse(accessToken)
 //     if (!parsed.value) return null
 
-//     const secret = await getSecretKey('access')
+//     const secret = await getSecretKey('auth')
 //     if (!secret) return null
 
 //     const { payload } = await jwtVerify(parsed.value, secret)

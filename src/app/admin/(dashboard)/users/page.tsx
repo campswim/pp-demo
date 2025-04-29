@@ -9,7 +9,7 @@
  */
 
 import { redirect } from 'next/navigation'
-import { validateAuthCookie } from '@/utils/auth'
+import { getUserSession } from '@/utils/userActions'
 import { getUsers } from '@/utils/userActions'
 import type { JWTPayload } from '@/lib/schemata'
 import NewUserForm from '@/components/createUserForm'
@@ -17,7 +17,7 @@ import UsersList from '@/components/usersList'
 
 export default async function Users() {
   // Redirect to the unauthorized page, when a user's role is not admin.
-  const user: JWTPayload | null = await validateAuthCookie()
+  const user: JWTPayload | null = await getUserSession()
   const role: string = typeof user?.role === 'string' ? user.role : ''
   const users = role ? await getUsers(role) : null
 

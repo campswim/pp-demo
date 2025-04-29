@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import type { JWTPayload } from '@/lib/schemata'
-import { validateAuthCookie } from '@/utils/auth'
+import { getUserSession } from '@/utils/userActions'
 import { logout } from '@/utils/userActions'
 
 export type LoggedInUser = {
@@ -28,13 +28,12 @@ const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined
 export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
   const [userId, setUserId] = useState<string | null>(user?.userId || null)
   const [role, setRole] = useState<string | null>(user?.role || 'guest')
-  // const initialRole = role ?? 'guest'
   const pathname = usePathname()
 
   useEffect(() => {
     // Get the auth cookie.
     const getAuthCookie = async () => {
-      const user: JWTPayload | null = await validateAuthCookie() 
+      const user: JWTPayload | null = await getUserSession() 
       
       if (user) {
         const newId: string | null = user?.userId ?? null
@@ -55,7 +54,7 @@ export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
       }
     }
     getAuthCookie()
-  }, [userId, pathname])
+  }, [user, userId, pathname])
 
   return (
     <LoggedInContext.Provider value={{ userId, setUserId, role, setRole }}>
