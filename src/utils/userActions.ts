@@ -181,7 +181,7 @@ export const logout = async (id: string | null = null): Promise<void> => {
     console.warn('Logout failed: ', err)
   }
 
-  // redirect('/login')
+  // redirect('/login') // Redirecting from the navbar.
 }
 
 // Get the user's session.

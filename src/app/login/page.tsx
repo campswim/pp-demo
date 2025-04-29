@@ -11,10 +11,8 @@ export default function Login() {
   const router = useRouter()
 
   useEffect(() => {
-    if (role && role !== 'guest') {
-      router.push('/')
-    }
-  }, [role, router])
+    if (role && role !== 'guest') router.push('/?login=true')
+  })
 
   return (
     <form 
