@@ -75,7 +75,8 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
                   <Link href='/' onClick={async (e) => {
                     e.preventDefault()
                     await logout(userId)
-                    router.push('/login')
+                    // router.push('/login')
+                    window.location.href = '/login' // This reloads the page from the server, re-evaluates cookies/session, and forces a fresh useLoggedIn() context.
                   }}>
                     {item.name}
                   </Link>

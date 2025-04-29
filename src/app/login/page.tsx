@@ -1,44 +1,29 @@
 'use client'
 
-import { 
-  useActionState, 
-  // useEffect 
-} from 'react'
-// import { useRouter } from 'next/navigation'
+import { useActionState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { login } from '@/utils/userActions'
+import { useLoggedIn } from '@/context/loggedIn'
 
 export default function Login() {
   const [state, action, pending] = useActionState(login, undefined)
-  // const router = useRouter()
-  let username = state?.user?.email?.split('@')[0]
-  username = username ? username[0]?.toUpperCase() + username?.slice(1) : ''
+  const { role } = useLoggedIn()
+  const router = useRouter()
 
-  // useEffect(() => {
-  //   if (state?.message) {
-  //     const timeout = setTimeout(() => {
-  //       router.push('/')
-  //     }, 4000)
-  //     return () => clearTimeout(timeout)
-  //   }
-  // })
+  useEffect(() => {
+    if (role && role !== 'guest') {
+      router.push('/')
+    }
+  }, [role, router])
 
-  return state?.message ? 
-  (
-    <div className='flex flex-col items-center w-1/4 mx-auto md:p-8 p-3'>
-      <h2 className='text-lg font-bold mb-4'>{username ? state.message + ', ' + username : state.message}.</h2>
-      {/* <p className='text-gray-500'>{state?.errors?.email}</p>
-      <p className='text-gray-500'>{state?.errors?.password}</p> */}
-    </div>
-  )
-  :
-  (
+  return (
     <form 
       action={action}
       className='flex flex-col items-center w-1/4 mx-auto md:p-8 p-3' 
       autoComplete='on'
     >
       <div className='mb-4 w-full'>
-        {/* <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='username'>
+        {/* <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='email'>
           Username
         </label> */}
         <input
@@ -69,15 +54,14 @@ export default function Login() {
         disabled={pending}
         type='submit'
         className='w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-        Login
+        {pending ? 'Stand By' : 'Log In'}
       </button>
-      {state?.errors?.email && <p>{state.errors.email}</p>}
+      {state?.errors?.email && <p className='my-3'>{state.errors.email}</p>}
       {state?.errors?.password && (
-        <div>
-          <p>Password must:</p>
+        <div className='my-3'>
           <ul>
             {state.errors.password.map((error) => (
-              <li key={error}>- {error}</li>
+              <li key={error}>{error}</li>
             ))}
           </ul>
         </div>

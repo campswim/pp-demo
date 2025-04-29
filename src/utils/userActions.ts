@@ -158,7 +158,7 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
   await setCookie('auth', accessToken)
   await setCookie('refresh', refreshToken)
 
-  redirect('/')
+  return { user, message: 'Welcome back'}
 }
 
 // Log a user out.
@@ -181,7 +181,7 @@ export const logout = async (id: string | null = null): Promise<void> => {
     console.warn('Logout failed: ', err)
   }
 
-  redirect('/login')
+  // redirect('/login')
 }
 
 // Get the user's session.
