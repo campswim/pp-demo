@@ -3,7 +3,7 @@
 import db from '@/utils/db'
 import bcrypt from 'bcryptjs'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
+// import { redirect } from 'next/navigation'
 import { User } from '@/generated/prisma'
 import { SignupFormSchema, FormState, JWTPayload, Cookie } from '@/lib/schemata'
 import { UserActionsProps } from '@/lib/types'
