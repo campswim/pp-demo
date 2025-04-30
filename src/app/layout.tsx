@@ -4,6 +4,7 @@ import './globals.css'
 import Navbar from '@/components/navbar'
 import { navItems } from '@/data/navItems'
 import { LoggedInProvider } from '@/context/loggedIn'
+import { ThemeProvider } from '@/context/theme'
 import { getUserSession } from '@/utils/userActions'
 
 const geistSans = Geist({
@@ -27,16 +28,23 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const user = await getUserSession()
   
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <LoggedInProvider user={user || null}>
-          {/* {needsRefresh && user && <RefreshSession payload={user} />}
-          {needsLogout && user && <Logout userId={user?.userId} />} */}
-          <Navbar items={navItems} />
-          <main className='flex flex-col w-[90%] m-auto min-h-screen'>
-            {children}
-          </main>
-        </LoggedInProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LoggedInProvider user={user || null}>
+            {/* {needsRefresh && user && <RefreshSession payload={user} />}
+            {needsLogout && user && <Logout userId={user?.userId} />} */}
+            <Navbar items={navItems} />
+            <main className='flex flex-col w-[90%] m-auto min-h-screen'>
+              {children}
+            </main>
+          </LoggedInProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

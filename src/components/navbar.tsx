@@ -6,7 +6,9 @@ import Link from 'next/link'
 import { NavItem } from '@/data/navItems'
 import { useLoggedIn } from '@/context/loggedIn'
 import { logout } from '@/utils/userActions'
-import { useRouter } from 'next/navigation'
+import { ModeToggle } from '@/components/modeToggle'
+// import { useRouter } from 'next/navigation'
+
 
 interface NavbarProps {
   items: NavItem[]
@@ -16,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
   const [pathname, setPathname] = useState<string>(usePathname())
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
   const { userId, role } = useLoggedIn()
-  const router = useRouter()
+  // const router = useRouter()
 
   // Check if the current pathname matches the item URL.
   const isActive = (pagename: string) => pathname === pagename ? 'text-blue-500' : ''
@@ -45,64 +47,69 @@ const Navbar: React.FC<NavbarProps> = ({ items }) => {
 
   return (
     <nav className='flex flex-col justify-end min-h-40 pb-6'>
-      <h1 className='text-white text-3xl font-bold w-[90%] mx-auto'>
+      <h1 className='text-3xl font-bold w-[90%] mx-auto'>
         <Link href='/' className='hover:text-blue-500'>
           Phone & Pin
         </Link>
       </h1>
-      <span className='border-t-2 border-white'></span>
-      <div className="flex items-center gap-4 w-[90%] mx-auto">
-        {items && items.length > 0 && items.map(item => (
-          canRender(item) && (
-            <div
-              key={item.id}
-              className='flex flex-col relative group'
-              onMouseEnter={() => handleGroupMouseEnter(item.id)}
-              onMouseLeave={handleGroupMouseLeave}
-            >
-              <div className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}>
-                { item.url !== '/user/logout' ? (
-                  <Link
-                    href={item.url}
-                    className={`text-lg font-semibold ${isActive(item.url)}`}
-                    onClick={() => handleLinkClick(item.url)}
-                  >
-                    {item.name}
-                  </Link>
-                )
-                :
-                (
-                  <Link href='/' onClick={async (e) => {
-                    e.preventDefault()
-                    await logout(userId)
-                    // router.push('/login')
-                    window.location.href = '/login' // This reloads the page from the server, re-evaluates cookies/session, and forces a fresh useLoggedIn() context.
-                  }}>
-                    {item.name}
-                  </Link>
+      <span className='border-t-2'></span>
+      <div className='flex'>
+        <div className="flex items-center gap-4 w-[90%] mx-auto">
+          {items && items.length > 0 && items.map(item => (
+            canRender(item) && (
+              <div
+                key={item.id}
+                className='flex flex-col relative group'
+                onMouseEnter={() => handleGroupMouseEnter(item.id)}
+                onMouseLeave={handleGroupMouseLeave}
+              >
+                <div className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}>
+                  { item.url !== '/user/logout' ? (
+                    <Link
+                      href={item.url}
+                      className={`text-lg font-semibold ${isActive(item.url)}`}
+                      onClick={() => handleLinkClick(item.url)}
+                    >
+                      {item.name}
+                    </Link>
+                  )
+                  :
+                  (
+                    <Link href='/' onClick={async (e) => {
+                      e.preventDefault()
+                      await logout(userId)
+                      // router.push('/login')
+                      window.location.href = '/login' // This reloads the page from the server, re-evaluates cookies/session, and forces a fresh useLoggedIn() context.
+                    }}>
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
+
+                {/* Show submenu only if the parent is hovered (activeItemId) */}
+                {item.subItems && item.subItems.length > 0 && activeItemId === item.id && (
+                  <div className='absolute left-5 top-7 w-[13rem] flex flex-col gap-1 whitespace-nowrap bg-black p-3 rounded shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
+                    {item.subItems.map(sub => (
+                      canRender(sub) && (
+                        <Link
+                          key={sub.id}
+                          href={sub.url}
+                          className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
+                          onClick={() => handleLinkClick(sub.url)}
+                        >
+                          {sub.name}
+                        </Link>
+                      )
+                    ))}
+                  </div>
                 )}
               </div>
-
-              {/* Show submenu only if the parent is hovered (activeItemId) */}
-              {item.subItems && item.subItems.length > 0 && activeItemId === item.id && (
-                <div className='absolute left-5 top-7 w-[13rem] flex flex-col gap-1 whitespace-nowrap bg-black p-3 rounded shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
-                  {item.subItems.map(sub => (
-                    canRender(sub) && (
-                      <Link
-                        key={sub.id}
-                        href={sub.url}
-                        className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
-                        onClick={() => handleLinkClick(sub.url)}
-                      >
-                        {sub.name}
-                      </Link>
-                    )
-                  ))}
-                </div>
-              )}
-            </div>
-          )
-        ))}
+            )
+          ))}
+        </div>
+        <div className='cursor-pointer mx-6 mt-2'>
+          <ModeToggle />
+        </div>
       </div>
     </nav>
   )

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { deleteUser } from '@/utils/userActions'
-import { GridLoader } from "react-spinners"
+import { GridLoader } from 'react-spinners'
 
 
 const DeleteUserButton = ({ userId }: { userId: string }) => {
