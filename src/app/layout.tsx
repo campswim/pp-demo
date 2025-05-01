@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/navbar'
-import { navItems } from '@/data/navItems'
+import Navbar from '@/components/navbar/navbar'
 import { LoggedInProvider } from '@/context/loggedIn'
 import { ThemeProvider } from '@/context/theme'
 import { getUserSession } from '@/utils/userActions'
+import Container from '@/components/global/Container'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -39,10 +39,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <LoggedInProvider user={user || null}>
             {/* {needsRefresh && user && <RefreshSession payload={user} />}
             {needsLogout && user && <Logout userId={user?.userId} />} */}
-            <Navbar items={navItems} />
-            <main className='flex flex-col min-h-screen'>
-              {children}
-            </main>
+            <Navbar />
+            <Container>
+              <main className='flex flex-col min-h-screen'>
+                {children}
+              </main>
+            </Container>
           </LoggedInProvider>
         </ThemeProvider>
       </body>
