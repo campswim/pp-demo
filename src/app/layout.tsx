@@ -5,7 +5,7 @@ import Navbar from '@/components/navbar/navbar'
 import { LoggedInProvider } from '@/context/loggedIn'
 import { ThemeProvider } from '@/context/theme'
 import { getUserSession } from '@/utils/userActions'
-import Container from '@/components/global/Container'
+import Container from '@/components/global/container'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
