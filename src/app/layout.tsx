@@ -40,7 +40,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             {/* {needsRefresh && user && <RefreshSession payload={user} />}
             {needsLogout && user && <Logout userId={user?.userId} />} */}
             <Navbar items={navItems} />
-            <main className='flex flex-col w-[90%] m-auto min-h-screen'>
+            <main className='flex flex-col min-h-screen'>
               {children}
             </main>
           </LoggedInProvider>
