@@ -42,7 +42,7 @@ const NavLinks= () => {
   }
 
   return (
-    <div className='flex'>
+    <div className='flex py-1'>
       <div className="flex items-center gap-4">
         {navItems && navItems.length > 0 && navItems.map(item => (
           canRender(item) && (
