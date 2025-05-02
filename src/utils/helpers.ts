@@ -13,7 +13,8 @@ export const formatHeaders = (headers: string[]) => {
   return formattedHeaders
 }
 
-export const getPlaceholders = (demo: boolean) => ({
-  email: demo ? 'Enter any email address, real or fake.' : 'Email',
-  password: demo ? 'Enter anything as a password.' : 'Password',
+export const getPlaceholders = (caller: string) => ({
+  name: caller === 'demo' ? 'Enter any name, real or fake.' : 'Name',
+  email: caller === 'demo' ? 'Enter any email address, real or fake.' : 'Email',
+  password: caller === 'demo' ? 'Enter anything as a password.' : 'Password',
 })
