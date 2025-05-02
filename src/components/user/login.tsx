@@ -21,7 +21,8 @@ const Login = ({ demo = false }: { demo?: boolean }) => {
     if (!demo && role && role !== 'guest') router.push('/?login=true')
   })
 
-  console.log({demo, emailPlaceholder, pwdPlaceholder})
+  if (state?.message && state.message === 'success') router.push('/demo/start')
+
   return (
     <form 
       action={action}
@@ -63,7 +64,8 @@ const Login = ({ demo = false }: { demo?: boolean }) => {
       {state?.errors?.email && <p className='my-3'>{state.errors.email}</p>}
       {state?.errors?.password && (
         <div className='my-3'>
-          <ul>
+          <p>The password must: </p>
+          <ul className='list-disc pl-5'>
             {state.errors.password.map((error) => (
               <li key={error}>{error}</li>
             ))}
