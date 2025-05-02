@@ -1,11 +1,11 @@
 import { z } from 'zod'
  
 export const SignupFormSchema = z.object({
-  // name: z
-  //   .string()
-  //   .min(2, { message: 'Name must be at least 2 characters long.' })
-  //   .trim(),
-  email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
+  username: z
+    .string()
+    .min(2, { message: 'Your username must be at least 2 characters long.' })
+    .trim(),
+  // email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
   password: z
     .string()
     .min(5, { message: 'be at least 5 characters long.' })
@@ -17,11 +17,15 @@ export const SignupFormSchema = z.object({
     .trim(),
 })
 
-export const DemoLoginFormSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
+export const DemoSignupFormSchema = z.object({
+  username: z
+    .string()
+    .min(2, { message: 'Your username must be at least 2 characters long.' })
+    .trim(),
+  // email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
   password: z
     .string()
-    .min(1, { message: 'be at least 1 characters long.' })
+    .min(5, { message: 'be at least 5 characters long.' })
 })
  
 export type FormState =
@@ -30,6 +34,7 @@ export type FormState =
         name?: string[]
         email?: string[]
         password?: string[]
+        phone?: string[]
       }
       message?: string
       user?: {
@@ -51,7 +56,8 @@ export type Cookie = z.infer<typeof CookieSchema>
 // 1a. Create a schema for the inner JWT payload.
 export const JWTPayloadSchema = z.object({
   userId: z.string(),
-  email: z.string(),
+  username: z.string(),
+  // email: z.string(),
   role: z.string(),
   iat: z.number().optional(),
   exp: z.number().optional()
@@ -84,5 +90,5 @@ export const AuthCookieSchema = z.string().transform((val, ctx) => {
 // The outer cookie shape.
 export const ParsedCookieSchema = z.object({ value: z.string() })
 
-// generic inner object shape (losse: accepts any object).
+// The generic shape of the cookie's inner object (accepts any object).
 export const GenericPayloadSchema = z.record(z.unknown())
