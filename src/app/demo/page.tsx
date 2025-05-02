@@ -1,6 +1,8 @@
+import Login from '@/components/user/login'
+
 const Demo = () => {
   return (
-    <h1>Demo Page</h1>
+    <Login demo={true}/>
   )
 }
 

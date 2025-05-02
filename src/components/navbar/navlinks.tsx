@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { NavItem } from '@/data/navItems'
 import { useLoggedIn } from '@/context/loggedIn'
 import { logout } from '@/utils/userActions'
-import { ModeToggle } from '@/components/modeToggle'
+import { ModeToggle } from '@/components/ui/mode-toggle'
 import { navItems } from '@/data/navItems'
 
 const NavLinks= () => {

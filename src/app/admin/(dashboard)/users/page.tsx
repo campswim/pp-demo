@@ -14,8 +14,8 @@ import { getPrismaSchemaFields } from '@/utils/meta'
 import { getUsers } from '@/utils/userActions'
 import { formatHeaders } from '@/utils/helpers'
 import type { JWTPayload } from '@/lib/schemata'
-import NewUserForm from '@/components/createUserForm'
-import UsersList from '@/components/usersList'
+import NewUserForm from '@/components/user/createUserForm'
+import UsersList from '@/components/user/usersList'
 
 export default async function Users() {
   // Redirect to the unauthorized page, when a user's role is not admin.

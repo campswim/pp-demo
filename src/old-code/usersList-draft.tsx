@@ -1,4 +1,4 @@
-import DeleteUserButton from '@/components/deleteUserButton'
+import DeleteUserButton from '@/components/user/deleteUserButton'
 
 interface User {
   id: string

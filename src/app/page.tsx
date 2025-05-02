@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import WelcomeMessage from '@/components/welcomeMessage'
+import WelcomeMessage from '@/components/user/welcomeMessage'
 
 export default function Home() {
   return (
