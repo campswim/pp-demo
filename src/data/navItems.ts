@@ -9,7 +9,7 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { id: 1, type: 'public', name: 'Register', url: '/signup' },
   { id: 2, type: 'public', name: 'Log In', url: '/login' },
-  { id: 3, type: 'user', name: 'Demo', url: 'demo' },
+  { id: 3, type: 'user', name: 'Demo', url: '/demo' },
   { id: 4, type: 'user', name: 'Profile', url: '/user/profile' },
   {
     id: 5,
