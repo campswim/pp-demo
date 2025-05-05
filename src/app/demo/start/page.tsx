@@ -1,6 +1,7 @@
 import GridLoaderClient from '@/components/ui/grid-loader'
 
 const DemoStart = () => {
+  
   return (
     <div>
       <p>Thanks for logging in.</p>
