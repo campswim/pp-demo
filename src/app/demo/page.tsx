@@ -1,9 +1,6 @@
 import Login from '@/components/user/login'
+import { demoLogin } from '@/utils/demoActions'
 
-const Demo = () => {
-  return (
-    <Login demo={true}/>
-  )
+export default function Demo() {
+  return <Login caller='demo' userAction={demoLogin} />
 }
-
-export default Demo
