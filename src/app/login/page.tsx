@@ -1,7 +1,6 @@
 import Login from '@/components/user/login'
+import { login } from '@/utils/userActions'
 
-const LoginPage = () => {
-  return <Login />
+export default function LoginPage() {
+  return <Login caller='login' userAction={login} />
 }
-
-export default LoginPage

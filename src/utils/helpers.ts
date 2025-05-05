@@ -14,7 +14,7 @@ export const formatHeaders = (headers: string[]) => {
 }
 
 export const getPlaceholders = (caller: string) => ({
-  name: caller === 'demo' ? 'Enter any name, real or fake.' : 'Name',
+  username: 'Username',
   email: caller === 'demo' ? 'Enter any email address, real or fake.' : 'Email',
   password: caller === 'demo' ? 'Enter anything as a password.' : 'Password',
 })

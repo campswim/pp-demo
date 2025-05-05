@@ -9,7 +9,7 @@ const WelcomeMessage = () => {
   const searchParams = useSearchParams()
   const isRegistration = searchParams.get('register') === 'true'
   const isLogin = searchParams.get('login') === 'true'
-  const welcomeMessage = usernameFormatted && isRegistration ? `Welcome, ${usernameFormatted}.` : usernameFormatted && isLogin ? `Welcome back, ${usernameFormatted}.` : 'Welcome back.'
+  const welcomeMessage = usernameFormatted && isRegistration ? `Welcome, ${usernameFormatted}.` : usernameFormatted && isLogin ? `Welcome back, ${usernameFormatted}.` : ''
 
   return (isLogin || isRegistration) && (
     <div>{welcomeMessage}</div>

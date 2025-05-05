@@ -14,6 +14,8 @@ export type LoggedInUser = {
 type LoggedInContextType = {
   userId: string | null
   setUserId: (userId: string) => void
+  username: string | null
+  setUsername: (username: string) => void
   role: string | null
   setRole: (role: string) => void
 }
@@ -27,6 +29,7 @@ const LoggedInContext = createContext<LoggedInContextType | undefined>(undefined
 
 export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
   const [userId, setUserId] = useState<string | null>(user?.userId || null)
+  const [username, setUsername] = useState<string | null>(user?.username || null)
   const [role, setRole] = useState<string | null>(user?.role || 'guest')
   const pathname = usePathname()
 
@@ -37,9 +40,11 @@ export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
       
       if (user) {
         const newId: string | null = user?.userId ?? null
+        const newUsername: string | null= user?.username ?? null
         const newRole: string = user?.role ?? 'guest'
         if (newId !== userId) {
           setUserId(newId)
+          setUsername(newUsername)
           setRole(newRole)
         }
       } else {
@@ -57,7 +62,7 @@ export function LoggedInProvider({ children, user }: LoggedInProviderProps) {
   }, [user, userId, pathname])
 
   return (
-    <LoggedInContext.Provider value={{ userId, setUserId, role, setRole }}>
+    <LoggedInContext.Provider value={{ userId, setUserId, username, setUsername, role, setRole }}>
       {children}
     </LoggedInContext.Provider>
   )

@@ -16,10 +16,16 @@ export const getUserById = async (id: string) => {
   return await db.user.findUnique({ where: { id } })
 }
 
-// Get user by email.
-export const getUserByEmail = async (email: string) => {
-  if (!email) throw new Error('No email was provided to the get-user-by-email function.')
-  return await db.user.findUnique({ where: { email }})
+// // Get user by email. [Email is not currently being used at all.]
+// export const getUserByEmail = async (email: string) => {
+//   if (!email) throw new Error('No email was provided to the get-user-by-email function.')
+//   return await db.user.findUnique({ where: { email }})
+// }
+
+// Get user by username.
+export const getUserByUsername = async(username: string) => {
+  if (!username) throw new Error('No username was provided to the get-user-by-username function.')
+    return await db.user.findUnique({ where: { username }})
 }
 
 // Get all users from the database.
@@ -34,7 +40,8 @@ export const createUser = async (prevState: UserActionsProps, formData: FormData
 
   try {
     const user: NewUser = {
-      email: formData.get('email') as string,
+      username: formData.get('username') as string,
+      // email: formData.get('email') as string,
       role: formData.get('role') as string,
       password: formData.get('password') as string,
     }
@@ -76,8 +83,8 @@ export const deleteUser = async (userId: string) => {
 export const signup = async (state: FormState, formData: FormData): Promise<FormState> => {
   // 1a. Validate form fields.
   const validatedFields = SignupFormSchema.safeParse({
-    // name: formData.get('name'),
-    email: formData.get('email'),
+    username: formData.get('username'),
+    // email: formData.get('email'),
     password: formData.get('password'),
   })
  
@@ -85,27 +92,39 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   if (!validatedFields.success) return { errors: validatedFields.error.flatten().fieldErrors }
 
   // 2. Prepare data for insertion into database.
-  const { email, password } = validatedFields.data
+  const { 
+    username, 
+    // email, 
+    password 
+  } = validatedFields.data
   const hashedPassword = await bcrypt.hash(password, 10)
 
   // 3. Check if the user already exists.
-  const existingUser = await db.user.findUnique({ where: { email }})
+  const existingUser = await db.user.findUnique({ where: { username }})
 
-  if (existingUser) return { errors: { email: ['This email has already been registered.'] }}
+  if (existingUser) return { errors: { email: ['This username has already been registered.'] }}
 
   // 3. Insert the user into the database.
   const newUser = await db.user.create({
     data: {
-      email,
+      username,
+      // email,
       password: hashedPassword,
+      loggedIn: true
     },
-    select: { id: true, email: true, role: true }
+    select: { 
+      id: true, 
+      username: true,
+      // email: true, 
+      role: true 
+    }
   })
 
   // 4. Generate the access and refresh tokens.
   const payload = {
     userId: newUser.id,
-    email: newUser.email,
+    username: newUser.username,
+    // email: newUser.email,
     role: newUser.role
   }
   const accessToken: string = await generateAccessToken(payload)
@@ -116,13 +135,14 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   await setCookie('refresh', refreshToken)
 
   // 6. Return a success message.
-  return { message: 'Welcome to the Phone & Pin demo', user: newUser }
+  return { message: 'Registration was successful' }
 }
 
 // Log a user in.
 export const login = async (state: FormState, formData: FormData): Promise<FormState> => {
   // 1a. Validate form fields.
   const validateFields = SignupFormSchema.safeParse({
+    name: formData.get('name'),
     email: formData.get('email'),
     password: formData.get('password'),
   })
@@ -131,8 +151,13 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
   if (!validateFields.success) return { errors: validateFields.error.flatten().fieldErrors }
 
   // 2. Get the user from the db.
-  const { email, password } = validateFields.data
-  const user = await getUserByEmail(email)
+  const { 
+    username, 
+    // email, 
+    password 
+  } = validateFields.data
+  // const user = await getUserByEmail(email)
+  const user = await getUserByUsername(username)
   if (!user) return { errors: { email: ['This email is not registered.'] } }
 
   // 3. Check if the password is correct.
@@ -142,7 +167,8 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
   // 4. Generate access and refresh tokens.
   const payload = {
     userId: user.id,
-    email: user.email,
+    username: user.username,
+    // email: user.email,
     role: user.role,
   }  
   const accessToken: string = await generateAccessToken(payload)
@@ -158,7 +184,7 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
   await setCookie('auth', accessToken)
   await setCookie('refresh', refreshToken)
 
-  return { user, message: 'Welcome back'}
+  return { message: 'Log-in was successful.'}
 }
 
 // Log a user out.
