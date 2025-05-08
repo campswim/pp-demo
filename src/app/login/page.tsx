@@ -1,6 +1,5 @@
-import Login from '@/components/user/login'
-import { login } from '@/utils/userActions'
+import LoginForm from '@/components/user/login-form'
 
 export default function LoginPage() {
-  return <Login caller='login' userAction={login} />
+  return <LoginForm caller='login' />
 }

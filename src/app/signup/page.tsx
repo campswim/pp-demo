@@ -1,6 +1,5 @@
-import Login from '@/components/user/login'
-import { signup } from '@/utils/userActions'
+import LoginForm from '@/components/user/login-form'
 
 export default function Signup() {
-  return <Login caller='register' userAction={signup} />
+  return <LoginForm caller='register' />
 }
