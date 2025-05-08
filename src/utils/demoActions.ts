@@ -1,34 +1,10 @@
-import twilio from 'twilio'
 import bcrypt from 'bcryptjs'
+import { redirect } from 'next/navigation'
 import db from '@/utils/db'
-import { getUserByEmail } from './userActions'
+import { getUserByUsername } from '@/utils/userActions'
 import { DemoSignupFormSchema, FormState } from '@/lib/schemata'
 
-// Initiate the authentication call from Twilio.
-const initiateCall = async (phoneNumber: string) => {
-  if (!phoneNumber) throw new Error('No phone number was provided to the initiateCall function.')
-
-  // Instantiate the Twilio instance.
-  const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID!,
-    process.env.TWILIO_AUTH_TOKEN!
-  )
-
-  try {
-    const call = await client.calls.create({
-      to: phoneNumber, // -> string with `+` prefix.
-      from: process.env.TWILIO_PHONE_NUMBER!,
-      url: `${process.env.BASE_URL}/api/voice/voice-entry`,
-      method: 'POST'
-    })
-    return call
-  } catch (err) {
-    console.error('Call failed:', err)
-    throw new Error('FAiled to initiate the call.')
-  }
-}
-
-// Register a user.
+// Register a user. [Not in use: just using the app's registered users.]
 export const demoSignup = async (state: FormState, formData: FormData): Promise<FormState> => {
   // 1a. Validate form fields.
   const validatedFields = DemoSignupFormSchema.safeParse({
@@ -67,7 +43,7 @@ export const demoSignup = async (state: FormState, formData: FormData): Promise<
 export const demoLogin = async (state: FormState, formData: FormData): Promise<FormState> => {
   // Validate form fields.
   const validateFields = DemoSignupFormSchema.safeParse({
-    email: formData.get('email'),
+    username: formData.get('username'),
     password: formData.get('password'),
   })
 
@@ -75,18 +51,14 @@ export const demoLogin = async (state: FormState, formData: FormData): Promise<F
   if (!validateFields.success) return { errors: validateFields.error.flatten().fieldErrors }
 
   // Get the user from the db.
-  const { email, password } = validateFields.data
-  const user = await getUserByEmail(email)
-  if (!user) return { errors: { email: ['This email is not registered.'] } }
+  const { username, password } = validateFields.data
+  const user = await getUserByUsername(username)
+  if (!user) return { errors: { username: ['This username is not registered.'] } }
 
   // Check if the password is correct.
   const isPasswordValid = await bcrypt.compare(password, user.password)
   if (!isPasswordValid) return { errors: { password: ['The password is incorrect.'] } }
 
-  // Initiate the auth phone call.
-  if (user?.phone) initiateCall(user.phone)
-  else return { errors: { phone: ['Please add a phone number to your profile to complete the sign-in procedure.']}}
-
-  // Return success to initiate the redirect to the /demo/start page.
-  return { message: 'success' }
+  // Redirect to the /demo/start page.
+  redirect('/demo/start')
 }
