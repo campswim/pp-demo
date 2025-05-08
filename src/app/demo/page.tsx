@@ -1,6 +1,5 @@
-import Login from '@/components/user/login'
-import { demoLogin } from '@/utils/demoActions'
+import LoginForm from '@/components/user/login-form'
 
 export default function Demo() {
-  return <Login caller='demo' userAction={demoLogin} />
+  return <LoginForm caller='demo' />
 }
