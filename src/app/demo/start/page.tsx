@@ -1,12 +1,17 @@
 import GridLoaderClient from '@/components/ui/grid-loader'
+import { initiateCall } from '@/utils/voice'
 
-const DemoStart = () => {
-  
+const DemoStart = async () => {
+
+  const call = await initiateCall()
+
+  console.log({call})
+
   return (
     <div>
       <p>Thanks for logging in.</p>
-      <p>Please stand by for an incoming phone call.</p>
-      <p>Have your safe word and PIN at the ready.</p>
+      <p>Stand by for an incoming call to your phone on record.</p>
+      <p>Please have your safe word and PIN at the ready.</p>
       <GridLoaderClient />
     </div>
   )
