@@ -1,6 +1,6 @@
 import { z } from 'zod'
  
-export const SignupFormSchema = z.object({
+export const LoginFormSchema = z.object({
   username: z
     .string()
     .min(2, { message: 'Your username must be at least 2 characters long.' })
@@ -15,13 +15,16 @@ export const SignupFormSchema = z.object({
     //   message: 'Contain at least one special character.',
     // })
     .trim(),
-  phone: z
+  })
+
+export const SignupFormSchema = LoginFormSchema.extend({
+    phone: z
     .string()
     .trim()
     .regex(/^\+?[\d\s().-]{7,20}$/, {
       message: 'Please enter a valid phone number.',
-    }),
-  })
+    })
+})
 
 export const DemoSignupFormSchema = z.object({
   username: z
@@ -37,15 +40,14 @@ export const DemoSignupFormSchema = z.object({
 export type FormState =
   | {
       errors?: {
-        name?: string[]
-        email?: string[]
+        username?: string[]
         password?: string[]
         phone?: string[]
       }
       message?: string
       user?: {
         id?: string
-        email?: string
+        username?: string
         role?: string
         token?: string
       }
