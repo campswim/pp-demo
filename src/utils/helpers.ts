@@ -18,7 +18,7 @@ export const formatHeaders = (headers: string[]) => {
 // Determine input fields' placeholder text.
 export const getPlaceholders = (caller: string) => ({
   username: 'Username',
-  phone: caller === 'demo' ? 'Enter a real phone number' : 'Phone',
+  phone: caller === 'demo' ? 'Enter a real phone number.' : 'Phone',
   password: caller === 'demo' ? 'Enter anything as a password.' : 'Password',
 })
 
