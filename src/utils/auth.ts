@@ -5,6 +5,8 @@ import { SignJWT, jwtVerify } from 'jose'
 import { JWTPayloadSchema, JWTPayload,  AuthCookieSchema } from '@/lib/schemata'
 import type { Cookie } from '@/lib/schemata'
 import { validateCookieAgainstSchema } from '@/utils/cookie'
+import { getUserById } from '@/utils/userActions'
+import { deleteCookie } from '@/utils/cookie'
 
 type CodeError = Error & { code?: string }
 
@@ -45,7 +47,7 @@ export const refreshAccessToken = async (refreshToken: JWTPayload): Promise<stri
   try {
     const payload: JWTPayload = {
       userId: refreshToken?.userId,
-      email: refreshToken?.email,
+      username: refreshToken?.username,
       role: refreshToken?.role
     }
     const newAccessToken = await generateAccessToken(payload)
@@ -62,7 +64,7 @@ export const refreshRefreshToken = async (refreshToken: JWTPayload): Promise<str
 
   const payload: JWTPayload = {
     userId: refreshToken?.userId,
-    email: refreshToken?.email,
+    username: refreshToken?.username,
     role: refreshToken?.role
   }
 
@@ -98,7 +100,16 @@ export const validateAuthCookie = async (cookie: Cookie | null = null): Promise<
       return null
     }
 
-    return parsedPayload.data
+    // Check to see whether the user still exists in the DB.
+    const haveUser = await getUserById(parsedPayload.data?.userId) !== null
+
+    if (!haveUser) {
+      await deleteCookie('auth')
+      await deleteCookie('refresh')
+      return null
+    } else {
+      return parsedPayload.data
+    }
   } catch (err) {
     const error = err as CodeError
     console.warn('Error parsing or validating the auth cookie:', error.code)
@@ -106,7 +117,7 @@ export const validateAuthCookie = async (cookie: Cookie | null = null): Promise<
   }
 }
 
-export const validateRefreshCookie = async (cookie: Cookie | null = null): Promise<JWTPayload | null> => {  
+export const validateRefreshCookie = async (cookie: Cookie | null = null): Promise<JWTPayload | null> => { 
   const refreshToken = cookie ? await validateCookieAgainstSchema(cookie, 'refresh', AuthCookieSchema) : null
   if (!refreshToken) return null
 
@@ -135,63 +146,3 @@ export const validateRefreshCookie = async (cookie: Cookie | null = null): Promi
     return null
   }
 }
-
-// // Validate the auth cookie, set on sign-up or log-in. [Not in use: see the eponymous version, which uses Zod to parse.]
-// export const validateAuthCookie = async (): Promise<JWTPayload | null> => {
-//   const authCookie = await getCookie('auth')
-//   const accessToken = authCookie?.value
-
-//   if (!accessToken) return null
-
-//   try {
-//     const parsed = JSON.parse(accessToken)
-//     if (!parsed.value) return null
-
-//     const secret = await getSecretKey('auth')
-//     if (!secret) return null
-
-//     const { payload } = await jwtVerify(parsed.value, secret)
-//     const result = JWTPayloadSchema.safeParse(payload)
-
-//     if (!result.success) {
-//       console.warn('The decode JWT is invalid:', result.error)
-//       return null
-//     }
-
-//     return result.data
-//   } catch (err) {
-//     const error = err as CodeError
-//     console.warn('Error parsing or validating the auth cookie: ', error.code)
-//     return null
-//   }
-// }
-
-// // Validate the refresh cookie, set on sign-up or log-in. [Not in use: see the eponymous version, which uses Zod to parse.]
-// export const validateRefreshCookie = async (): Promise<JWTPayload | null> => {
-//   const refreshCookie = await getCookie('refresh')
-//   const refreshData = refreshCookie?.value
-
-//   if (!refreshData || !refreshData.value) return null
-
-//   try {
-//     const parsed = JSON.parse(refreshData)
-//     if (!parsed.value) return null
-
-//     const secret = await getSecretKey('refresh')
-//     if (!secret) return null
-
-//     const { payload } = await jwtVerify(parsed.value, secret)
-//     const result = JWTPayloadSchema.safeParse(payload)
-
-//     if (!result.success) {
-//       console.warn('The decode JWT is invalid:', result.error)
-//       return null
-//     }
-
-//     return result.data
-//   } catch (err) {
-//     const error = err as CodeError
-//     console.warn('Error parsing or validating the refresh cookie: ', error.code)
-//     return null
-//   }
-// }
