@@ -1,4 +1,5 @@
 import twilio from 'twilio'
+import db from '@/utils/db'
 import { decrypt } from '@/utils/encrypt-decrypt'
 import { getUserById } from '@/utils/userActions'
 import { validateAuthCookie } from '@/utils/auth'
@@ -11,16 +12,13 @@ export const initiateCall = async () => {
   // Get the auth cookie in order to retrieve the user's phone number.
   const authCookie: Cookie | null = await getCookie('auth')
   const userInfo = authCookie ? await validateAuthCookie(authCookie) : null
-
-  console.log({userInfo})
+  if (!userInfo) throw new Error('This session is not valid.')
 
   // Get the user and user's phone number.
   const user = userInfo && userInfo?.userId ? await getUserById(userInfo.userId) : null
   const phone = user?.phone ?? null
-  if (!phone) throw new Error('No phone number was provided to the initiateCall function.')
+  if (!phone) throw new Error('No phone number is associated with the current user.')
   
-  console.log({phone})
-
   // Decrypt the phone number.
   const phoneDecrypted = decrypt(phone)
   if (!phoneDecrypted) throw new Error('Decrypting the phone number failed.')
@@ -40,8 +38,20 @@ export const initiateCall = async () => {
       to: phoneFormatted, // -> string with `+` prefix.
       from: process.env.TWILIO_PHONE_NUMBER!,
       url: `${process.env.BASE_URL}/api/voice/voice-entry`,
-      method: 'POST'
+      method: 'POST',
+      statusCallback: `${process.env.BASE_URL}/api/voice/call-status`,
+      statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'],
+      statusCallbackMethod: 'POST',
     })
+
+    await db.voiceCall.create({
+      data: {
+        userId: userInfo.userId,
+        callSid: call.sid,
+        status: call.status,
+      }
+    })
+
     return call
   } catch (err) {
     console.error('Call failed:', err)
