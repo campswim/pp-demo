@@ -15,7 +15,13 @@ export const SignupFormSchema = z.object({
     //   message: 'Contain at least one special character.',
     // })
     .trim(),
-})
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[\d\s().-]{7,20}$/, {
+      message: 'Please enter a valid phone number.',
+    }),
+  })
 
 export const DemoSignupFormSchema = z.object({
   username: z
