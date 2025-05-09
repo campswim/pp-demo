@@ -44,8 +44,10 @@ export const initiateCall = async () => {
       statusCallbackMethod: 'POST',
     })
 
-    await db.voiceCall.create({
-      data: {
+    await db.voiceCall.upsert({
+      where: { callSid: call.sid },
+      update: { status: call.status },
+      create: {
         userId: userInfo.userId,
         callSid: call.sid,
         status: call.status,
