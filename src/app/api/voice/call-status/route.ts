@@ -1,6 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import db from '@/utils/db'
+import { validateAuthCookie } from '@/utils/auth'
+import { getCookie } from '@/utils/cookie'
 
+export async function GET() {
+  const authCookie = await getCookie('auth')
+  const user = authCookie ? await validateAuthCookie(authCookie) : null
+
+  if (!user) return NextResponse.json({ success: false }, { status: 401 })
+
+  const latestCall = await db.voiceCall.findFirst({
+    where: { userId: user.userId },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  return NextResponse.json({
+    success: true,
+    status: latestCall?.status || 'unknown',
+  })
+}
 export async function POST(req: NextRequest) {
   const formData = await req.formData()
   const callSid = formData.get('CallSid') as string
