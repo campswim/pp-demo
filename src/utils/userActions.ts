@@ -204,5 +204,14 @@ export const logout = async (id: string | null = null): Promise<void> => {
 export const getUserSession = async (): Promise<JWTPayload | null> => {
   const authCookie: Cookie | null = await getCookie('auth')
   const user: JWTPayload | null = await validateAuthCookie(authCookie)
+
+  // Check to see whether the user still exists in the DB.
+  const haveUser = user ? await getUserById(user?.userId) !== null : false
+  if (!haveUser) {
+    await deleteCookie('auth')
+    await deleteCookie('refresh')
+    return null
+  }
+  
   return user ?? null
 }
