@@ -1,27 +1,37 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { canInitiateCall } from '@/utils/call-limiter'
 import GridLoaderClient from '@/components/ui/grid-loader'
+import { useLoggedIn } from '@/context/loggedIn'
 
 export default function DemoStart() {
   const [callStatus, setCallStatus] = useState<'loading' | 'success' | 'error'>('loading')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { userId } = useLoggedIn()
 
   useEffect(() => {
     const triggerCall = async () => {
       try {
+        console.log('📞 useEffect running')
+
         const res = await fetch('/api/voice/initiate-call', { method: 'POST' })
         const data = await res.json()
-        if (!data.success) throw new Error(data.error || 'Unknown error')
+
+        console.log({data})
+
+        if (!data.success) throw new Error(data.error || 'Try block: Error triggering the auth call.')
         setCallStatus('success')
       } catch (err) {
         setCallStatus('error')
-        setErrorMessage(err instanceof Error ? err.message : 'An unknown error occurred')
+        setErrorMessage(err instanceof Error ? err.message : 'Error block: Error triggering the auth call')
       }
     }
 
-    triggerCall()
-  }, [])
+    if (userId && canInitiateCall(userId)) triggerCall()
+  }, [userId])
+
+  console.log({callStatus, errorMessage})
 
   return (
     <div className='text-center'>
