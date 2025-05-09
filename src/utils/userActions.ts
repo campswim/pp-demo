@@ -10,6 +10,7 @@ import { UserActionsProps } from '@/lib/types'
 import { generateAccessToken, generateRefreshToken, validateAuthCookie } from './auth'
 import { getCookie, setCookie, deleteCookie } from './cookie'
 import { encrypt } from './encrypt-decrypt'
+import { clearCallCacheForUser } from '@/utils/call-limiter' 
 
 // Get user by ID.
 export const getUserById = async (id: string) => {
@@ -181,37 +182,35 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
 export const logout = async (id: string | null = null): Promise<void> => {
   if (!id) throw new Error('No ID was provided to the logout method.')
   
-  // Clear the access and refresh cookies.
+  // Clear the user's session.
   try {
-    await deleteCookie('auth');
-    await deleteCookie('refresh')
-    await deleteCookie('user-id')
-
-    // Mark the user as logged out in the db.
-    await db.user.update({
-      where: { id: id || undefined },
-      data: { loggedIn: false }
-    })
-
+    await deleteUserSession(id)
   } catch (err) {
     console.warn('Logout failed: ', err)
   }
 
-  // redirect('/login') // Redirecting from the navbar.
+  redirect('/login')
 }
 
 // Get the user's session.
 export const getUserSession = async (): Promise<JWTPayload | null> => {
   const authCookie: Cookie | null = await getCookie('auth')
-  const user: JWTPayload | null = await validateAuthCookie(authCookie)
-
-  // Check to see whether the user still exists in the DB.
-  const haveUser = user ? await getUserById(user?.userId) !== null : false
-  if (!haveUser) {
-    await deleteCookie('auth')
-    await deleteCookie('refresh')
-    return null
-  }
-  
+  const user: JWTPayload | null = await validateAuthCookie(authCookie)  
   return user ?? null
+}
+
+export const deleteUserSession = async (userId: string | null = null): Promise<void> => {
+  if (!userId) throw new Error('No ID was provided to the delete-user-session method.')
+  
+  // // Check to see whether the user still exists in the DB.
+  await deleteCookie('auth')
+  await deleteCookie('refresh')
+  await deleteCookie('user-id')
+  clearCallCacheForUser(userId) // Clear the call cache for the user.
+
+  // Mark the user as logged out in the db.
+  await db.user.update({
+    where: { id: userId },
+    data: { loggedIn: false }
+  })
 }
