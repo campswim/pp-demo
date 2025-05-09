@@ -8,8 +8,6 @@ import { validateCookieAgainstSchema } from '@/utils/cookie'
 import { getUserById } from '@/utils/userActions'
 import { deleteCookie } from '@/utils/cookie'
 
-type CodeError = Error & { code?: string }
-
 export const getSecretKey = async (type: string): Promise<Uint8Array> => {
   const secret = type === 'auth' 
     ? process.env.ACCESS_SECRET 
@@ -99,20 +97,11 @@ export const validateAuthCookie = async (cookie: Cookie | null = null): Promise<
       console.warn('Invalid JWT payload:', parsedPayload.error.flatten())
       return null
     }
-
-    // Check to see whether the user still exists in the DB.
-    const haveUser = await getUserById(parsedPayload.data?.userId) !== null
-
-    if (!haveUser) {
-      await deleteCookie('auth')
-      await deleteCookie('refresh')
-      return null
-    } else {
-      return parsedPayload.data
-    }
+    
+    return parsedPayload.data
   } catch (err) {
-    const error = err as CodeError
-    console.warn('Error parsing or validating the auth cookie:', error.code)
+    const error = err as Error
+    console.warn('Error parsing or validating the auth cookie:', error.message)
     return null
   }
 }
