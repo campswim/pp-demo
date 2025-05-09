@@ -1,12 +1,9 @@
 'use server'
 
-// import jwt from 'jsonwebtoken'
 import { SignJWT, jwtVerify } from 'jose'
 import { JWTPayloadSchema, JWTPayload,  AuthCookieSchema } from '@/lib/schemata'
 import type { Cookie } from '@/lib/schemata'
 import { validateCookieAgainstSchema } from '@/utils/cookie'
-import { getUserById } from '@/utils/userActions'
-import { deleteCookie } from '@/utils/cookie'
 
 export const getSecretKey = async (type: string): Promise<Uint8Array> => {
   const secret = type === 'auth' 
