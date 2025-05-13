@@ -6,13 +6,20 @@ const splitCamelCase = (string: string): string => {
 }
 
 // Format table headers.
-export const formatHeaders = (headers: string[]) => {
-  const formattedHeaders = headers.map(header => {
+export const formatHeaders = (headers: string[], exclusions: string[] = []) => {
+  // Exclude certain headers from formatting.
+  const filteredHeaders = headers.filter(header => !exclusions.includes(header))
+  const formattedHeaders = filteredHeaders.map(header => {
     if (header === 'id') return 'ID'
     return splitCamelCase(header)
   })
-
   return formattedHeaders
+}
+
+// Format a single header.
+export const formatHeader = (header: string) => {
+  if (header === 'id') return 'ID'
+  return splitCamelCase(header)
 }
 
 // Determine input fields' placeholder text.
@@ -33,4 +40,18 @@ export function formatToE164(raw: string): string {
 
   // Default to US country code if none provided
   return `+1${cleaned}`
+}
+
+// Format phone numbers to be readable.
+export function formatPhoneDashed(raw: string): string {
+  const digits = raw.replace(/\D/g, '') // strip non-numeric
+
+  // Strip country code if present
+  const local = digits.length === 11 && digits.startsWith('1')
+    ? digits.slice(1)
+    : digits
+
+  if (local.length !== 10) return raw // fallback if not standard 10-digit
+
+  return `${local.slice(0, 3)}-${local.slice(3, 6)}-${local.slice(6)}`
 }
