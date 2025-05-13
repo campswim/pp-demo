@@ -15,26 +15,24 @@ export async function POST(req: NextRequest) {
     response.say('Call ID is missing. Cannot authenticate the call.')
     response.hangup()
     
-    return new Response(response.toString(), {
-      headers: { 'Content-Type': 'text/xml' }
-    })
+    return new Response(response.toString(), { headers: { 'Content-Type': 'text/xml' }})
   }
 
   // Check if the PIN is correct.
   if (pin === '1234') {
     response.say('Your PIN is correct and you will be logged into your account shortly. Goodbye.')
 
+    // Update the call status to authenticated.
     await db.voiceCall.update({
       where: { callSid },
       data: { status: 'authenticated' }
     })
-  } else {
+  } else { // If the PIN is incorrect, allow the user to retry.
     if (retryCount < 1) {
       response.say("I'm sorry, you've entered your PIN incorrectly. Let's try one more time.")
       response.gather({
-        input: ['speech', 'dtmf'],
-        timeout: 10,
-        speechTimeout: 'auto',
+        input: ['dtmf'],
+        timeout: 2,
         action: `${process.env.BASE_URL}/api/voice/validate-pin?retry=1`,
         method: 'POST'
       }).say('Please say or enter your PIN again.')
@@ -50,7 +48,5 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return new Response(response.toString(), {
-    headers: { 'Content-Type': 'text/xml' }
-  })
+  return new Response(response.toString(), { headers: { 'Content-Type': 'text/xml' }})
 }
