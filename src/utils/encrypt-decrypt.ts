@@ -14,11 +14,13 @@ export function encrypt(text: string): string {
 
 export function decrypt(encryptedBase64: string): string {
   const data = Buffer.from(encryptedBase64, 'base64')
-  const iv = data.slice(0, IV_LENGTH)
-  const tag = data.slice(IV_LENGTH, IV_LENGTH + 16)
-  const encrypted = data.slice(IV_LENGTH + 16)
+  const iv = data.subarray(0, IV_LENGTH)
+  const tag = data.subarray(IV_LENGTH, IV_LENGTH + 16)
+  const encrypted = data.subarray(IV_LENGTH + 16)
   const decipher = crypto.createDecipheriv(ALGORITHM, KEY, iv)
   decipher.setAuthTag(tag)
+
   const decrypted = decipher.update(encrypted, undefined, 'utf8') + decipher.final('utf8')
+
   return decrypted
 }
