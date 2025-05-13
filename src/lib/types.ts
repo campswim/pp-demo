@@ -7,11 +7,16 @@ export type ValidationResult = {
   reason?: string 
 }
 
-// // The cookie object.
-// export type Cookie = {
-//   value: string;
-//   expires?: Date
-// }
+// The call status type.
+export type CallStatus = 
+  | 'success' 
+  | 'ringing' 
+  | 'in-progress' 
+  | 'completed' 
+  | 'authenticated' 
+  | 'busy' 
+  | 'error' 
+  | ''
 
 // Define the type for the user actions' return object.
 export interface UserActionsProps {
