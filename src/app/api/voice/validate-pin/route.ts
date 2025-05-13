@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
         timeout: 2,
         action: `${process.env.BASE_URL}/api/voice/validate-pin?retry=1`,
         method: 'POST'
-      }).say('Please say or enter your PIN again.')
+      }).say('Please enter your PIN again.')
     } else {
       response.say("I'm sorry, you've entered your PIN incorrectly again. Please try logging in again. Goodbye.")
       response.hangup()
