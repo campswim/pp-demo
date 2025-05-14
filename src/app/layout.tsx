@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
-import Navbar from '@/components/navbar/navbar'
 import { LoggedInProvider } from '@/context/loggedIn'
 import { ThemeProvider } from '@/context/theme'
 import { getUserSession } from '@/utils/userActions'
-import Container from '@/components/global/container'
+import SplitLayout from '@/components/ui/split-layout'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,20 +30,15 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang='en' suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
+          attribute='class'
+          defaultTheme='system'
           enableSystem
           disableTransitionOnChange
         >
           <LoggedInProvider user={user || null}>
-            {/* {needsRefresh && user && <RefreshSession payload={user} />}
-            {needsLogout && user && <Logout userId={user?.userId} />} */}
-            <Navbar />
-            <Container>
-              <main className='flex flex-col min-h-screen'>
-                {children}
-              </main>
-            </Container>
+            <SplitLayout>
+              {children}
+            </SplitLayout>
           </LoggedInProvider>
         </ThemeProvider>
       </body>
