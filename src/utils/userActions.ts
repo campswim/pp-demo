@@ -13,10 +13,15 @@ import { encrypt } from './encrypt-decrypt'
 import { clearCallCacheForUser } from '@/utils/call-limiter' 
 
 // Get user by ID.
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string): Promise<Partial<User> | null> => {
   if (!id) throw new Error('No ID was provided to the get-user-by-id function.')
-  return await db.user.findUnique({ where: { id } })
+  const user = await db.user.findUnique({ 
+    where: { id }, 
+    include: { voiceCalls: true } 
+  })
+  return user
 }
+
 // Get user by username.
 export const getUserByUsername = async(username: string) => {
   if (!username) throw new Error('No username was provided to the get-user-by-username function.')
