@@ -1,4 +1,5 @@
 import { JWTPayload } from '@/lib/schemata'
+import { Prisma } from '@/generated/prisma'
 
 // The auth and refresh cookies' result after validation.
 export type ValidationResult = { 
@@ -23,3 +24,5 @@ export interface UserActionsProps {
   success?: boolean
   error?: string | null
 }
+
+export type UserWithVoiceCalls = Prisma.UserGetPayload<{ include: { voiceCalls: true }}>
