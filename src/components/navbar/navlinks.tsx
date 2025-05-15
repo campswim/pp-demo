@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 import { NavItem } from '@/data/navItems'
 import { useLoggedIn } from '@/context/loggedIn'
 import { logout } from '@/utils/userActions'
-import { ModeToggle } from '@/components/ui/mode-toggle'
 import { navItems } from '@/data/navItems'
 import { DrawerClose } from '@/components/ui/drawer'
 
@@ -39,8 +38,8 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
   }
 
   return (
-    <div className='flex py-1'>
-      <div className="flex items-center gap-4">
+    <div className='flex justify-center items-center'>
+      <div className="flex items-center gap-8">
         {navItems && navItems.length > 0 && navItems.map(item => (
           canRender(item) && (
             <div
@@ -117,7 +116,6 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
             </div>
           )
         ))}
-        <ModeToggle />
       </div>
     </div>
   )

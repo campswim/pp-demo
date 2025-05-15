@@ -11,7 +11,7 @@ const Logo = () => {
   const href = role ? '/user/home' : '/'
 
   return (
-    <h1 className='text-3xl font-bold'>
+    <h1 className='flex items-center text-3xl font-bold px-4'>
       <Link href={href} className='flex items-center hover:text-blue-500'>
         <PiPhoneDisconnectBold size={100} />
         <TbAmpersand />

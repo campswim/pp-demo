@@ -1,15 +1,16 @@
-import Container from '../global/container'
+// import Container from '../global/container'
 import Logo from './logo'
 import NavLinks from '@/components/navbar/navlinks'
-// import HorizontalLine from '../global/horizontal-line'
+import UtilLinks from '@/components/navbar/util-links'
 
 const Navbar = ({ isDrawer }: { isDrawer: boolean }) => {
   return (
-    <nav>
-      <Container className='flex min-h-40 pb-6'>
+    <nav className='grid grid-cols-3 items-center min-h-20'>
+      {/* <Container className='flex justify-between align-center min-h-20'> */}
         <Logo />
-        <NavLinks isDrawer={isDrawer}/>
-      </Container>
+        <NavLinks isDrawer={isDrawer} />
+        <UtilLinks />
+      {/* </Container> */}
     </nav>
   )
 }
