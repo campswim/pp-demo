@@ -8,10 +8,11 @@ import { useLoggedIn } from '@/context/loggedIn'
 import { logout } from '@/utils/userActions'
 import { ModeToggle } from '@/components/ui/mode-toggle'
 import { navItems } from '@/data/navItems'
+import { DrawerClose } from '@/components/ui/drawer'
 
 const NavLinks= () => {
-  const [pathname, setPathname] = useState<string>(usePathname())
-
+  // const [pathname, setPathname] = useState<string>(usePathname())
+  const pathname = usePathname() // Get the current pathname from Next.js router
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
   const { userId, role } = useLoggedIn()
   // const router = useRouter()
@@ -36,10 +37,10 @@ const NavLinks= () => {
     setActiveItemId(null) // Hide submenu when mouse leaves both parent and submenu
   }
 
-  // Manually set the pathname and update active item when a link is clicked.
-  const handleLinkClick = (url: string) => {
-    setPathname(url) // Update pathname on click
-  }
+  // // Manually set the pathname and update active item when a link is clicked.
+  // const handleLinkClick = (url: string) => {
+  //   setPathname(url) // Update pathname on click
+  // }
 
   return (
     <div className='flex py-1'>
@@ -54,13 +55,15 @@ const NavLinks= () => {
             >
               <div className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}>
                 { item.url !== '/user/logout' ? (
-                  <Link
-                    href={item.url}
-                    className={`text-lg font-semibold ${isActive(item.url)}`}
-                    onClick={() => handleLinkClick(item.url)}
-                  >
-                    {item.name}
-                  </Link>
+                  <DrawerClose asChild>
+                    <Link
+                      href={item.url}
+                      className={`text-lg font-semibold ${isActive(item.url)}`}
+                      // onClick={() => handleLinkClick(item.url)}
+                    >
+                      {item.name}
+                    </Link>
+                  </DrawerClose>
                 )
                 :
                 (
@@ -80,14 +83,15 @@ const NavLinks= () => {
                 <div className='absolute left-5 top-7 w-[13rem] flex flex-col gap-1 whitespace-nowrap bg-black p-3 rounded shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
                   {item.subItems.map(sub => (
                     canRender(sub) && (
-                      <Link
-                        key={sub.id}
-                        href={sub.url}
-                        className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
-                        onClick={() => handleLinkClick(sub.url)}
-                      >
-                        {sub.name}
-                      </Link>
+                      <DrawerClose asChild key={sub.id} >
+                        <Link
+                          href={sub.url}
+                          className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
+                          // onClick={() => handleLinkClick(sub.url)}
+                        >
+                          {sub.name}
+                        </Link>
+                      </DrawerClose>
                     )
                   ))}
                 </div>
