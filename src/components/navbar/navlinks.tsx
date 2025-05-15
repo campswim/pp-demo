@@ -10,7 +10,7 @@ import { ModeToggle } from '@/components/ui/mode-toggle'
 import { navItems } from '@/data/navItems'
 import { DrawerClose } from '@/components/ui/drawer'
 
-const NavLinks= () => {
+const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
   // const [pathname, setPathname] = useState<string>(usePathname())
   const pathname = usePathname() // Get the current pathname from Next.js router
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
@@ -28,19 +28,15 @@ const NavLinks= () => {
     return false
   }
 
-  // Handle mouse hover for parent and submenu
+  // Handle mouse hover for parent and submenu.
   const handleGroupMouseEnter = (id: number) => {
     setActiveItemId(id) // Show submenu when hovering over parent
   }
 
+  // Handle mouse leave for parent and submenu.
   const handleGroupMouseLeave = () => {
     setActiveItemId(null) // Hide submenu when mouse leaves both parent and submenu
   }
-
-  // // Manually set the pathname and update active item when a link is clicked.
-  // const handleLinkClick = (url: string) => {
-  //   setPathname(url) // Update pathname on click
-  // }
 
   return (
     <div className='flex py-1'>
@@ -54,24 +50,34 @@ const NavLinks= () => {
               onMouseLeave={handleGroupMouseLeave}
             >
               <div className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}>
-                { item.url !== '/user/logout' ? (
-                  <DrawerClose asChild>
+                { item.url !== '/user/logout' ? 
+                ( isDrawer ?
+                  (
+                    <DrawerClose asChild>
+                      <Link
+                        href={item.url}
+                        className={`text-lg font-semibold ${isActive(item.url)}`}
+                        // onClick={() => handleLinkClick(item.url)}
+                      >
+                        {item.name}
+                      </Link>
+                    </DrawerClose>
+                  )
+                  :
+                  (
                     <Link
                       href={item.url}
                       className={`text-lg font-semibold ${isActive(item.url)}`}
-                      // onClick={() => handleLinkClick(item.url)}
                     >
                       {item.name}
                     </Link>
-                  </DrawerClose>
+                  )
                 )
                 :
                 (
                   <Link href='/' onClick={async (e) => {
                     e.preventDefault()
                     await logout(userId)
-                    // // router.push('/login')
-                    // window.location.href = '/login' // This reloads the page from the server, re-evaluates cookies/session, and forces a fresh useLoggedIn() context.
                   }}>
                     {item.name}
                   </Link>
@@ -82,16 +88,29 @@ const NavLinks= () => {
               {item.subItems && item.subItems.length > 0 && activeItemId === item.id && (
                 <div className='absolute left-5 top-7 w-[13rem] flex flex-col gap-1 whitespace-nowrap bg-black p-3 rounded shadow-[0_2px_10px_rgba(255,255,255,0.2)]'>
                   {item.subItems.map(sub => (
-                    canRender(sub) && (
-                      <DrawerClose asChild key={sub.id} >
-                        <Link
-                          href={sub.url}
-                          className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
-                          // onClick={() => handleLinkClick(sub.url)}
-                        >
-                          {sub.name}
-                        </Link>
-                      </DrawerClose>
+                    canRender(sub) && 
+                    (
+                      isDrawer ?
+                      (
+                        <DrawerClose asChild key={sub.id} >
+                          <Link
+                            href={sub.url}
+                            className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
+                          >
+                            {sub.name}
+                          </Link>
+                        </DrawerClose>
+                    )
+                    :
+                    (
+                      <Link
+                        key={sub.id}
+                        href={sub.url}
+                        className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
+                      >
+                        {sub.name}
+                      </Link>
+                    )
                     )
                   ))}
                 </div>

@@ -1,24 +1,66 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
 import Container from '@/components/global/container'
 import Navbar from '@/components/navbar/navbar'
 
-export default function SplitLayout({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false)
-  const drawerRef = useRef<HTMLDivElement>(null)
+const ANIMATION_DURATION = 700
 
+export default function SplitLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  const isPersistent = !pathname.startsWith('/demo')
+  const firstRender = useRef(true)
+
+  const [open, setOpen] = useState(false)
+  const [visible, setVisible] = useState(isPersistent)
+  const [animatingIn, setAnimatingIn] = useState(false)
+  const [animatingOut, setAnimatingOut] = useState(false)
+
+  // Set the visibiilty of the persistent drawer.
   useEffect(() => {
-    if (open && drawerRef.current) {
-      drawerRef.current.focus()
+    if (firstRender.current) {
+      firstRender.current = false
+      if (isPersistent) setVisible(true)
+      return
     }
-  }, [open])
+
+    if (isPersistent) {
+      setVisible(true)
+      setAnimatingIn(true)
+      const inTimer = setTimeout(() => setAnimatingIn(false), ANIMATION_DURATION)
+      return () => clearTimeout(inTimer)
+    } else {
+      setAnimatingOut(true)
+      const outTimer = setTimeout(() => {
+        setAnimatingOut(false)
+        setVisible(false)
+      }, ANIMATION_DURATION)
+      return () => clearTimeout(outTimer)
+    }
+  }, [isPersistent])
 
   return (
-    <>
-      {/* Drawer toggle button */}
+    <div className='flex h-screen overflow-hidden'>
+      {/* Persistent drawer (not ShadCN) */}
+      {visible && (
+        <div 
+          className={cn(
+            'fixed bottom-0 inset-x-0 z-50 bg-gray-900 text-white p-4 border-t border-gray-700 transition-transform duration-700 ease-in-out',
+            animatingIn && 'translate-y-full',
+            animatingOut && 'translate-y-full',
+            !animatingIn && !animatingOut && 'translate-y-0'
+          )}        
+        >
+          <Navbar isDrawer={false} />
+        </div>
+      )}
+
+      {/* ShadCN Drawer toggle button */}
       <Drawer open={open} onOpenChange={setOpen}>
+      {!isPersistent && (
         <DrawerTrigger asChild>
           <button
               className='fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-transparent p-0 border-none'
@@ -29,25 +71,22 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
             />
           </button>        
         </DrawerTrigger>
+      )}
 
         {/* Drawer content */}
         <DrawerContent 
-          ref={drawerRef}
-          tabIndex={-1}
           className='bg-gray-900 text-white p-4 w-screen max-w-none outline-none'
         >
-          <Navbar />
+          <Navbar isDrawer={true}/>
         </DrawerContent>
       </Drawer>
 
       {/* Main content area */}
-      <div className='flex h-screen overflow-hidden'>
         <Container>
-          <main className='flex flex-col min-h-screen'>
+          <main className='flex flex-col justify-center min-h-screen'>
             {children}
           </main>
         </Container>
-      </div>
-      </>
+    </div>
   )
 }

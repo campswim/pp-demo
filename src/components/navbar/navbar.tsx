@@ -3,7 +3,7 @@ import Logo from './logo'
 import NavLinks from '@/components/navbar/navlinks'
 // import HorizontalLine from '../global/horizontal-line'
 
-const Navbar = () => {
+const Navbar = ({ isDrawer }: { isDrawer: boolean }) => {
   return (
     <nav>
       <Container>
@@ -11,7 +11,7 @@ const Navbar = () => {
       {/* </Container> */}
         {/* <HorizontalLine /> */}
       {/* <Container className='flex flex-col min-h-40 pb-6'> */}
-        <NavLinks />
+        <NavLinks isDrawer={isDrawer}/>
       </Container>
     </nav>
   )
