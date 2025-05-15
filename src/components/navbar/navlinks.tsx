@@ -57,7 +57,6 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                       <Link
                         href={item.url}
                         className={`text-lg font-semibold ${isActive(item.url)}`}
-                        // onClick={() => handleLinkClick(item.url)}
                       >
                         {item.name}
                       </Link>
@@ -75,7 +74,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                 )
                 :
                 (
-                  <Link href='/' onClick={async (e) => {
+                  <Link href={item.url} onClick={async (e) => {
                     e.preventDefault()
                     await logout(userId)
                   }}>

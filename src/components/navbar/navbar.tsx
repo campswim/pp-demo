@@ -6,11 +6,8 @@ import NavLinks from '@/components/navbar/navlinks'
 const Navbar = ({ isDrawer }: { isDrawer: boolean }) => {
   return (
     <nav>
-      <Container>
+      <Container className='flex min-h-40 pb-6'>
         <Logo />
-      {/* </Container> */}
-        {/* <HorizontalLine /> */}
-      {/* <Container className='flex flex-col min-h-40 pb-6'> */}
         <NavLinks isDrawer={isDrawer}/>
       </Container>
     </nav>
