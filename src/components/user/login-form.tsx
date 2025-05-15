@@ -15,7 +15,7 @@ const Login = ({ caller }: { caller: string }) => {
   return (
     <form 
       action={action}
-      className='flex flex-col items-center w-1/3 mx-auto md:p-8 p-3' 
+      className='flex flex-col items-center mx-auto md:p-8 p-3' 
       autoComplete='on'
     >
       <div className='mb-4 w-full'>
