@@ -179,8 +179,7 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
   await setCookie('refresh', refreshToken)
 
   // 6. Reirect to the homepage, indicating a login in the URL for the welcome message.
-  redirect('/?login=true')
-  // return { message: 'Log-in was successful.'}
+  redirect('/user/home?login=true')
 }
 
 // Log a user out.
