@@ -1,10 +1,9 @@
-import WelcomeMessage from '@/components/user/welcomeMessage'
+import PublicHomePage from '@/components/homepage/public-homepage';
 
 export default function Home() {
   return (
     <div>
-      Home Page
-      <WelcomeMessage />
+      <PublicHomePage />
     </div>
   );
 }
