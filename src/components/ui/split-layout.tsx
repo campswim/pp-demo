@@ -43,7 +43,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
   }, [isPersistent])
 
   return (
-    <div className='flex h-screen overflow-hidden'>
+    <div className='flex h-screen'>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
