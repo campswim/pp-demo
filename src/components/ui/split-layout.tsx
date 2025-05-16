@@ -48,7 +48,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       {visible && (
         <div 
           className={cn(
-            'fixed bottom-0 inset-x-0 z-50 bg-gray-900 text-white p-4 border-t border-gray-700 transition-transform duration-700 ease-in-out',
+            'fixed bottom-0 inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 border-t border-gray-700 transition-transform duration-700 ease-in-out',
             animatingIn && 'translate-y-full',
             animatingOut && 'translate-y-full',
             !animatingIn && !animatingOut && 'translate-y-0'

@@ -4,7 +4,7 @@ import UtilLinks from '@/components/navbar/util-links'
 
 const Navbar = ({ isDrawer }: { isDrawer: boolean }) => {
   return (
-    <nav className='grid grid-cols-3 items-center min-h-20'>
+    <nav className='relative flex flex-col items-start md:grid md:grid-cols-3 md:items-center min-h-20'>
       <Logo />
       <NavLinks isDrawer={isDrawer} />
       <UtilLinks />
