@@ -8,7 +8,7 @@ import { useLoggedIn } from '@/context/loggedIn'
 
 const Logo = () => {
   const { role } = useLoggedIn()
-  const href = role ? '/user/home' : '/'
+  const href = role !== 'guest' ? '/user/home' : '/'
 
   return (
     <h1 className='flex items-center text-3xl font-bold'>
