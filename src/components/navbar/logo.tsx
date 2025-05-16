@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { MdFiberPin } from "react-icons/md"
-import { PiPhoneDisconnectBold } from "react-icons/pi"
+// import { PiPhoneDisconnectBold } from "react-icons/pi"
+import PhoneWithText from '@/components/ui/phone-with-text' 
 import { TbAmpersand } from "react-icons/tb"
 import { useLoggedIn } from '@/context/loggedIn'
 
@@ -13,9 +14,10 @@ const Logo = () => {
   return (
     <h1 className='flex items-center text-3xl font-bold px-4'>
       <Link href={href} className='flex items-center hover:text-blue-500'>
-        <PiPhoneDisconnectBold size={100} />
+        {/* <PiPhoneDisconnectBold size={100} /> */}
+        <PhoneWithText size={100} />
         <TbAmpersand />
-        <MdFiberPin size={100} />
+        <MdFiberPin size={120} />
       </Link>
     </h1>
   )
