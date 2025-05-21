@@ -23,7 +23,15 @@ export const SignupFormSchema = LoginFormSchema.extend({
     .trim()
     .regex(/^\+?[\d\s().-]{7,20}$/, {
       message: 'Please enter a valid phone number.',
-    })
+    }),
+    safeword: z
+    .string()
+    .min(3, { 
+      message: 'Your safeword consist of at least 3 characters.'
+    }),
+    pin: z
+    .number()
+    .min(4, { message: 'Your PIN must consist of exactly four digits.'})
 })
 
 export const DemoSignupFormSchema = z.object({

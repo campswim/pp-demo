@@ -21,6 +21,8 @@ model User {
   password  String   
   phone     String   @unique
   role      String   @default("user")
+  safeword  String   @default("")
+  pin       Int      @default(1234)
   loggedIn  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
