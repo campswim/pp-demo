@@ -43,16 +43,16 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
   }, [isPersistent])
 
   return (
-    <div className='flex h-screen'>
+    <div className={pathname !== '/' ? 'flex min-h-screen' : 'flex flex-col min-h-screen'}>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
-          className={cn(
+          className={pathname !== '/' ? cn(
             'fixed bottom-0 inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 border-t border-gray-700 transition-transform duration-700 ease-in-out',
             animatingIn && 'translate-y-full',
             animatingOut && 'translate-y-full',
             !animatingIn && !animatingOut && 'translate-y-0'
-          )}        
+          ) : 'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 border-b border-gray-700 transition-transform duration-700 ease-in-out'}        
         >
           <Navbar isDrawer={false} />
         </div>
@@ -82,11 +82,19 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       </Drawer>
 
       {/* Main content area */}
+      {pathname !== '/' ? (
         <Container>
           <main className='flex flex-col justify-center min-h-screen'>
             {children}
           </main>
         </Container>
+      )
+      :
+      (
+        <main className='flex flex-col justify-center min-h-screen'>
+          {children}
+        </main>
+      )}
     </div>
   )
 }
