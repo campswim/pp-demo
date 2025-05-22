@@ -86,17 +86,24 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
     username: formData.get('username'),
     phone: formData.get('phone'),
     password: formData.get('password'),
+    safeword: formData.get('safeword'),
+    pin: Number(formData.get('pin'))
   })
- 
+
   // 1b. If any form fields are invalid, return early.
-  if (!validatedFields.success) return { errors: validatedFields.error.flatten().fieldErrors }
+  if (!validatedFields.success) {
+    return { errors: validatedFields.error.flatten().fieldErrors }
+  }
 
   // 2. Prepare data for insertion into database.
   const { 
     username, 
     phone, 
-    password 
+    password,
+    safeword,
+    pin
   } = validatedFields.data
+
   const hashedPassword = await bcrypt.hash(password, 10)
   const encryptedPhone = encrypt(phone)
 
@@ -111,7 +118,9 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
       username,
       password: hashedPassword,
       phone: encryptedPhone,
-      loggedIn: true
+      loggedIn: true,
+      safeword,
+      pin
     },
     select: { 
       id: true, 
@@ -134,8 +143,7 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   await setCookie('refresh', refreshToken)
 
   // 6. Redirect to the homepage, indicating a registration in the URL for the welcome message.
-  redirect('/?register=true')
-  return { message: 'Registration was successful' }
+  redirect('/user/home/?register=true')
 }
 
 // Log a user in.

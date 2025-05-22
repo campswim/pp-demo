@@ -60,6 +60,16 @@ a:hover {
   scrollbar-width: none;      /* Firefox */
 }
 
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

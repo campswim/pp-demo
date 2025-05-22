@@ -51,6 +51,8 @@ export type FormState =
         username?: string[]
         password?: string[]
         phone?: string[]
+        safeword?: string[]
+        pin?: string[]
       }
       message?: string
       user?: {

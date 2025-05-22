@@ -20,6 +20,9 @@ const Login = ({ caller }: { caller: string }) => {
       autoComplete='on'
     >
       <div className='mb-4 w-full'>
+        {/* <label htmlFor="username" className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+          Username
+        </label> */}
         <input
           type='username'
           id='username'
@@ -82,7 +85,7 @@ const Login = ({ caller }: { caller: string }) => {
               className={inputStyle}
               autoComplete='off'
               onFocus={() => setPinPlaceholder('')}
-              onBlur={() => setPinPlaceholder('4-DigitPIN')}
+              onBlur={() => setPinPlaceholder('4-Digit PIN')}
               required
             />
           </div>
@@ -94,16 +97,25 @@ const Login = ({ caller }: { caller: string }) => {
         className='w-full rounded-md bg-primary px-3 pb-1 pt-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'>
         {pending ? 'Stand By' : caller === 'register' ? 'Register' : 'Log In'}
       </button>
-      {state?.errors?.username && <p className='my-3'>{state.errors.username}</p>}
-      {state?.errors?.password && (
-        <div className='my-3'>
-          <p>The password must: </p>
-          <ul className='list-disc pl-5'>
-            {state.errors.password.map((error) => (
-              <li key={error}>{error}</li>
-            ))}
-          </ul>
-        </div>
+      {state?.errors && 
+      (state?.errors?.password ? 
+        (
+          <div className='my-3'>
+            <p>The password must: </p>
+            <ul className='list-disc pl-5'>
+              {state.errors.password.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )
+        :
+        (
+          Object.entries(state.errors).map(([key, value]) => {
+            console.log({key, value})
+            return <p key={key}>{key}: {value}</p>
+          })
+        )
       )}
     </form>
   )
