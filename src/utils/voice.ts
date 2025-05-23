@@ -68,14 +68,16 @@ export const getSafeWord = async (callSid: string | null): Promise<string | null
       where: { callSid }, 
       include: { user: { select: { safeword: true } } } 
   })
-    return voiceCall?.user?.safeword ?? null
+
+    const safewordDecrypted = voiceCall?.user?.safeword ? decrypt(voiceCall.user.safeword) : null
+    return safewordDecrypted
   } catch (err) {
     console.warn('getSafeWord failed:', err)
     return null
   }
 }
 
-export const getPin = async (callSid: string | null): Promise<number | null> => {
+export const getPin = async (callSid: string | null): Promise<string | null> => {
   if (!callSid) throw new Error('No call SID was sent to getPin.')
 
     try {
@@ -83,6 +85,7 @@ export const getPin = async (callSid: string | null): Promise<number | null> => 
         where: { callSid },
         include: { user: { select: { pin: true } } }
       })
+      
       return voiceCall?.user?.pin ??  null
     } catch (err) {
       console.warn('getPin failed:', err)
