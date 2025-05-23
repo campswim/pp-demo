@@ -106,6 +106,8 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
 
   const hashedPassword = await bcrypt.hash(password, 10)
   const encryptedPhone = encrypt(phone)
+  const hashedSafeword = encrypt(safeword)
+  const encryptedPin = await bcrypt.hash(pin.toString(), 10)
 
   // 3. Check if the user already exists.
   const existingUser = await db.user.findUnique({ where: { username }})
@@ -119,8 +121,8 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
       password: hashedPassword,
       phone: encryptedPhone,
       loggedIn: true,
-      safeword,
-      pin
+      safeword: hashedSafeword,
+      pin: encryptedPin
     },
     select: { 
       id: true, 
@@ -204,8 +206,14 @@ export const logout = async (id: string | null = null): Promise<void> => {
   redirect('/user/login')
 }
 
-// Get the user's session.
+// Get the user's session in server components.
 export const getUserSession = async (): Promise<JWTPayload | null> => {
+  const authCookie = await getCookie('auth')
+  return authCookie ? await validateAuthCookie(authCookie) : null
+}
+
+// Get the user's session.
+export const getUserSessionWithRefresh = async (): Promise<JWTPayload | null> => {
   const authCookie: Cookie | null = await getCookie('auth') ?? null
   let user: JWTPayload | null = authCookie ? await validateAuthCookie(authCookie) : null
 
@@ -218,10 +226,7 @@ export const getUserSession = async (): Promise<JWTPayload | null> => {
     const parsed = await parseCookieValue('auth', true)
     const expiredUserId: string | null = parsed && typeof parsed?.userId == 'string' ? parsed.userId : null
 
-    deleteCookie('auth')
-    deleteCookie('refresh')
-
-    if (expiredUserId) setCookie('user-id', expiredUserId)
+    deleteUserSession(expiredUserId)
   } else {
     const newAccessToken = await refreshAccessToken(refreshUser)
     const newRefreshToken = await refreshRefreshToken(refreshUser)
@@ -237,18 +242,22 @@ export const getUserSession = async (): Promise<JWTPayload | null> => {
   return user ?? null
 }
 
-export const deleteUserSession = async (userId: string | null = null): Promise<void> => {
-  if (!userId) throw new Error('No ID was provided to the delete-user-session method.')
-  
-  // // Check to see whether the user still exists in the DB.
+export const deleteUserSession = async (userId: string | null = null): Promise<void> => {  
+  // To-do: Check to see whether the user still exists in the DB.
+
+  // Delete the user-related cookies.
   await deleteCookie('auth')
   await deleteCookie('refresh')
   await deleteCookie('user-id')
-  clearCallCacheForUser(userId) // Clear the call cache for the user.
-
-  // Mark the user as logged out in the db.
-  await db.user.update({
-    where: { id: userId },
-    data: { loggedIn: false }
-  })
+  
+  if (userId) {
+    // Clear the call cache for the user.
+    clearCallCacheForUser(userId)
+    
+    // Mark the user as logged out in the db.
+    await db.user.update({
+      where: { id: userId },
+      data: { loggedIn: false }
+    })
+  }
 }
