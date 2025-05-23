@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import db from '@/utils/db'
-import { getUserSession } from '@/utils/userActions'
+import { getUserSessionWithRefresh } from '@/utils/userActions'
 
 export async function GET() {
-  const user = await getUserSession() ?? null
+  const user = await getUserSessionWithRefresh() ?? null
   const latestCall = await db.voiceCall.findFirst({
     where: { userId: user?.userId },
     orderBy: { createdAt: 'desc' },
