@@ -60,3 +60,32 @@ export const initiateCall = async () => {
     throw new Error('Failed to initiate the call.')
   }
 }
+
+export const getSafeWord = async (callSid: string | null): Promise<string | null> => {
+  if (!callSid) throw new Error('No call SID was sent to getSafeWord.')
+  try {
+    const voiceCall = await db.voiceCall.findUnique({ 
+      where: { callSid }, 
+      include: { user: { select: { safeword: true } } } 
+  })
+    return voiceCall?.user?.safeword ?? null
+  } catch (err) {
+    console.warn('getSafeWord failed:', err)
+    return null
+  }
+}
+
+export const getPin = async (callSid: string | null): Promise<number | null> => {
+  if (!callSid) throw new Error('No call SID was sent to getPin.')
+
+    try {
+      const voiceCall = await db.voiceCall.findUnique({
+        where: { callSid },
+        include: { user: { select: { pin: true } } }
+      })
+      return voiceCall?.user?.pin ??  null
+    } catch (err) {
+      console.warn('getPin failed:', err)
+      return null
+    }
+}

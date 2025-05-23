@@ -1,17 +1,18 @@
+import { NextRequest } from 'next/server'
 import { twiml } from 'twilio'
+import { getSafeWord } from '@/utils/voice'
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const url = new URL(req.url)
   const retryCount = Number(url.searchParams.get('retry') || '0')
   const formData = await req.formData()
+  const callSid = formData.get('CallSid')?.toString() ?? null
   const speechResult = formData.get('SpeechResult')?.toString().trim().toLowerCase()
-  // const digits = formData.get('Digits')?.toString().trim().toLowerCase()
-  // const transcript = (speechResult || digits)?.replace(/[^\w\s]/g, '')
   const transcript = speechResult?.replace(/[^\w\s]/g, '')
   const response = new twiml.VoiceResponse()
-  const acceptedWords = ['banana', 'pineapple']
+  const safeword = await getSafeWord(callSid)
 
-  if (acceptedWords.some(word => transcript?.includes(word))) {
+  if ( safeword && transcript?.includes(safeword)) {
     response.say('Your safe word has been accepted.')
     response.say('Now, using your phone\'s keypad, please enter your four-digit PIN.')
     response.gather({

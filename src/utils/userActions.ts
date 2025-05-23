@@ -7,8 +7,8 @@ import { redirect } from 'next/navigation'
 import { User } from '@/generated/prisma'
 import { SignupFormSchema, LoginFormSchema, FormState, JWTPayload, Cookie } from '@/lib/schemata'
 import { UserActionsProps } from '@/lib/types'
-import { generateAccessToken, generateRefreshToken, validateAuthCookie } from './auth'
-import { getCookie, setCookie, deleteCookie } from './cookie'
+import { generateAccessToken, generateRefreshToken, refreshAccessToken, refreshRefreshToken, validateAuthCookie, validateRefreshCookie } from './auth'
+import { getCookie, setCookie, deleteCookie, parseCookieValue } from './cookie'
 import { encrypt } from './encrypt-decrypt'
 import { clearCallCacheForUser } from '@/utils/call-limiter' 
 
@@ -206,8 +206,34 @@ export const logout = async (id: string | null = null): Promise<void> => {
 
 // Get the user's session.
 export const getUserSession = async (): Promise<JWTPayload | null> => {
-  const authCookie: Cookie | null = await getCookie('auth')
-  const user: JWTPayload | null = await validateAuthCookie(authCookie)  
+  const authCookie: Cookie | null = await getCookie('auth') ?? null
+  let user: JWTPayload | null = authCookie ? await validateAuthCookie(authCookie) : null
+
+  if (user) return user
+  
+  const refreshCookie: Cookie | null = await getCookie('refresh')
+  const refreshUser: JWTPayload | null = refreshCookie ? await validateRefreshCookie(refreshCookie) : null
+
+  if (!refreshUser) {
+    const parsed = await parseCookieValue('auth', true)
+    const expiredUserId: string | null = parsed && typeof parsed?.userId == 'string' ? parsed.userId : null
+
+    deleteCookie('auth')
+    deleteCookie('refresh')
+
+    if (expiredUserId) setCookie('user-id', expiredUserId)
+  } else {
+    const newAccessToken = await refreshAccessToken(refreshUser)
+    const newRefreshToken = await refreshRefreshToken(refreshUser)
+
+    if (newAccessToken && newRefreshToken) {
+      setCookie('auth', newAccessToken)
+      setCookie('refresh', newRefreshToken)
+
+      user = refreshUser
+    }
+  }
+
   return user ?? null
 }
 

@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import db from '@/utils/db'
-import { validateAuthCookie } from '@/utils/auth'
-import { getCookie } from '@/utils/cookie'
+import { getUserSession } from '@/utils/userActions'
 
 export async function GET() {
-  const authCookie = await getCookie('auth')
-  const user = authCookie ? await validateAuthCookie(authCookie) : null
-  if (!user) return NextResponse.json({ success: false }, { status: 401 })
-    
+  const user = await getUserSession() ?? null
   const latestCall = await db.voiceCall.findFirst({
-    where: { userId: user.userId },
+    where: { userId: user?.userId },
     orderBy: { createdAt: 'desc' },
   })
 

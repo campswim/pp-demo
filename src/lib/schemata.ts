@@ -75,7 +75,6 @@ export type Cookie = z.infer<typeof CookieSchema>
 export const JWTPayloadSchema = z.object({
   userId: z.string(),
   username: z.string(),
-  // email: z.string(),
   role: z.string(),
   iat: z.number().optional(),
   exp: z.number().optional()

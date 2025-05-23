@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { JWTPayload } from '@/lib/schemata'
-import { Cookie } from '@/lib/schemata'
+import { JWTPayload, Cookie } from '@/lib/schemata'
 import { validateAuthCookie, validateRefreshCookie, refreshAccessToken, refreshRefreshToken } from '@/utils/auth'
 import { parseCookieValue, cookieConfig } from '@/utils/cookie'
 
@@ -26,7 +25,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete('auth')
       response.cookies.delete('refresh')
       
-      // Pass the user ID to frontend: cookie or header?
+      // Pass the user ID to frontend.
       if (expiredUserId) {
         response.cookies.set('user-id', expiredUserId)
       }

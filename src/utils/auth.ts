@@ -127,8 +127,8 @@ export const validateRefreshCookie = async (cookie: Cookie | null = null): Promi
 
     return parsedPayload.data
   } catch (err) {
-    const error = err as CodeError
-    console.warn('Error parsing or validating the refresh cookie:', error.code)
+    const error = err as Error
+    console.warn('Error parsing or validating the refresh cookie:', error.message)
     return null
   }
 }
