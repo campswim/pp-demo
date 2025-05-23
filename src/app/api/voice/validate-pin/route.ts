@@ -2,14 +2,17 @@ import { twiml } from 'twilio'
 import { NextRequest } from 'next/server'
 import db from '@/utils/db'
 import { getPin } from '@/utils/voice'
+import bcrypt from 'bcryptjs'
 
 export async function POST(req: NextRequest) {
   const url = new URL(req.url)
   const retryCount = Number(url.searchParams.get('retry') || '0')
   const formData = await req.formData()
   const callSid = formData.get('CallSid')?.toString() ?? null
-  const enteredPin: number | null = Number(formData.get('Digits')) ?? null
-  const pin = await getPin(callSid)
+  const enteredPin = formData.get('Digits')?.toString() ?? null
+  const pin = await getPin(callSid) ?? null
+  const isPinValid = pin && enteredPin ? await bcrypt.compare(enteredPin, pin) : false
+
   const response = new twiml.VoiceResponse()
 
   // End the call if it is missing an SID.
@@ -21,7 +24,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Check if the PIN is correct.
-  if (enteredPin === pin) {
+  if (isPinValid) {
     response.say('Your PIN is correct and you will be logged into your account shortly. Goodbye.')
 
     // Update the call status to authenticated.
