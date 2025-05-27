@@ -1,6 +1,9 @@
 import { twiml } from 'twilio'
 
 export async function POST(req: Request) {
+
+  console.log('ian wuz ere', {req})
+  
   // Get the current URL.
   const url = new URL(req.url)
 

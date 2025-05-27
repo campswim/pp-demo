@@ -8,6 +8,7 @@ import { useCallStatusPolling } from '@/hooks/use-call-status-polling'
 import { useCallRouting } from '@/hooks/use-call-routing'
 import { statusMap } from '@/data/status-map'
 import type { CallStatus } from '@/lib/types'
+import Demo from '@/components/ui/demo-background'
 
 export default function DemoStart() {
   const [callStatus, setCallStatus] = useState<CallStatus>('')
@@ -24,13 +25,15 @@ export default function DemoStart() {
   useCallRouting(callStatus)
 
   return (
-    <div className='text-center'>
-      <p>Thanks for logging in.</p>
-      <p>Stand by for an incoming call to your phone on record.</p>
-      <p>Please have your safe word and PIN at the ready.</p>
-      <GridLoaderClient />
-      {callStatus !== 'error' && <p className='text-green-500'>{statusMap[callStatus]}</p>}
-      {callStatus === 'error' && <p className='text-red-500'>Error: {errorMessage}</p>}
+    <div className='relative w-full h-screen flex items-center'>
+      <Demo />
+      <div className='text-center'>
+        <p>Stand by for an incoming phone call to your phone on record.</p>
+        <p>Please have your safe word and PIN at the ready.</p>
+        <GridLoaderClient />
+        {callStatus !== 'error' && <p className='text-green-500'>{statusMap[callStatus]}</p>}
+        {callStatus === 'error' && <p className='text-red-500'>Error: {errorMessage}</p>}
+      </div>
     </div>
   )
 }

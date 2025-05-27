@@ -3,11 +3,11 @@ import db from '@/utils/db'
 import { getUserSessionWithRefresh } from '@/utils/userActions'
 
 export async function GET() {
-  const user = await getUserSessionWithRefresh() ?? null
-  const latestCall = await db.voiceCall.findFirst({
+  const user = await getUserSessionWithRefresh() ?? null  
+  const latestCall = user ? await db.voiceCall.findFirst({
     where: { userId: user?.userId },
     orderBy: { createdAt: 'desc' },
-  })
+  }) : null
 
   return NextResponse.json({
     success: true,

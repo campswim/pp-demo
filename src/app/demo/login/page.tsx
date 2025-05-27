@@ -1,5 +1,11 @@
 import LoginForm from '@/components/user/login-form'
+import Demo from '@/components/ui/demo-background'
 
 export default function DemoLogin() {
-  return <LoginForm caller='demo' />
+  return (
+    <div className='relative w-full h-screen flex items-center'>
+      <Demo />
+      <LoginForm caller='demo' />
+    </div>
+  )
 }
