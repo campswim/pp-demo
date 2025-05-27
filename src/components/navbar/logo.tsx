@@ -6,7 +6,7 @@ import PhoneWithText from '@/components/ui/phone-with-text'
 import { TbAmpersand } from "react-icons/tb"
 import { useLoggedIn } from '@/context/loggedIn'
 
-const Logo: React.FC<{ hrefBoolean?: boolean, logoSize: number | undefined }> = ({ hrefBoolean = false, logoSize = 100 }) => {
+const Logo: React.FC<{ hrefBoolean?: boolean, logoSize?: number }> = ({ hrefBoolean = false, logoSize = 100 }) => {
   const { role } = useLoggedIn()
   const href = role !== 'guest' ? '/user/home' : '/'
 
