@@ -1,5 +1,3 @@
-// components/icons/PhoneWithText.jsx
-
 const PhoneWithText = ({ size = 100, color = 'currentColor', ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

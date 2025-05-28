@@ -16,7 +16,7 @@ const Login = ({ caller }: { caller: string }) => {
   return (
     <form 
       action={action}
-      className='flex flex-col items-center mx-auto min-w-[20rem] md:p-8 p-3' 
+      className='flex flex-col items-center mx-auto min-w-[20rem] z-10 md:p-8 p-3 border border-border bg-white/70 dark:bg-black/50 rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
       autoComplete='on'
     >
       <div className='mb-4 w-full'>
@@ -94,7 +94,8 @@ const Login = ({ caller }: { caller: string }) => {
       <button
         disabled={pending}
         type='submit'
-        className='w-full rounded-md bg-primary px-3 pb-1 pt-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'>
+        className="w-full rounded-md bg-primary dark:bg-primary/80 px-3 pb-1 pt-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 dark:hover:bg-primary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
         {pending ? 'Stand By' : caller === 'register' ? 'Register' : 'Log In'}
       </button>
       {state?.errors && 
