@@ -6,12 +6,9 @@ import { demoLogin } from '@/utils/demoActions'
 
 const Login = ({ caller }: { caller: string }) => {
   const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
-  const [usernamePlaceholder, setUsernamePlaceholder] = useState<string | null>('Username')
-  const [phonePlaceholder, setPhonePlaceholder] = useState<string | null>('Phone Number')
   const [safewordPlaceholder, setSafewordPlaceholder] = useState<string | null>('Safeword')
   const [pinPlaceholder, setPinPlaceholder] = useState<string | null>('4-Digit PIN')
-  const [pwdPlaceholder, setPwdPlaceholder] = useState<string | null>('Password')
-  const inputStyle = 'w-full rounded-md border border-input focus:border-transparent focus:outline-none bg-background pt-5 pb-1 px-3 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset'
+  const inputStyle = 'peer w-full rounded-md border border-input focus:border-transparent focus:outline-none bg-background pt-5 pb-1 px-3 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset'
   
   return (
     <form 
@@ -19,75 +16,98 @@ const Login = ({ caller }: { caller: string }) => {
       className='flex flex-col items-center mx-auto min-w-[20rem] z-10 md:p-8 p-3 border border-border bg-white/70 dark:bg-black/50 rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
       autoComplete='on'
     >
-      <div className='mb-4 w-full'>
-        {/* <label htmlFor="username" className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Username
-        </label> */}
+      <div className='relative mb-4 w-full'>
         <input
           type='username'
           id='username'
           name='username'
-          placeholder={usernamePlaceholder ?? undefined}
+          placeholder=' '
           className={inputStyle}
           autoComplete='on'
-          onFocus={() => setUsernamePlaceholder('')}
-          onBlur={() => setUsernamePlaceholder('Username')}
+          // onFocus={() => setUsernamePlaceholder('')}
+          // onBlur={() => setUsernamePlaceholder('Username')}
           required
         />
+        <label 
+          htmlFor='username' 
+          className='absolute left-3 top-1 text-[.65rem] text-muted-foreground transition-all duration-200 ease-in-out peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[.65rem]'
+        >
+          Username
+        </label>
       </div>
-      <div className='mb-4 w-full'>
+      <div className='relative mb-4 w-full'>
         <input
           type='password'
           id='password'
           name='password'
-          placeholder={pwdPlaceholder ?? undefined}
+          placeholder=' '
           className={inputStyle}
           autoComplete='on'
-          onFocus={() => setPwdPlaceholder('')}
-          onBlur={() => setPwdPlaceholder('Password')}
           required
         />
+        <label 
+          htmlFor='password' 
+          className='absolute left-3 top-1 text-[.65rem] text-muted-foreground transition-all duration-200 ease-in-out peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[.65rem]'
+        >
+          Password
+        </label>
       </div>
       {caller === 'register' && (
         <>
-          <div className='mb-4 w-full'>
+          <div className='relative mb-4 w-full'>
             <input
               type='tel'
               id='phone'
               name='phone'
-              placeholder={phonePlaceholder ?? undefined}
+              placeholder=' '
               className={inputStyle}
               autoComplete='on'
-              onFocus={() => setPhonePlaceholder('')}
-              onBlur={() => setPhonePlaceholder('Phone Number')}
               required
             />
+            <label 
+              htmlFor='phone' 
+              className='absolute left-3 top-1 text-[.65rem] text-muted-foreground transition-all duration-200 ease-in-out peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[.65rem]'
+            >
+              Phone
+            </label>
           </div>
-          <div className='mb-4 w-full'>
+          <div className='relative mb-4 w-full'>
             <input
               type='text'
               id='safeword'
               name='safeword'
-              placeholder={safewordPlaceholder ?? undefined}
+              placeholder=' '
               className={inputStyle}
               autoComplete='off'
               onFocus={() => setSafewordPlaceholder('')}
               onBlur={() => setSafewordPlaceholder('Safeword')}
               required
             />
+            <label 
+              htmlFor='safeword' 
+              className='absolute left-3 top-1 text-[.65rem] text-muted-foreground transition-all duration-200 ease-in-out peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[.65rem]'
+            >
+              Safeword
+            </label>
           </div>
-          <div className='mb-4 w-full'>
+          <div className='relative mb-4 w-full'>
             <input
               type='number'
               id='pin'
               name='pin'
-              placeholder={pinPlaceholder ?? undefined}
+              placeholder=' '
               className={inputStyle}
               autoComplete='off'
               onFocus={() => setPinPlaceholder('')}
               onBlur={() => setPinPlaceholder('4-Digit PIN')}
               required
             />
+            <label 
+              htmlFor='pin' 
+              className='absolute left-3 top-1 text-[.65rem] text-muted-foreground transition-all duration-200 ease-in-out peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[.65rem]'
+            >
+              Four-digit PIN
+            </label>
           </div>
         </>
       )}
