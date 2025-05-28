@@ -1,13 +1,11 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState } from 'react'
 import { signup, login } from '@/utils/userActions'
 import { demoLogin } from '@/utils/demoActions'
 
 const Login = ({ caller }: { caller: string }) => {
   const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
-  const [safewordPlaceholder, setSafewordPlaceholder] = useState<string | null>('Safeword')
-  const [pinPlaceholder, setPinPlaceholder] = useState<string | null>('4-Digit PIN')
   const inputStyle = 'peer w-full rounded-md border border-input focus:border-transparent focus:outline-none bg-background pt-5 pb-1 px-3 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset'
   
   return (
@@ -24,8 +22,6 @@ const Login = ({ caller }: { caller: string }) => {
           placeholder=' '
           className={inputStyle}
           autoComplete='on'
-          // onFocus={() => setUsernamePlaceholder('')}
-          // onBlur={() => setUsernamePlaceholder('Username')}
           required
         />
         <label 
@@ -79,8 +75,6 @@ const Login = ({ caller }: { caller: string }) => {
               placeholder=' '
               className={inputStyle}
               autoComplete='off'
-              onFocus={() => setSafewordPlaceholder('')}
-              onBlur={() => setSafewordPlaceholder('Safeword')}
               required
             />
             <label 
@@ -98,8 +92,6 @@ const Login = ({ caller }: { caller: string }) => {
               placeholder=' '
               className={inputStyle}
               autoComplete='off'
-              onFocus={() => setPinPlaceholder('')}
-              onBlur={() => setPinPlaceholder('4-Digit PIN')}
               required
             />
             <label 
