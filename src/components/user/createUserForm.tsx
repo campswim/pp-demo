@@ -29,6 +29,7 @@ export default function NewUserForm() {
       }, 3000)
       return () => clearTimeout(timeout)
     }
+    return undefined;
   }, [state])
 
   return (
