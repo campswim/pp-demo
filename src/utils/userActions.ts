@@ -44,6 +44,9 @@ export const createUser = async (prevState: UserActionsProps, formData: FormData
       // email: formData.get('email') as string,
       role: formData.get('role') as string,
       password: formData.get('password') as string,
+      phone: formData.get('phone') as string,
+      safeword: formData.get('safeword') as string,
+      pin: formData.get('pin') as string,
     }
 
     await db.user.create({
