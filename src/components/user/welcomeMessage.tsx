@@ -12,7 +12,7 @@ const WelcomeMessage = () => {
   const welcomeMessage = usernameFormatted && isRegistration ? 'Welcome' : usernameFormatted && isLogin ? 'Welcome Back' : ''
 
   return (isLogin || isRegistration) && (
-    <div className='flex items-center w-full h-screen'>
+    <div className='flex items-center w-full'>
       <div>
         <h1 className='text-9xl z-10'>{welcomeMessage}</h1>
         {usernameFormatted && (
