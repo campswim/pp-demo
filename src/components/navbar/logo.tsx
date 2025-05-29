@@ -6,7 +6,7 @@ import PhoneWithText from '@/components/ui/phone-with-text'
 import { TbAmpersand } from "react-icons/tb"
 import { useLoggedIn } from '@/context/loggedIn'
 
-const Logo: React.FC<{ hrefBoolean?: boolean, logoSize?: number }> = ({ hrefBoolean = false, logoSize = 100 }) => {
+const Logo: React.FC<{ hrefBoolean?: boolean  }> = ({ hrefBoolean = false }) => {
   const { role } = useLoggedIn()
   const href = role !== 'guest' ? '/user/home' : '/'
 
@@ -17,16 +17,16 @@ const Logo: React.FC<{ hrefBoolean?: boolean, logoSize?: number }> = ({ hrefBool
     <h1 className={h1Class}>
       {hrefBoolean ? (
         <Link href={href} className='flex items-center hover:text-blue-500'>
-          <PhoneWithText size={logoSize} />
-          <TbAmpersand />
-          <MdFiberPin size={logoSize} />
+          <PhoneWithText className='w-20 h-20' />
+          <TbAmpersand className='w-8 h-8' />
+          <MdFiberPin className='w-22 h-25' />
         </Link>
       ) : (
-        <>
-          <PhoneWithText size={logoSize} />
-          <TbAmpersand size={logoSize / 3}/>
-          <MdFiberPin size={logoSize} />
-        </>
+        <div className='absolute inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden'>
+          <PhoneWithText className='w-full h-auto' />
+          <TbAmpersand className='w-[33%] h-auto' />
+          <MdFiberPin className='w-full h-auto' />      
+        </div>
       )}
     </h1>
   )
