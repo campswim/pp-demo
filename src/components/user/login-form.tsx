@@ -125,7 +125,6 @@ const Login = ({ caller }: { caller: string }) => {
         :
         (
           Object.entries(state.errors).map(([key, value]) => {
-            console.log({key, value})
             return <p key={key}>{key}: {value}</p>
           })
         )

@@ -5,8 +5,6 @@ export async function POST() {
   try {
     const call = await initiateCall()
 
-    console.log('initiate-call:', {call})
-
     return NextResponse.json({ success: true, sid: call.sid })
   } catch (err) {
     console.error('Failed to initiate call:', err)
