@@ -3,18 +3,16 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { NavItem } from '@/data/navItems'
+import { NavItem } from '@/lib/types'
 import { useLoggedIn } from '@/context/loggedIn'
 import { logout } from '@/utils/userActions'
 import { navItems } from '@/data/navItems'
 import { DrawerClose } from '@/components/ui/drawer'
 
 const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
-  // const [pathname, setPathname] = useState<string>(usePathname())
   const pathname = usePathname() // Get the current pathname from Next.js router
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
   const { userId, role } = useLoggedIn()
-  // const router = useRouter()
 
   // Check if the current pathname matches the item URL.
   const isActive = (pagename: string) => pathname === pagename ? 'text-blue-500' : ''
@@ -48,14 +46,14 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
               onMouseEnter={() => handleGroupMouseEnter(item.id)}
               onMouseLeave={handleGroupMouseLeave}
             >
-              <div className={`cursor-pointer ${isActive(item.url)} text-lg font-semibold`}>
-                { item.url !== '/user/logout' ? 
+              <div className={`cursor-pointer ${isActive(item.href)} text-lg font-semibold`}>
+                { item.href !== '/user/logout' ? 
                 ( isDrawer ?
                   (
                     <DrawerClose asChild>
                       <Link
-                        href={item.url}
-                        className={`text-lg font-semibold ${isActive(item.url)}`}
+                        href={item.href}
+                        className={`text-lg font-semibold ${isActive(item.href)}`}
                       >
                         {item.name}
                       </Link>
@@ -64,8 +62,8 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                   :
                   (
                     <Link
-                      href={item.url}
-                      className={`text-lg font-semibold ${isActive(item.url)}`}
+                      href={item.href}
+                      className={`text-lg font-semibold ${isActive(item.href)}`}
                     >
                       {item.name}
                     </Link>
@@ -73,7 +71,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                 )
                 :
                 (
-                  <Link href={item.url} onClick={async (e) => {
+                  <Link href={item.href} onClick={async (e) => {
                     e.preventDefault()
                     await logout(userId)
                   }}>
@@ -92,8 +90,8 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                       (
                         <DrawerClose asChild key={sub.id} >
                           <Link
-                            href={sub.url}
-                            className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
+                            href={sub.href}
+                            className={`text-lg text-white hover:text-blue-500 ${isActive(sub.href)}`}
                           >
                             {sub.name}
                           </Link>
@@ -103,8 +101,8 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                     (
                       <Link
                         key={sub.id}
-                        href={sub.url}
-                        className={`text-lg text-white hover:text-blue-500 ${isActive(sub.url)}`}
+                        href={sub.href}
+                        className={`text-lg text-white hover:text-blue-500 ${isActive(sub.href)}`}
                       >
                         {sub.name}
                       </Link>
