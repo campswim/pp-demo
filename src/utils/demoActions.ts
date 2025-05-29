@@ -26,3 +26,8 @@ export const demoLogin = async (state: FormState, formData: FormData): Promise<F
   // Redirect to the /demo/start page.
   redirect('/demo/start')
 }
+
+// Log a demo user out: no auth, just redirect to /user/home.
+export const demoLogout = async (): Promise<void> => {
+  redirect('/user/home')
+}
