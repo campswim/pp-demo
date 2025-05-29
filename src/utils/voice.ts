@@ -8,10 +8,7 @@ import { formatToE164 } from '@/utils/helpers'
 import type { Cookie } from '@/lib/schemata'
 
 // Initiate the authentication call from Twilio.
-export const initiateCall = async () => {
-
-  console.log('BASE_URL:', process.env.BASE_URL)
-  
+export const initiateCall = async () => {  
   // Get the auth cookie in order to retrieve the user's phone number.
   const authCookie: Cookie | null = await getCookie('auth')
   const userInfo = authCookie ? await validateAuthCookie(authCookie) : null

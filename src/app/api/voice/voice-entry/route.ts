@@ -1,6 +1,9 @@
 import { twiml } from 'twilio'
 
 export async function POST(req: Request) {
+
+  console.log('entering /voice-entry')
+  
   // Get the current URL.
   const url = new URL(req.url)
 
