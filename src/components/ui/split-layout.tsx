@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import Container from '@/components/global/container'
 import Navbar from '@/components/navbar/navbar'
+import DemoHeader from '@/components/demo/demo-header'
 
 const ANIMATION_DURATION = 700
 
@@ -47,7 +48,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
   }, [isPersistent])
 
   return (
-    <div className={pathname !== '/' ? 'flex justify-center min-h-screen' : 'flex flex-col min-h-screen'}>
+    <div className={pathname !== '/' ? 'flex flex-col justify-center min-h-screen' : 'flex flex-col min-h-screen'}>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
@@ -87,11 +88,14 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
 
       {/* Main content area */}
       {pathname !== '/' && pathname !== '/user/home' ? (
-        <Container>
-          <main className='flex flex-col justify-center min-h-screen'>
-            {children}
-          </main>
-        </Container>
+        <>
+          <DemoHeader />
+          <Container>
+            <main className='flex flex-col justify-center min-h-screen'>
+              {children}
+            </main>
+          </Container>
+        </>
       )
       :
       (
