@@ -42,6 +42,10 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
     }
   }, [isPersistent])
 
+  useEffect(() => {
+    if (isPersistent) setOpen(false)
+  }, [isPersistent])
+
   return (
     <div className={pathname !== '/' ? 'flex justify-center min-h-screen' : 'flex flex-col min-h-screen'}>
       {/* Persistent drawer (not ShadCN) */}
@@ -58,7 +62,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
         </div>
       )}
 
-      {/* ShadCN Drawer toggle button */}
+      {/* ShadCN Drawer */}
       <Drawer open={open} onOpenChange={setOpen}>
       {!isPersistent && (
         <DrawerTrigger asChild>
@@ -75,7 +79,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
 
         {/* Drawer content */}
         <DrawerContent 
-          className='bg-gray-900 text-white p-4 w-screen max-w-none outline-none'
+          className='bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 w-screen max-w-none outline-none'
         >
           <Navbar isDrawer={true}/>
         </DrawerContent>
