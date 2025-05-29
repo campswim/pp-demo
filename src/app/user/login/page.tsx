@@ -3,7 +3,7 @@ import LogoBackground from '@/components/ui/logo-background'
 
 export default function LoginPage() {
   return (
-    <div className='relative w-full h-screen flex justify-center items-center'>
+    <div className='relative w-full flex justify-center items-center'>
       <LogoBackground />
       <LoginForm caller='login' />
     </div>
