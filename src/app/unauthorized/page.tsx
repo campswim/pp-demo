@@ -14,7 +14,7 @@ export default async function UnauthorizedPage({ searchParams }: UnauthorizedPag
   const role = params.role ?? ''
 
   return (
-    <div className='flex min-h-screen flex-col items-center justify-center text-center p-8'>
+    <div className='flex flex-col items-center justify-center text-center p-8'>
       <h1 className='text-4xl font-bold mb-4'>Unauthorized</h1>
       <p className='text-lg text-gray-600'>
         Your role{role && role !== 'undefined' && (
