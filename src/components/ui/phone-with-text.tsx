@@ -1,8 +1,8 @@
-const PhoneWithText = ({ size = 100, color = 'currentColor', ...props }) => (
+const PhoneWithText = ({ color = 'currentColor', ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
+    // width={size}
+    // height={size}
     viewBox="0 20 256 236" // shift viewBox origin down by 20px
     fill="none"
     stroke={color}
