@@ -48,7 +48,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
   }, [isPersistent])
 
   return (
-    <div className={pathname !== '/' ? 'flex flex-col justify-center min-h-screen' : 'flex flex-col min-h-screen'}>
+    <div className='flex flex-col min-h-screen'>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
@@ -91,7 +91,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
         <>
           <DemoHeader />
           <Container>
-            <main className='flex flex-col justify-center min-h-screen'>
+            <main className='flex flex-col flex-1 items-center justify-center'>
               {children}
             </main>
           </Container>
@@ -99,7 +99,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       )
       :
       (
-        <main className='flex flex-col justify-center min-h-screen'>
+        <main className='flex flex-col flex-1 items-center justify-center'>
           {children}
         </main>
       )}
