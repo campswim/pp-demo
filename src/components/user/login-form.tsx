@@ -11,7 +11,7 @@ const Login = ({ caller }: { caller: string }) => {
   return (
     <form 
       action={action}
-      className='flex flex-col items-center mx-auto min-w-[20rem] z-10 md:p-8 p-3 border border-border bg-white/70 dark:bg-black/50 rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
+      className='flex flex-col items-center mx-auto min-w-[20rem] z-10 md:p-8 p-3 border-2 border-border bg-white/70 dark:bg-black/50 rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
       autoComplete='on'
     >
       <div className='relative mb-4 w-full'>
@@ -81,7 +81,7 @@ const Login = ({ caller }: { caller: string }) => {
               htmlFor='safeword' 
               className='absolute left-3 top-1 text-[.65rem] text-muted-foreground transition-all duration-200 ease-in-out peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[.65rem]'
             >
-              Safeword
+              Safe Word
             </label>
           </div>
           <div className='relative mb-4 w-full'>

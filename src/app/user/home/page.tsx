@@ -1,8 +1,10 @@
 import WelcomeMessage from '@/components/user/welcomeMessage'
+import LogoBackground from '@/components/ui/logo-background'
 
 export default function Home() {
   return (
-    <div className='flex justify-center'>
+    <div className='relative w-full h-screen flex justify-center items-center'>
+      <LogoBackground />      
       <WelcomeMessage />
     </div>
   )
