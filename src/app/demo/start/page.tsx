@@ -25,7 +25,7 @@ export default function DemoStart() {
   useCallRouting(callStatus)
 
   return (
-    <div className='relative w-full h-screen flex items-center'>
+    <div className='relative w-full flex items-center'>
       <Demo />
       <div className='text-center'>
         <p>Stand by for an incoming phone call to your phone on record.</p>
