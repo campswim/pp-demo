@@ -11,7 +11,7 @@ const Login = ({ caller }: { caller: string }) => {
   return (
     <form 
       action={action}
-      className='flex flex-col items-center mx-auto min-w-[20rem] z-10 md:p-8 p-3 border-2 border-border dark:border-none bg-white/70 dark:bg-black/50 rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
+      className='flex flex-col items-center mx-auto min-w-[20rem] z-10 md:p-8 p-3 border-2 border-border dark:border-none bg-white/70 dark:bg-black/50 rounded-md shadow-xl dark:shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
       autoComplete='on'
     >
       <div className='relative mb-4 w-full'>
