@@ -8,10 +8,12 @@ import { useLoggedIn } from '@/context/loggedIn'
 import { logout } from '@/utils/userActions'
 import { navItems } from '@/data/navItems'
 import { DrawerClose } from '@/components/ui/drawer'
+import { GridLoader } from 'react-spinners'
 
 const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
   const pathname = usePathname() // Get the current pathname from Next.js router
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
   const { userId, role } = useLoggedIn()
 
   // Check if the current pathname matches the item URL.
@@ -73,9 +75,17 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                 (
                   <Link href={item.href} onClick={async (e) => {
                     e.preventDefault()
+                    setIsLoggingOut(true)
                     await logout(userId)
                   }}>
-                    {item.name}
+                    {isLoggingOut ? 
+                    (
+                      <GridLoader color='#0ea5e9' size={3} />
+                    )
+                    :
+                    (
+                      item.name
+                    )}
                   </Link>
                 )}
               </div>
