@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
-export function useCallRouting(callStatus: string) {
+export function useCallRouting(callStatus: string) {  
   const router = useRouter()
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export function useCallRouting(callStatus: string) {
       return () => clearInterval(interval)
     }
 
-    if (['busy', 'error', 'completed'].includes(callStatus)) {
+    if (['busy', 'error', 'completed', 'failed'].includes(callStatus)) {
       const interval = setInterval(() => {
         router.push('/demo/login')
       }, 2000)
