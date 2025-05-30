@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     response.say("I didn't hear anything.")
     response.redirect(`${process.env.BASE_URL}/api/voice/voice-entry?retry=1`)
   } else {
-    response.say("I still can't hear anything. Please try logging in again. Goodbye.")
+    response.say("I didn't hear anything. Please try logging in again. Goodbye.")
     response.hangup()
   }
   
