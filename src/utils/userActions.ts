@@ -44,9 +44,6 @@ export const createUser = async (prevState: UserActionsProps, formData: FormData
       // email: formData.get('email') as string,
       role: formData.get('role') as string,
       password: formData.get('password') as string,
-      phone: formData.get('phone') as string,
-      safeword: formData.get('safeword') as string,
-      pin: formData.get('pin') as string,
     }
 
     await db.user.create({
@@ -86,7 +83,7 @@ export const deleteUser = async (userId: string) => {
 export const signup = async (state: FormState, formData: FormData): Promise<FormState> => {
   // 1a. Validate form fields.
   const validatedFields = SignupFormSchema.safeParse({
-    username: formData.get('username'),
+    username: typeof formData.get('username') === 'string' ? (formData.get('username') as string).toLowerCase() : '',
     phone: formData.get('phone'),
     password: formData.get('password'),
     safeword: formData.get('safeword'),
@@ -164,7 +161,7 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
 
   // 2. Get the user from the db.
   const { username, password } = validateFields.data
-  const user = await getUserByUsername(username)
+  const user = await getUserByUsername(username.toLowerCase())
 
   if (!user) return { errors: { username: [`The username "${username}" is not registered.`] } }
 
