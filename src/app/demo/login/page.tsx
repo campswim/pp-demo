@@ -1,10 +1,8 @@
 import LoginForm from '@/components/user/login-form'
-import Demo from '@/components/ui/demo-background'
 
 export default function DemoLogin() {
   return (
-    <div className='relative w-full flex justify-center'>
-      <Demo />
+    <div className='w-full flex justify-center'>
       <LoginForm caller='demo' />
     </div>
   )
