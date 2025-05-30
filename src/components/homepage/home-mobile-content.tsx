@@ -23,7 +23,7 @@ const HomeMobileContent = () => {
         <p className='text-5xl'>+</p>
         <p className='text-3xl leading-loose italic'>Low Cost</p>
         <p className='text-5xl'>=</p>
-        <Logo hrefBoolean={false} />
+        <Logo hrefBoolean={false} caller='public homepage'/>
       </section>
 
       <section className='py-8 text-center'>
