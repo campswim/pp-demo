@@ -12,11 +12,11 @@ const WelcomeMessage = () => {
   const welcomeMessage = usernameFormatted && isRegistration ? 'Welcome' : usernameFormatted && isLogin ? 'Welcome Back' : ''
 
   return (isLogin || isRegistration) && (
-    <div className='flex items-center w-full'>
+    <div className='flex items-center justify-center w-full py-10'>
       <div>
-        <h1 className='text-9xl z-10'>{welcomeMessage}</h1>
+        <h1 className='text-center text-2xl lg:text-9xl z-10'>{welcomeMessage}</h1>
         {usernameFormatted && (
-          <p className='text-7xl text-center'>{`\u2013 ${usernameFormatted} \u2013`}</p>
+          <p className='text-3xl lg:text-7xl text-center'>{`\u2013 ${usernameFormatted} \u2013`}</p>
         )}
       </div>
     </div>
