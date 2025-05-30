@@ -80,7 +80,7 @@ function DrawerContent({
             role='button'
             tabIndex={0}
             aria-label='Close drawer'
-            className="cursor-pointer bg-sky-200 mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full transition-transform duration-300 ease-in-out hover:scale-105 hover:bg-sky-300 group-data-[vaul-drawer-direction=bottom]/drawer-content:block dark:bg-sky-800 dark:hover:bg-sky-700"          
+            className="cursor-pointer bg-sky-400 mx-auto my-4 hidden h-2 w-[100px] shrink-0 rounded-full transition-transform duration-300 ease-in-out hover:scale-105 hover:bg-sky-300 group-data-[vaul-drawer-direction=bottom]/drawer-content:block dark:bg-sky-800 dark:hover:bg-sky-700"          
           />
         </DrawerClose>
         {children}
