@@ -6,8 +6,6 @@ import { usePathname } from 'next/navigation'
 export default function LogoBackground() {
   const pathname = usePathname()
 
-  console.log({pathname})
-
   if (pathname.startsWith('/demo') || pathname === '/') return null
 
   return (
