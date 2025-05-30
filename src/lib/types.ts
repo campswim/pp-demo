@@ -17,6 +17,7 @@ export type CallStatus =
   | 'authenticated' 
   | 'busy' 
   | 'error' 
+  | 'failed'
   | ''
 
 // Define the type for the user actions' return object.
