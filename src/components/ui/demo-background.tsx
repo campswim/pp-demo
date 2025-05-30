@@ -1,7 +1,15 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
+
 export default function DemoBackground() {
+  const pathname = usePathname()
+
+  if (!pathname.startsWith('/demo')) return null
+
   return (
-    <div className='absolute inset-0 flex items-center justify-center opacity-7 pointer-events-none z-0'>
-      <p className='text-[20vw] md:text-[30vw] lg:text-[40vw] xl:text-[50rem]'>DEMO</p>    
+    <div className='fixed inset-0 flex items-center justify-center opacity-10 pointer-events-none z-0'>
+      <p className='hidden xs:block xs:text-[40vw]'>DEMO</p>    
     </div>
   )
 }
