@@ -14,9 +14,9 @@ export default function DemoHeader() {
   if (!pathname.startsWith('/demo')) return null
 
   return (
-    <header className='w-full min-h-25 flex items-center border-b bg-blue-100 dark:bg-white/70 backdrop-blur z-50'>
+    <header className='w-full min-h-15 lg:min-h-25 flex items-center border-b bg-blue-100 dark:bg-white/70 backdrop-blur z-50'>
       <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex justify-evenly items-center'>
-        <Link href='/demo' className='text-xl font-bold'>Client Logo</Link>
+        <Link href='/demo/login' className='text-xl font-bold'>Client Logo</Link>
         <nav className='hidden md:flex justify-center gap-6 col-start-2'>
           {demoNavItems.map(({ id, name, href }) => (
             <Link key={id} href={href} className='text-sm hover:text-primary'>
