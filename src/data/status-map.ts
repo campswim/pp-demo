@@ -6,5 +6,6 @@ export const statusMap = {
   'authenticated': 'You have been granted access. Stand by to be redirected to your account.',
   'busy': 'Your phone is busy. Please ensure you are not on another call when you log in.',
   'error': 'An error has occurred.',
+  'failed': 'Authentication has failed. Please try again.',
   '': ''
 }
