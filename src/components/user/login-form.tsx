@@ -3,11 +3,14 @@
 import { useActionState } from 'react'
 import { signup, login } from '@/utils/userActions'
 import { demoLogin } from '@/utils/demoActions'
+import { GridLoader } from 'react-spinners'
 
 const Login = ({ caller }: { caller: string }) => {
   const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
   const inputStyle = 'peer w-full rounded-md border border-input focus:border-transparent focus:outline-none bg-background pt-5 pb-1 px-3 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset'
   
+  console.log({pending})
+
   return (
     <form 
       action={action}
@@ -108,7 +111,7 @@ const Login = ({ caller }: { caller: string }) => {
         type='submit'
         className="w-full rounded-md bg-primary dark:bg-primary/80 px-3 pb-1 pt-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 dark:hover:bg-primary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        {pending ? 'Stand By' : caller === 'register' ? 'Register' : 'Log In'}
+        {pending ? <GridLoader color='#0ea5e9' size={3} /> : caller === 'register' ? 'Register' : 'Log In'}
       </button>
       {state?.errors && 
       (state?.errors?.password ? 
