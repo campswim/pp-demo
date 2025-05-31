@@ -89,7 +89,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       </Drawer>
 
       {/* Main content area */}
-      {pathname !== '/' && pathname !== '/user/home' ? (
+      {pathname !== '/' ? (
         <div className='relative w-full min-h-screen flex flex-col'>
           <DemoBackground />
           <LogoBackground />
