@@ -9,8 +9,6 @@ const Login = ({ caller }: { caller: string }) => {
   const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
   const inputStyle = 'peer w-full rounded-md border border-input focus:border-transparent focus:outline-none bg-background pt-5 pb-1 px-3 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset'
   
-  console.log({pending})
-
   return (
     <form 
       action={action}
