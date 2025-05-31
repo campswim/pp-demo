@@ -10,8 +10,28 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
   const excludedCallHeaders = ['id', 'userId']
 
   return (
-    <ul className='flex flex-col gap-2'>
+    <div>
       {headers.map((header, idx) => {
+        if (header === 'safeword') {
+          const value = user ? decrypt(String(user[header as keyof UserWithVoiceCalls])) : 'N/A'
+
+          return (
+            <div key={idx}>
+              {formatHeader(header)}: {value}
+            </div>
+          )
+        }
+
+        if (header === 'pin') {
+          const value = user ? decrypt(String(user[header as keyof UserWithVoiceCalls])) : 'N/A'
+
+          return (
+            <div key={idx}>
+              {formatHeader(header)}: {value}
+            </div>
+          )
+        }
+
         if (header === 'phone') {
           const value = user ? formatPhoneDashed(decrypt(String(user[header as keyof UserWithVoiceCalls]))) : 'N/A'
           
@@ -24,6 +44,7 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
 
         if (header === 'voiceCalls') {
           const voiceCalls = user?.[header as keyof UserWithVoiceCalls] as UserWithVoiceCalls['voiceCalls'] | undefined
+
           if (voiceCalls) voiceCalls.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
           if (!Array.isArray(voiceCalls) || voiceCalls.length === 0) {
@@ -49,7 +70,8 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
                   </tr>
                 </thead>
 
-                {Array.isArray(voiceCalls) && voiceCalls.length > 0 ? (
+                {Array.isArray(voiceCalls) && voiceCalls.length > 0 ? 
+                (
                   <tbody>
                     {voiceCalls.map(call => (
                       <tr key={call?.id} className='border-b p-6'>
@@ -76,7 +98,9 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
                       </tr>
                     ))}
                   </tbody>
-                ) : (
+                ) 
+                : 
+                (
                   'None'
                 )}
               </table>
@@ -95,7 +119,7 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
 
         return null
       })}
-    </ul>
+    </div>
   )
 }
 
