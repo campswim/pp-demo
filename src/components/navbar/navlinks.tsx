@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { NavItem } from '@/lib/types'
@@ -37,6 +37,12 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
     setActiveItemId(null) // Hide submenu when mouse leaves both parent and submenu
   }
 
+  useEffect(() => {
+    if (!userId) {
+      setIsLoggingOut(false)
+    }
+  }, [userId])
+  
   return (
     <div className='flex justify-center items-center'>
       <div className="flex items-center gap-8">
@@ -77,6 +83,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                     e.preventDefault()
                     setIsLoggingOut(true)
                     await logout(userId)
+                    setIsLoggingOut(false)
                   }}>
                     {isLoggingOut ? 
                     (
