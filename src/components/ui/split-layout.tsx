@@ -55,11 +55,11 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       {visible && (
         <div 
           className={pathname !== '/' ? cn(
-            'fixed bottom-0 inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-0 lg:p-4 border-t border-gray-700 transition-transform duration-700 ease-in-out',
+            'fixed bottom-0 inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-0 lg:p-4 transition-transform duration-700 ease-in-out',
             animatingIn && 'translate-y-full',
             animatingOut && 'translate-y-full',
             !animatingIn && !animatingOut && 'translate-y-0'
-          ) : 'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white p-4 border-b border-gray-700 transition-transform duration-700 ease-in-out'}        
+          ) : 'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 transition-transform duration-700 ease-in-out'}        
         >
           <Navbar isDrawer={false} />
         </div>
@@ -89,7 +89,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       </Drawer>
 
       {/* Main content area */}
-      {pathname !== '/' && pathname !== '/user/home' ? (
+      {pathname !== '/' ? (
         <div className='relative w-full min-h-screen flex flex-col'>
           <DemoBackground />
           <LogoBackground />

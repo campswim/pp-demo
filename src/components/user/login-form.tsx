@@ -3,6 +3,7 @@
 import { useActionState } from 'react'
 import { signup, login } from '@/utils/userActions'
 import { demoLogin } from '@/utils/demoActions'
+import { GridLoader } from 'react-spinners'
 
 const Login = ({ caller }: { caller: string }) => {
   const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
@@ -11,7 +12,7 @@ const Login = ({ caller }: { caller: string }) => {
   return (
     <form 
       action={action}
-      className='flex flex-col items-center mx-auto min-w-[20rem] z-10 md:p-8 p-3 border-2 border-border dark:border-none bg-white/70 dark:bg-black/50 rounded-md shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
+      className='flex flex-col items-center mx-auto min-w-[20rem] z-10 md:p-8 p-3 border-2 border-border dark:border-none bg-white/70 dark:bg-black/50 rounded-md shadow-xl dark:shadow-[0_10px_40px_rgba(0,0,0,0.3)]'
       autoComplete='on'
     >
       <div className='relative mb-4 w-full'>
@@ -108,7 +109,7 @@ const Login = ({ caller }: { caller: string }) => {
         type='submit'
         className="w-full rounded-md bg-primary dark:bg-primary/80 px-3 pb-1 pt-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 dark:hover:bg-primary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        {pending ? 'Stand By' : caller === 'register' ? 'Register' : 'Log In'}
+        {pending ? <GridLoader color='#0ea5e9' size={3} /> : caller === 'register' ? 'Register' : 'Log In'}
       </button>
       {state?.errors && 
       (state?.errors?.password ? 
@@ -125,7 +126,7 @@ const Login = ({ caller }: { caller: string }) => {
         :
         (
           Object.entries(state.errors).map(([key, value]) => {
-            return <p key={key}>{key}: {value}</p>
+            return <p key={key}>{value}</p>
           })
         )
       )}

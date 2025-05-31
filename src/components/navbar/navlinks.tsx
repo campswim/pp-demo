@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { NavItem } from '@/lib/types'
@@ -8,10 +8,12 @@ import { useLoggedIn } from '@/context/loggedIn'
 import { logout } from '@/utils/userActions'
 import { navItems } from '@/data/navItems'
 import { DrawerClose } from '@/components/ui/drawer'
+import { GridLoader } from 'react-spinners'
 
 const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
   const pathname = usePathname() // Get the current pathname from Next.js router
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
   const { userId, role } = useLoggedIn()
 
   // Check if the current pathname matches the item URL.
@@ -35,6 +37,12 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
     setActiveItemId(null) // Hide submenu when mouse leaves both parent and submenu
   }
 
+  useEffect(() => {
+    if (!userId) {
+      setIsLoggingOut(false)
+    }
+  }, [userId])
+  
   return (
     <div className='flex justify-center items-center'>
       <div className="flex items-center gap-8">
@@ -73,9 +81,18 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                 (
                   <Link href={item.href} onClick={async (e) => {
                     e.preventDefault()
+                    setIsLoggingOut(true)
                     await logout(userId)
+                    setIsLoggingOut(false)
                   }}>
-                    {item.name}
+                    {isLoggingOut ? 
+                    (
+                      <GridLoader color='#0ea5e9' size={3} />
+                    )
+                    :
+                    (
+                      item.name
+                    )}
                   </Link>
                 )}
               </div>

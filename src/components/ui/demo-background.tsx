@@ -8,7 +8,7 @@ export default function DemoBackground() {
   if (!pathname.startsWith('/demo')) return null
 
   return (
-    <div className='fixed inset-0 flex items-center justify-center opacity-10 pointer-events-none z-0'>
+    <div className='fixed inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0'>
       <p className='hidden xs:block xs:text-[40vw]'>DEMO</p>    
     </div>
   )

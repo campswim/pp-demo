@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 const HomeMobileContent = () => {
   return(
-    <div className='bg-white text-black dark:bg-gray-900 dark:text-white font-sans antialiased'>
+    <div className='bg-white text-black dark:bg-gray-900 dark:text-white font-sans antialiased max-w-screen'>
       <div className='text-center p-8'>
         <h2 className='mt-2 text-xl font-bold'>Multi-Factor Authentication</h2>
         <p className='my-2'>Welcome to the revolutionary cloud-based solution to the</p>
@@ -69,7 +69,7 @@ const HomeMobileContent = () => {
         <h3 className='text-xl text-center font-bold mb-6 px-4'>Then you may <i>never</i> need to use</h3>
         <div className='max-w-[90%] mt-4 text-left mx-auto'>
           <div className='flex flex-col items-align text-center mt-4 space-x-4'>
-            <figure className='flex flex-col items-center justify-between text-center mb-6 min-h-[15rem] border-1 border-gray-900 dark:border-white rounded-sm'>
+            <figure className='flex flex-col items-center justify-between text-center mx-0 mb-6 min-h-[15rem] border-1 border-gray-900 dark:border-white rounded-sm'>
                 <Image 
                   src='/icons/cell-icon-sms.png' 
                   alt='Cellphone icon with SMS' 
@@ -94,7 +94,7 @@ const HomeMobileContent = () => {
               </figcaption>
             </figure>
             <div className='flex flex-col items-center justify-between text-center mb-6 min-h-[15rem] border-1 border-gray-900 dark:border-white rounded-sm'>
-              <ul className='mx-auto list-disc list-inside space-y-1 text-md text-left pt-10'>
+              <ul className='mx-auto list-disc list-inside space-y-1 text-md text-left px-4 pt-10'>
                 <li>Must consist of at least 8 characters.</li>
                 <li>Must contain upper- and lowercase letters.</li>
                 <li>Must have at least 1 special character.</li>
