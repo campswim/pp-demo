@@ -14,7 +14,7 @@ export default function Home() {
             </div>
           </div>
           <WelcomeMessage />
-          <ol className='list-decimal px-4 space-y-4 xs:px-15 sm:text-xl sm:max-w-[80%] sm:mx-auto lg:text-3xl lg:max-w-[75%] xl:max-w-[50%]'>
+          <ol className='list-decimal px-4 space-y-4 xs:px-15 sm:text-xl sm:max-w-[80%] sm:mx-auto lg:text-3xl lg:max-w-[75%] xl:max-w-full'>
             <li>Select &quot;Demo&quot; from the footer.</li>
             <li>Have your safe word and PIN at the ready.</li>
             <li>Log into your demo account using your credentials for this site.</li>
