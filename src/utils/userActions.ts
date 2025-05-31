@@ -108,8 +108,8 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
 
   const hashedPassword = await bcrypt.hash(password, 10)
   const encryptedPhone = encrypt(phone)
-  const hashedSafeword = encrypt(safeword)
-  const encryptedPin = await bcrypt.hash(pin.toString(), 10)
+  const encryptedSafeword = encrypt(safeword)
+  const encryptedPin = encrypt(pin.toString())
 
   // 3. Check if the user already exists.
   const existingUser = await db.user.findUnique({ where: { username }})
@@ -123,7 +123,7 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
       password: hashedPassword,
       phone: encryptedPhone,
       loggedIn: true,
-      safeword: hashedSafeword,
+      safeword: encryptedSafeword,
       pin: encryptedPin
     },
     select: { 
