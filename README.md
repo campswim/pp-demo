@@ -104,9 +104,11 @@ A unique system that allows users to log into accounts containing sensitive info
 
 As a user, I’d like to:
 
-- [x] create a new account, entering my login credentials for both password and phone-and-pin authentication;
-- [ ] have access to a method of safely resetting my password and/or PIN and/or safe words, in the event that I forget them or otherwise feel they are in need of change, e.g., have been compromised;
-- [x] speak my safe word(s) via phone before I enter my PIN;
+- [x] create a new account, entering my login credentials (username and password) and personal information (phone number and phone's registered country) for both password authentication
+- [ ] configure phone-and-pin multi-factor authentication in an initial inbound phone call as part of the sign-up process, establishing via phone my safe word and PIN.
+- [ ] have access to a method of safely resetting my password, in the event that I forge it or otherwise feel it is need of change, e.g., is too weak;
+- [ ] have access to a method of resetting my PIN and safe word, in the event that I forget them or otherwise feel they are in need of change, e.g., have been compromised;
+- [x] speak my safe word via phone before I enter my PIN;
 - [x] be presented with clear instructions via phone about what to do;
 - [x] hear a polite voice via phone with correct grammar and a proper salutation and valediction;
 - [x] log into my account with a password via the website and with a safe word and PIN via phone.
