@@ -49,11 +49,13 @@ A unique system that allows users to log into accounts containing sensitive info
 ### Development Environment
 
 - Run `npm run dev` in the terminal to spin up a development version of the frontend on <http://localhost:3000>.
-- Run `ngrok http 3000`--`npx ngrok http 3000`, if it's not installed globally--in the terminal to expose the backend via an ngrok tunnel to the TWilio API (the port should match the frontend's); then, copy the URL from the terminal's output and use it as the value of the BASE_URL in the .env file.
+- Run `ngrok http 3000`--if it's not installed globally, run `npx ngrok http 3000`--in the terminal to expose the backend via an ngrok tunnel to the TWilio API (the port should match the frontend's); then, copy the URL from the terminal's output and use it as the value of the BASE_URL in the .env file.
 
 ### Production Environment
 
 - [For testing:](https://pp-demo-gules.vercel.app)
+  - Deploys via git push to dev (preview) and push/pull to main (production).
+  - [Empty]
 - The deployed demo: N/A
 
 ### Supabase
