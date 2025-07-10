@@ -1,15 +1,18 @@
 import Container from '@/components/global/container'
-import HomeMobileContent from '@/components/homepage/home-mobile-content'
-import HomeDesktopContent from '@/components/homepage/home-desktop-content'
+import Logo from '@/components/navbar/logo'
+// import HomeMobileContent from '@/components/homepage/home-mobile-content'
+// import HomeDesktopContent from '@/components/homepage/home-desktop-content'
 
 const PublicHomePage: React.FC = () => {
   return (
     <>
       <div className='lg:hidden'>
-        <HomeMobileContent />
+        {/* <HomeMobileContent /> */}
+        <Logo />
       </div>
       <Container className='hidden lg:block'>
-        <HomeDesktopContent />
+        {/* <HomeDesktopContent /> */}
+        <Logo />
       </Container>
     </>
   )
