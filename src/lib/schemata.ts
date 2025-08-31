@@ -27,7 +27,7 @@ export const SignupFormSchema = LoginFormSchema.extend({
     safeword: z
     .string()
     .min(3, { 
-      message: 'Your safeword consist of at least 3 characters.'
+      message: 'Your safeword must consist of at least 3 characters.'
     }),
     pin: z
     .number()
