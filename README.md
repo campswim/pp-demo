@@ -73,7 +73,7 @@ A unique system that allows users to log into accounts containing sensitive info
 - Push changes to the DB (one or the other):
   - Merge into the DB: `npx prisma migrate dev --name init`
   - Overwrite the DB: `npx prisma db push`
-- To view the DB in a UI: `npx prisma studio`
+- To view the DB in a the browser: `npx prisma studio`
 - To avoid re-connecting to the DB when there's already a connection ([Prisma Instance](https://www.prisma.io/docs/guides/other/troubleshooting-orm/help-articles/nextjs-prisma-client-dev-practices#solution)):
   - Create utils/db.ts
   - Add the following code:
