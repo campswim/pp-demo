@@ -68,7 +68,7 @@ const Login = ({ caller }: { caller: string }) => {
               Phone
             </label>
           </div>
-          <div className='relative mb-4 w-full'>
+          {/* <div className='relative mb-4 w-full'>
             <input
               type='text'
               id='safeword'
@@ -101,15 +101,21 @@ const Login = ({ caller }: { caller: string }) => {
             >
               Four-digit PIN
             </label>
-          </div>
+          </div> */}
         </>
       )}
       <button
         disabled={pending}
         type='submit'
-        className="w-full rounded-md bg-primary dark:bg-primary/80 px-3 pb-1 pt-5 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 dark:hover:bg-primary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="group w-full rounded-md bg-primary dark:bg-primary/80 px-3 pb-1 pt-5 text-sm font-medium text-primary-foreground shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       >
-        {pending ? <GridLoader color='#0ea5e9' size={3} /> : caller === 'register' ? 'Register' : 'Log In'}
+        {pending ? (
+          <GridLoader color='#0ea5e9' size={3} />
+        ) : (
+          <span className='inline-block transform transition-transform duration-300 ease-in-out group-hover:scale-120'>
+            {caller === 'register' ? 'Register' : 'Log In'}
+          </span>
+        )}
       </button>
       {state?.errors && 
       (state?.errors?.password ? 
