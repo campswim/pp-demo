@@ -8,7 +8,7 @@ import { useCallStatusPolling } from '@/hooks/use-call-status-polling'
 import { useCallRouting } from '@/hooks/use-call-routing'
 import { statusMap } from '@/data/status-map'
 import type { CallStatus } from '@/lib/types'
-import Demo from '@/components/ui/demo-background'
+import DemoBackground from '@/components/ui/demo-background'
 
 export default function DemoStart() {
   const [callStatus, setCallStatus] = useState<CallStatus>('')
@@ -18,7 +18,7 @@ export default function DemoStart() {
   const { userId } = useLoggedIn()
 
   // Trigger the call when the component mounts and the userId is available.
-  useInitiateCall(userId, setCallStatus, setErrorMessage)
+  useInitiateCall(userId, 'demo', setCallStatus, setErrorMessage)
 
   // Poll for call status updates.
   useCallStatusPolling(callStatus, setCallStatus, setErrorMessage)
@@ -33,7 +33,7 @@ export default function DemoStart() {
 
   return (
     <div className='relative w-full flex items-center'>
-      <Demo />
+      <DemoBackground />
       <div className='text-center'>
         {showMessageOne.current && <p className='text-3xl lg:text-5xl p-4 mb-6'>Stand by for an incoming phone call to your phone on record.</p>}
         {showMessageTwo.current && <p className='text-2xl lg:text-4xl p-4'>Please have your safe word and PIN at the ready.</p>}
