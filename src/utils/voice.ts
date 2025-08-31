@@ -8,7 +8,7 @@ import { formatToE164 } from '@/utils/helpers'
 import type { Cookie } from '@/lib/schemata'
 
 // Initiate the authentication call from Twilio.
-export const initiateCall = async () => {  
+export const initiateCall = async (caller: 'register' | 'demo') => {  
   // Get the auth cookie in order to retrieve the user's phone number.
   const authCookie: Cookie | null = await getCookie('auth')
   const userInfo = authCookie ? await validateAuthCookie(authCookie) : null
@@ -37,7 +37,7 @@ export const initiateCall = async () => {
     const call = await client.calls.create({
       to: phoneFormatted, // -> string with `+` prefix.
       from: process.env.TWILIO_PHONE_NUMBER!,
-      url: `${process.env.BASE_URL}/api/voice/voice-entry`,
+      url: process.env.BASE_URL + caller === 'demo' ? '/api/voice/voice-entry' : '/api/voice/register-creds',
       method: 'POST',
       statusCallback: `${process.env.BASE_URL}/api/voice/call-status`,
       statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'],
