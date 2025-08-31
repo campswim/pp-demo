@@ -88,8 +88,8 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
     username: typeof formData.get('username') === 'string' ? (formData.get('username') as string).toLowerCase() : '',
     phone: formData.get('phone'),
     password: formData.get('password'),
-    safeword: formData.get('safeword'),
-    pin: Number(formData.get('pin'))
+    // safeword: formData.get('safeword'),
+    // pin: Number(formData.get('pin'))
   })
 
   // 1b. If any form fields are invalid, return early.
@@ -102,14 +102,14 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
     username, 
     phone, 
     password,
-    safeword,
-    pin
+    // safeword,
+    // pin
   } = validatedFields.data
 
   const hashedPassword = await bcrypt.hash(password, 10)
   const encryptedPhone = encrypt(phone)
-  const encryptedSafeword = encrypt(safeword)
-  const encryptedPin = encrypt(pin.toString())
+  // const encryptedSafeword = encrypt(safeword)
+  // const encryptedPin = encrypt(pin.toString())
 
   // 3. Check if the user already exists.
   const existingUser = await db.user.findUnique({ where: { username }})
@@ -123,8 +123,8 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
       password: hashedPassword,
       phone: encryptedPhone,
       loggedIn: true,
-      safeword: encryptedSafeword,
-      pin: encryptedPin
+      // safeword: encryptedSafeword,
+      // pin: encryptedPin
     },
     select: { 
       id: true, 
@@ -132,6 +132,10 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
       role: true 
     }
   })
+
+  if (!newUser) {
+    return { message: 'Something went wrong while creating your account.' }
+  }
 
   // 4. Generate the access and refresh tokens.
   const payload = {
@@ -147,7 +151,8 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   await setCookie('refresh', refreshToken)
 
   // 6. Redirect to the homepage, indicating a registration in the URL for the welcome message.
-  redirect('/user/home/?register=true')
+  // redirect('/user/home/?register=true')
+  redirect(`/user/register-creds?user=${newUser.id}`)
 }
 
 // Log a user in.
@@ -244,6 +249,7 @@ export const getUserSessionWithRefresh = async (): Promise<JWTPayload | null> =>
   return user ?? null
 }
 
+// Delete the user's session and cookies.
 export const deleteUserSession = async (userId: string | null = null): Promise<void> => {  
   // To-do: Check to see whether the user still exists in the DB.
 
