@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server'
 import { initiateCall } from '@/utils/voice'
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
-    const call = await initiateCall()
+    const body = await req.json()
+    const { caller } = body
+
+    if (!caller || (caller !== 'register' && caller !== 'demo')) {
+      return NextResponse.json({ success: false, error: 'Invalid caller type.' }, { status: 400 })
+    }
+    // Initiate the call using the provided caller type.
+    const call = await initiateCall(caller)
 
     return NextResponse.json({ success: true, sid: call.sid })
   } catch (err) {
