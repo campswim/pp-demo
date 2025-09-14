@@ -24,7 +24,11 @@ const UsersList = ({ users, headers }: { users: User[], headers: string[] }) => 
                   {Object.entries(user).map(([key, value]) => (
                     key !== 'password' && key !== 'id' &&
                     <td key={key} className='px-4 py-2 align-bottom whitespace-nowrap'>
-                      {value instanceof Date ? value.toISOString().split('T')[0] : value.toString()}
+                      {value === null || value === undefined
+                        ? ''
+                        : value instanceof Date
+                          ? value.toISOString().split('T')[0]
+                          : value.toString()}
                     </td>
 
                   ))}

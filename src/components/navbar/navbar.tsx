@@ -1,4 +1,4 @@
-import Logo from './logo'
+import Logo from './logo-fortress'
 import NavLinks from '@/components/navbar/navlinks'
 import UtilLinks from '@/components/navbar/util-links'
 
