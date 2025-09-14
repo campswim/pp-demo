@@ -1,5 +1,5 @@
 import Container from '@/components/global/container'
-import Logo from '@/components/navbar/logo'
+import Logo from '@/components/navbar/logo-fortress'
 // import HomeMobileContent from '@/components/homepage/home-mobile-content'
 // import HomeDesktopContent from '@/components/homepage/home-desktop-content'
 

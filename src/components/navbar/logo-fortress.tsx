@@ -1,47 +1,78 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { useLoggedIn } from '@/context/loggedIn'
-import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
-import logoWhite from '../../../public/logos/Fortress-white-text.png'
-import logoBlack from '../../../public/logos/Fortress-dark-text.png'
+import Image from 'next/image'
 
-const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({ hrefBoolean = false, caller = null }) => {
+// Import PNGs for light and dark mode
+import FortressLogoLight from '../../../public/logos/Fortress-white-text.png'
+import FortressLogoDark from '../../../public/logos/Fortress-dark-text.png'
+import FortressEmblem from '../../../public/logos/Fortress-Emblem.png'
+/**
+ * Fortress logo component supporting light/dark mode PNGs and all layout logic.
+ */
+const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
+  hrefBoolean = false,
+  caller = null,
+}) => {
   const { role } = useLoggedIn()
-  const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) return null
-
   const href = role !== 'guest' ? '/user/home' : '/'
-  const currentLogo = resolvedTheme === 'dark' ? logoWhite : logoBlack
 
   let className = 'flex items-center text-3xl font-bold'
   className += !hrefBoolean ? ' justify-center' : ' justify-start'
 
+  // Common logo sizes for all usages
+  const logoHeight =
+    caller === 'inline'
+      ? 200
+      : hrefBoolean
+      ? 200
+      : 100
+
+  // Wrapper for dual PNGs with dark/light support
+  const FortressLogoDual = (
+    <span className="relative block" aria-label="Fortress Logo">
+      {/* Light mode PNG */}
+      <Image
+        src={FortressLogoDark}
+        alt="Fortress Logo"
+        height={logoHeight}
+        style={{ height: logoHeight, width: 'auto' }}
+        className="block dark:hidden object-contain"
+        priority
+      />
+      {/* Dark mode PNG */}
+      <Image
+        src={FortressLogoLight}
+        alt="Fortress Logo"
+        height={logoHeight}
+        style={{ height: logoHeight, width: 'auto' }}
+        className="hidden dark:block object-contain"
+        priority
+      />
+    </span>
+  )
+
   return (
     <div className={className}>
       {hrefBoolean ? (
-        <Link href={href} className='flex items-center hover:text-blue-500'>
-          <Image src={currentLogo} alt="Fortress Logo" height={200} />
+        <Link
+          href={href}
+          className="flex items-center hover:text-blue-500 my-6"
+        >
+          {FortressLogoDual}
         </Link>
       ) : caller === 'inline' ? (
-        <div className='pointer-events-none flex items-center justify-center mx-6'>
-          <Image src={currentLogo} alt="Fortress Logo" height={200} />
+        <div className="pointer-events-none flex items-center justify-center mx-6">
+          {FortressLogoDual}
         </div>
       ) : (
         <div
-          className={`inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden ${
-            caller !== 'public homepage' ? 'fixed z-[-1] opacity-10' : ''
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 z-0 pointer-events-none flex items-center justify-center overflow-hidden md:top-3/8 ${
+            caller !== 'public homepage' ? 'fixed z-[-1]' : ''
           }`}
         >
-          <Image src={currentLogo} alt="Fortress Logo" height={128} style={{ objectFit: 'contain' }} />
+          <Image src={FortressEmblem} alt="Fortress Emblem" />
         </div>
       )}
     </div>
