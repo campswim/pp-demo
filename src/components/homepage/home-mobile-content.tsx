@@ -1,4 +1,4 @@
-import Logo from '@/components/navbar/logo'
+import Logo from '@/components/navbar/logo-fortress'
 import Image from 'next/image'
 
 const HomeMobileContent = () => {
