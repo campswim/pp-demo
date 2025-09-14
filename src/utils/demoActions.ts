@@ -21,10 +21,14 @@ export const demoLogin = async (state: FormState, formData: FormData): Promise<F
 
   // Check if the password is correct.
   const isPasswordValid = await bcrypt.compare(password, user.password)
-  if (!isPasswordValid) return { errors: { password: ['The password is incorrect.'] } }
+  if (!isPasswordValid) return { errors: { password: ['is incorrect.'] } }
 
-  // Redirect to the /demo/start page.
-  redirect('/demo/start')
+  // If no safe word and PIN, redirect to /demo/register-creds; else redirect to /demo/start.
+  if (!user.safeword || !user.pin) {
+    redirect('/demo/register-creds')
+  } else {
+    redirect('/demo/start')
+  }
 }
 
 // Log a demo user out: no auth, just redirect to /user/home.

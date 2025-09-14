@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { useActionState } from 'react'
 import { signup, login } from '@/utils/userActions'
 import { demoLogin } from '@/utils/demoActions'
@@ -7,8 +8,28 @@ import { GridLoader } from 'react-spinners'
 
 const Login = ({ caller }: { caller: string }) => {
   const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
-  const inputStyle = 'peer w-full rounded-md border border-input focus:border-transparent focus:outline-none bg-background pt-5 pb-1 px-3 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset'
-  
+  // initialize local form state from server state when present
+  const [form, setForm] = useState({
+    username: '',
+    password: '',
+    phone: ''
+  })
+  const inputStyle = `
+    peer w-full rounded-md border border-input focus:border-transparent focus:outline-none bg-background pt-5 pb-1 px-3 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset
+  `
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }))
+
+  useEffect(() => {
+    if (state?.values) {
+      setForm(prev => ({
+        username: (state.values?.username as string) ?? prev.username,
+        password: '', // don't prefill password for security.
+        phone: (state.values?.phone as string) ?? prev.phone,
+      }))
+    }
+  }, [state?.values])
+
   return (
     <form 
       action={action}
@@ -17,10 +38,12 @@ const Login = ({ caller }: { caller: string }) => {
     >
       <div className='relative mb-4 w-full'>
         <input
-          type='username'
+          type='text'
           id='username'
           name='username'
           placeholder=' '
+          value={form.username}
+          onChange={onChange}
           className={inputStyle}
           autoComplete='on'
           required
@@ -38,8 +61,10 @@ const Login = ({ caller }: { caller: string }) => {
           id='password'
           name='password'
           placeholder=' '
+          value={form.password}
+          onChange={onChange}
           className={inputStyle}
-          autoComplete='on'
+          autoComplete='current-password'
           required
         />
         <label 
@@ -57,6 +82,8 @@ const Login = ({ caller }: { caller: string }) => {
               id='phone'
               name='phone'
               placeholder=' '
+              value={form.phone}
+              onChange={onChange}
               className={inputStyle}
               autoComplete='on'
               required
@@ -121,7 +148,7 @@ const Login = ({ caller }: { caller: string }) => {
       (state?.errors?.password ? 
         (
           <div className='my-3'>
-            <p>The password must: </p>
+            <p>The password: </p>
             <ul className='list-disc pl-5'>
               {state.errors.password.map((error) => (
                 <li key={error}>{error}</li>

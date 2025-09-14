@@ -83,22 +83,34 @@ export const deleteUser = async (userId: string) => {
 
 // Register a user.
 export const signup = async (state: FormState, formData: FormData): Promise<FormState> => {
+  let username = typeof formData.get('username') === 'string' ? (formData.get('username') as string).toLowerCase() : ''
+  let phone = typeof formData.get('phone') === 'string' ? (formData.get('phone') as string).toLowerCase() : ''
+  let password = typeof formData.get('password') === 'string' ? (formData.get('password') as string) : ''
+  // const safeword = typeof formData.get('safeword') === 'string' ? (formData.get('safeword') as string) : ''
+  // const pin = typeof formData.get('pin') === 'string' ? Number(formData.get('pin')) : undefined
+
   // 1a. Validate form fields.
   const validatedFields = SignupFormSchema.safeParse({
-    username: typeof formData.get('username') === 'string' ? (formData.get('username') as string).toLowerCase() : '',
-    phone: formData.get('phone'),
-    password: formData.get('password'),
-    // safeword: formData.get('safeword'),
-    // pin: Number(formData.get('pin'))
+    username,
+    phone,
+    password,
+    // safeword,
+    // pin
   })
 
   // 1b. If any form fields are invalid, return early.
   if (!validatedFields.success) {
-    return { errors: validatedFields.error.flatten().fieldErrors }
+    return { 
+      errors: validatedFields.error.flatten().fieldErrors,
+      values: {
+        username,
+        phone
+      } 
+    }
   }
 
   // 2. Prepare data for insertion into database.
-  const { 
+  const userData = { 
     username, 
     phone, 
     password,
@@ -106,13 +118,13 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
     // pin
   } = validatedFields.data
 
-  const hashedPassword = await bcrypt.hash(password, 10)
-  const encryptedPhone = encrypt(phone)
+  const hashedPassword = await bcrypt.hash(userData.password, 10)
+  const encryptedPhone = encrypt(userData.phone)
   // const encryptedSafeword = encrypt(safeword)
   // const encryptedPin = encrypt(pin.toString())
 
   // 3. Check if the user already exists.
-  const existingUser = await db.user.findUnique({ where: { username }})
+  const existingUser = await db.user.findUnique({ where: { username: userData.username } })
 
   if (existingUser) return { errors: { username: ['This username has already been registered.'] }}
 
@@ -151,8 +163,7 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   await setCookie('refresh', refreshToken)
 
   // 6. Redirect to the homepage, indicating a registration in the URL for the welcome message.
-  // redirect('/user/home/?register=true')
-  redirect(`/user/register-creds?user=${newUser.id}`)
+  redirect('/user/home/?register=true')
 }
 
 // Log a user in.
@@ -174,7 +185,7 @@ export const login = async (state: FormState, formData: FormData): Promise<FormS
 
   // 3. Check if the password is correct.
   const isPasswordValid = await bcrypt.compare(password, user.password)
-  if (!isPasswordValid) return { errors: { password: ['The password is incorrect.'] } }
+  if (!isPasswordValid) return { errors: { password: ['is incorrect.'] } }
 
   // 4. Generate access and refresh tokens.
   const payload = {

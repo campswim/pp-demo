@@ -8,7 +8,6 @@ import Container from '@/components/global/container'
 import Navbar from '@/components/navbar/navbar'
 import DemoHeader from '@/components/demo/demo-header'
 import DemoBackground from '@/components/ui/demo-background'
-import LogoBackground from '@/components/ui/logo-background'
 
 const ANIMATION_DURATION = 700
 
@@ -92,7 +91,6 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       {pathname !== '/' ? (
         <div className='relative w-full min-h-screen flex flex-col'>
           <DemoBackground />
-          <LogoBackground />
           <DemoHeader />
           <Container>
             <main className={cn('flex justify-center overflow-y-auto', visible && 'pb-45')}>

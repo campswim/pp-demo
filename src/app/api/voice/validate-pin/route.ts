@@ -2,7 +2,6 @@ import { twiml } from 'twilio'
 import { NextRequest } from 'next/server'
 import db from '@/utils/db'
 import { getPin } from '@/utils/voice'
-import bcrypt from 'bcryptjs'
 
 export async function POST(req: NextRequest) {
   const url = new URL(req.url)
@@ -11,7 +10,7 @@ export async function POST(req: NextRequest) {
   const callSid = formData.get('CallSid')?.toString() ?? null
   const enteredPin = formData.get('Digits')?.toString() ?? null
   const pin = await getPin(callSid) ?? null
-  const isPinValid = pin && enteredPin ? await bcrypt.compare(enteredPin, pin) : false
+  const isPinValid = pin && enteredPin && enteredPin === pin
 
   const response = new twiml.VoiceResponse()
 
