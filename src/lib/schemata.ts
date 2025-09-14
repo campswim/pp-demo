@@ -21,17 +21,17 @@ export const SignupFormSchema = LoginFormSchema.extend({
     phone: z
     .string()
     .trim()
-    .regex(/^\+?[\d\s().-]{7,20}$/, {
+    .regex(/^(?=(?:.*\d){10,15}$)\+?[0-9\s().-]{10,30}$/, {
       message: 'Please enter a valid phone number.',
     }),
-    safeword: z
-    .string()
-    .min(3, { 
-      message: 'Your safeword must consist of at least 3 characters.'
-    }),
-    pin: z
-    .number()
-    .min(4, { message: 'Your PIN must consist of exactly four digits.'})
+    // safeword: z
+    // .string()
+    // .min(3, { 
+    //   message: 'Your safeword must consist of at least 3 characters.'
+    // }),
+    // pin: z
+    // .number()
+    // .min(4, { message: 'Your PIN must consist of exactly four digits.'})
 })
 
 export const DemoSignupFormSchema = z.object({
@@ -42,11 +42,16 @@ export const DemoSignupFormSchema = z.object({
   // email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
   password: z
     .string()
-    .min(5, { message: 'be at least 5 characters long.' })
+    .min(5, { message: 'must be at least 5 characters long.' })
 })
  
 export type FormState =
   | {
+      values?: {
+        username?: string
+        password?: string
+        phone?: string
+      },
       errors?: {
         username?: string[]
         password?: string[]
