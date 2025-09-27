@@ -9,7 +9,6 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
   const excludedHeaders = ['id', 'password', 'createdAt', 'updatedAt']
   const excludedCallHeaders = ['id', 'userId']
 
-  console.log({headers})
   return (
     <div>
       {headers.map((header, idx) => {
