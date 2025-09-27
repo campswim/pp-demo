@@ -17,7 +17,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
   const { userId, role } = useLoggedIn()
 
   // Check if the current pathname matches the item URL.
-  const isActive = (pagename: string) => pathname === pagename ? 'text-blue-500' : ''
+  const isActive = (pagename: string) => pathname === pagename ? 'text-blue-500 border-b-2 border-blue-500' : ''
 
   // Check if the item can be rendered based on the user's role.
   const canRender = (item: NavItem) => {
@@ -54,7 +54,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
               onMouseEnter={() => handleGroupMouseEnter(item.id)}
               onMouseLeave={handleGroupMouseLeave}
             >
-              <div className={`cursor-pointer ${isActive(item.href)} text-lg font-semibold`}>
+              <div className={`cursor-pointer text-lg font-semibold`}>
                 { item.href !== '/user/logout' ? 
                 ( isDrawer ?
                   (
