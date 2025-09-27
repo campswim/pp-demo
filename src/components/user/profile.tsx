@@ -9,11 +9,12 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
   const excludedHeaders = ['id', 'password', 'createdAt', 'updatedAt']
   const excludedCallHeaders = ['id', 'userId']
 
+  console.log({headers})
   return (
     <div>
       {headers.map((header, idx) => {
         if (header === 'safeword') {
-          const value = user ? decrypt(String(user[header as keyof UserWithVoiceCalls])) : 'N/A'
+          const value = user && user[header] ? decrypt(String(user[header as keyof UserWithVoiceCalls])) : 'Not Set'
 
           return (
             <div key={idx}>
@@ -23,7 +24,7 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
         }
 
         if (header === 'pin') {
-          const value = user ? decrypt(String(user[header as keyof UserWithVoiceCalls])) : 'N/A'
+          const value = user && user[header] ? decrypt(String(user[header as keyof UserWithVoiceCalls])) : 'Not Set'
 
           return (
             <div key={idx}>
