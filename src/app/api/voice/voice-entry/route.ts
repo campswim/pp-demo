@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     // enhanced: true, // requires Twilio's enhanced speech recognition
   })
   gather.pause({ length: 1 })
-  gather.say('Please clearly speak your safe word to continue.')
+  gather.say('Please speak your safe word to continue.')
 
   // If no input is received, allow a second try.
   if (retryCount < 1) {

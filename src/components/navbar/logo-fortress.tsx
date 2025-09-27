@@ -36,7 +36,6 @@ const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
       <Image
         src={FortressLogoDark}
         alt="Fortress Logo"
-        height={logoHeight}
         style={{ height: logoHeight, width: 'auto' }}
         className="block dark:hidden object-contain"
         priority
@@ -45,7 +44,6 @@ const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
       <Image
         src={FortressLogoLight}
         alt="Fortress Logo"
-        height={logoHeight}
         style={{ height: logoHeight, width: 'auto' }}
         className="hidden dark:block object-contain"
         priority

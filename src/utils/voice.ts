@@ -93,7 +93,7 @@ export const setSafeWord = async (callSid: string | null, safeword: string | nul
 }
 
 // Save the PIN to the DB.
-export const setPin = async (callSid: string | null, pin: string | null): Promise<string | null> => {
+export const setPin = async (callSid: string | undefined, pin: string | null): Promise<string | null> => {
   if (!callSid) throw new Error('No call SID was sent to setPin.')
   if (!pin) throw new Error('No PIN provided.')
 

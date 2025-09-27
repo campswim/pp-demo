@@ -34,7 +34,7 @@ export default function RegisterCreds() {
     <div className='relative w-full flex items-center'>
       <div className='text-center'>
         {showMessageOne.current && <p className='text-3xl lg:text-5xl p-4 mb-6'>To authenticate using your phone, you need to set your safe word and PIN. </p>}
-        {showMessageTwo.current && <p className='text-2xl lg:text-4xl p-4'>Stand by for an incoming phone call to your phone on record.</p>}
+        {showMessageTwo.current && <p className='text-2xl lg:text-4xl p-4'>Stand by for an incoming call to your phone on record.</p>}
         <GridLoaderClient />
         {callStatus !== 'error' && <p className='text-green-500'>{statusMap[callStatus]}</p>}
         {callStatus === 'error' && <p className='text-red-500'>Error: {errorMessage}</p>}

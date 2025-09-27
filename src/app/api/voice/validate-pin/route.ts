@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   // Check if the PIN is correct.
   if (isPinValid) {
-    response.say('Your PIN is correct and you will be logged into your account shortly. Goodbye.')
+    response.say('Your PIN is correct. You will be logged into your account shortly. Goodbye.')
 
     // Update the call status to authenticated.
     await db.voiceCall.update({
