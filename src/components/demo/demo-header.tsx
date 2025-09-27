@@ -13,8 +13,6 @@ export default function DemoHeader() {
 
   if (!pathname.startsWith('/demo')) return null
 
-  console.log({ pathname })
-
   return (
     <header className='w-full min-h-15 lg:min-h-25 flex items-center border-b bg-blue-100 dark:bg-white/70 backdrop-blur z-50'>
       <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex justify-evenly items-center'>
