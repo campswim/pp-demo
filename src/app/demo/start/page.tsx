@@ -32,10 +32,10 @@ export default function DemoStart() {
   }, [callStatus])
 
   return (
-    <div className='relative w-full flex items-center'>
+    <div className='relative w-full flex flex-col items-center justify-center'>
       <DemoBackground />
       <div className='text-center'>
-        {showMessageOne.current && <p className='text-3xl lg:text-5xl p-4 mb-6'>Stand by for an incoming phone call to your phone on record.</p>}
+        {showMessageOne.current && <p className='text-3xl lg:text-5xl p-4 mb-6'>Stand by for an incoming call to your phone on record.</p>}
         {showMessageTwo.current && <p className='text-2xl lg:text-4xl p-4'>Please have your safe word and PIN at the ready.</p>}
         <GridLoaderClient />
         {callStatus !== 'error' && <p className='text-green-500'>{statusMap[callStatus]}</p>}

@@ -1,6 +1,6 @@
 'use client'
 
-import Logo from '@/components/navbar/logo'
+import Logo from '@/components/navbar/logo-fortress'
 import { usePathname } from 'next/navigation'
 
 export default function LogoBackground() {
