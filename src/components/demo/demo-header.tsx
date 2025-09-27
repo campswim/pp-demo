@@ -13,15 +13,29 @@ export default function DemoHeader() {
 
   if (!pathname.startsWith('/demo')) return null
 
+  console.log({ pathname })
+
   return (
     <header className='w-full min-h-15 lg:min-h-25 flex items-center border-b bg-blue-100 dark:bg-white/70 backdrop-blur z-50'>
       <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex justify-evenly items-center'>
         <Link href='/demo/login' className='text-xl font-bold'>Client Logo</Link>
         <nav className='hidden md:flex justify-center gap-6 col-start-2'>
           {demoNavItems.map(({ id, name, href }) => (
-            <Link key={id} href={href} className='text-sm hover:text-primary'>
-              {name}
-            </Link>
+            (pathname !== '/demo/account' && name === 'Log Out') || 
+            (pathname !== '/demo/register-creds' && name === 'Register') || 
+            (pathname !== '/demo/login' && name === 'Log In') ? null
+            : pathname === '/demo/login' && name === 'Log In' ? 
+              <Link key={id} href={href} className='text-sm hover:text-primary border-b-2 border-blue-500'>
+                {name}
+              </Link>
+            : pathname === '/demo/register-creds' && name === 'Register' ?
+              <Link key={id} href={href} className='text-sm hover:text-primary border-b-2 border-blue-500'>
+                {name}
+              </Link>
+            :
+              <Link key={id} href={href} className='text-sm hover:text-primary'>
+                {name}
+              </Link>
           ))}
         </nav>
         <div className='md:hidden'>
