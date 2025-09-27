@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     speechModel: 'phone_call'
   })
   gather.pause({ length: 1 })
-  gather.say('Please cleary speak a safe word to register.')
+  gather.say('Please clearly speak a safe word to register.')
   
   // If no input is received, allow a second try.
   if (retryCount < 1) {
