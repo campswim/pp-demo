@@ -10,7 +10,13 @@ const config = {
       xl: '1280px',
       '2xl': '1536px',
     },
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)', 'sans-serif'],      // body/UI
+        heading: ['var(--font-playfair)', 'serif'],    // headings
+        mono: ['var(--font-geist-mono)', 'monospace'], // monospace
+      },
+    },
   },
   plugins: [],
 }

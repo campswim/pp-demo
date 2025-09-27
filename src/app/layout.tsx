@@ -1,34 +1,37 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import { LoggedInProvider } from '@/context/loggedIn'
 import { ThemeProvider } from '@/context/theme'
 import { getUserSession } from '@/utils/userActions'
 import SplitLayout from '@/components/ui/split-layout'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+// Body & UI font
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+// Headings font
+const playfair = Playfair_Display({
+  variable: '--font-playfair',
   subsets: ['latin'],
 })
 
 export const metadata: Metadata = {
   title: 'P&P Demo',
-  description: 'A unique system that allows users to log into accounts containing sensitive information by saying or entering a predetermined PIN via telephone.',
+  description:
+    'A unique system that allows users to log into accounts containing sensitive information by saying or entering a predetermined PIN via telephone.',
   keywords: 'phone, pin, security, authentication',
   authors: [{ name: 'Nate Cox' }],
 }
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode}>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const user = await getUserSession()
-  
+
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${inter.variable} ${playfair.variable} antialiased`}>
         <ThemeProvider
           attribute='class'
           defaultTheme='system'
@@ -36,9 +39,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           disableTransitionOnChange
         >
           <LoggedInProvider user={user || null}>
-            <SplitLayout>
-              {children}
-            </SplitLayout>
+            <SplitLayout>{children}</SplitLayout>
           </LoggedInProvider>
         </ThemeProvider>
       </body>
