@@ -75,6 +75,34 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+.watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  font-weight: 900;
+  opacity: 0.05;
+
+  /* default: mobile portrait */
+  flex-direction: column; /* stack letters vertically */
+  font-size: 20vh;        /* scale to fill height on narrow screens */
+}
+
+/* wider screens: horizontal layout */
+@media (min-width: 768px) {
+  .watermark {
+    flex-direction: row; /* letters in a horizontal line */
+    font-size: 33vw;     /* scale based on width */
+  }
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

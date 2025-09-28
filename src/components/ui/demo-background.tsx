@@ -8,8 +8,12 @@ export default function DemoBackground() {
   if (!pathname.startsWith('/demo')) return null
 
   return (
-    <div className='fixed inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0'>
-      <p className='hidden xs:block xs:text-[40vw]'>DEMO</p>    
+    <div className="fixed inset-0 flex items-center justify-center z-0">
+      <p className="watermark">
+        {'DEMO'.split('').map((letter, idx) => (
+          <span key={idx}>{letter}</span>
+        ))}
+      </p>    
     </div>
   )
 }
