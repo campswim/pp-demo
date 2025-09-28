@@ -6,5 +6,5 @@ export const demoNavItems: NavItem[] = [
   { id: 3, type: 'demo', name: 'Commercial Banking', href: '#' },
   { id: 4, type: 'demo', name: 'Log In', href: '/demo/login'},
   { id: 5, type: 'demo', name: 'Log Out', href: '/demo/logout' },
-  { id: 6, type: 'demo', name: 'Register', href: '#' },
+  { id: 6, type: 'demo', name: 'Register', href: '/demo/register-creds' },
 ]
