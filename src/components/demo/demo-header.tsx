@@ -10,7 +10,29 @@ import { demoNavItems } from '@/data/demo-nav-items'
 export default function DemoHeader() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
+  const shouldShowNavItem = (href: string) => {
+    if (pathname === '/demo/login') {
+      // On login page: hide Register & Log Out.
+      if (href === '/demo/register-creds' || href === '/demo/logout') return false
+      return true
+    }
 
+    if (pathname === '/demo/register-creds') {
+      // On register page: hide Login
+      if (href === '/demo/login') return false
+      return true
+    }
+
+    if (pathname === '/demo/account') {
+      // On account page: hide Login & Register
+      if (href === '/demo/login' || href === '/demo/register-creds') return false
+      return true
+    }
+
+    // Default: show everything
+    return true
+  }
+  
   if (!pathname.startsWith('/demo')) return null
 
   return (
@@ -18,23 +40,14 @@ export default function DemoHeader() {
       <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex justify-evenly items-center'>
         <Link href='/demo/login' className='text-xl font-bold'>Client Logo</Link>
         <nav className='hidden md:flex justify-center gap-6 col-start-2'>
-          {demoNavItems.map(({ id, name, href }) => (
-            (pathname !== '/demo/account' && name === 'Log Out') || 
-            (pathname !== '/demo/register-creds' && name === 'Register') || 
-            (pathname !== '/demo/login' && name === 'Log In') ? null
-            : pathname === '/demo/login' && name === 'Log In' ? 
-              <Link key={id} href={href} className='text-sm hover:text-primary border-b-2 border-blue-500'>
-                {name}
-              </Link>
-            : pathname === '/demo/register-creds' && name === 'Register' ?
-              <Link key={id} href={href} className='text-sm hover:text-primary border-b-2 border-blue-500'>
-                {name}
-              </Link>
-            :
-              <Link key={id} href={href} className='text-sm hover:text-primary'>
-                {name}
-              </Link>
-          ))}
+          {demoNavItems.map(({ id, name, href }) => {            if (!shouldShowNavItem(href)) return null
+
+          const isActive = pathname === href ? 'border-b-2 border-blue-500' : ''
+          return (
+            <Link key={id} href={href} className={`text-sm hover:text-primary ${isActive}`}>
+              {name}
+            </Link>
+          )})}
         </nav>
         <div className='md:hidden'>
           <Sheet open={open} onOpenChange={setOpen}>
@@ -45,15 +58,19 @@ export default function DemoHeader() {
               <SheetTitle className='sr-only'>Demo Menu</SheetTitle>
               <SheetDescription className='sr-only'>This is the demo navigation menu.</SheetDescription>
               <div className='mt-8 flex flex-col space-y-4'>
-                {demoNavItems.map(({ id, name, href }) => (
-                  <SheetClose asChild key={id}>
-                    <Link href={href}>{name}</Link>
-                  </SheetClose>
-                ))}
+                {demoNavItems.map(({ id, name, href }) => {
+                  if (!shouldShowNavItem(href)) return null
+
+                  return (
+                    <SheetClose asChild key={id}>
+                      <Link href={href}>{name}</Link>
+                    </SheetClose>
+                  )
+                })}
               </div>
             </SheetContent>
           </Sheet>
-        </div>
+        </div>      
       </div>
     </header>
   )
