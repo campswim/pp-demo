@@ -1,3 +1,5 @@
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+
 // Helper of the format-headers function.
 const splitCamelCase = (string: string): string => {
   const match = string.match(/^[a-z]+|[A-Z][a-z]*/g)
@@ -55,6 +57,12 @@ export const formatPhoneDashed = (raw: string): string => {
 
   return `${local.slice(0, 3)}-${local.slice(3, 6)}-${local.slice(6)}`
 }
+
+export const getCountryFromPhoneNumber = (phone: string): string => {
+  const parsed = parsePhoneNumberFromString(phone);
+  return parsed && parsed.country ? parsed.country : 'US';
+}
+
 
 // Format the date to be more legible.
 export const formatDate = (input: string | Date, timeZone: string = 'America/Los_Angeles'): string => {
