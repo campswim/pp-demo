@@ -5,11 +5,12 @@ import { useActionState } from 'react'
 import { signup, login } from '@/utils/userActions'
 import { demoLogin } from '@/utils/demoActions'
 import { GridLoader } from 'react-spinners'
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 
 const Login = ({ caller }: { caller: string }) => {
   const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
-  // initialize local form state from server state when present
-  const [form, setForm] = useState({
+    const [form, setForm] = useState({
     username: '',
     password: '',
     phone: ''
@@ -77,23 +78,15 @@ const Login = ({ caller }: { caller: string }) => {
       {caller === 'register' && (
         <>
           <div className='relative mb-4 w-full'>
-            <input
-              type='tel'
-              id='phone'
-              name='phone'
-              placeholder=' '
+            <PhoneInput
+              placeholder="Enter phone number"
               value={form.phone}
-              onChange={onChange}
-              className={inputStyle}
-              autoComplete='on'
-              required
-            />
-            <label 
-              htmlFor='phone' 
-              className='absolute left-3 top-1 text-[.65rem] text-muted-foreground transition-all duration-200 ease-in-out peer-placeholder-shown:top-5 peer-placeholder-shown:text-base peer-focus:top-1 peer-focus:text-[.65rem]'
-            >
-              Phone
-            </label>
+              onChange={(value) => setForm(f => ({ ...f, phone: value || '' }))}
+              defaultCountry="US"
+              international
+              countryCallingCodeEditable={false}
+              className='border shadow rounded py-2 px-3 text-black dark:text-white w-full'
+            />          
           </div>
           {/* <div className='relative mb-4 w-full'>
             <input
