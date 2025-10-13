@@ -4,8 +4,8 @@ import { encrypt, decrypt } from '@/utils/encrypt-decrypt'
 import { getUserById } from '@/utils/userActions'
 import { validateAuthCookie } from '@/utils/auth'
 import { getCookie } from '@/utils/cookie'
-import { formatToE164, getCountryFromPhoneNumber } from '@/utils/helpers'
 import type { Cookie } from '@/lib/schemata'
+import { parsePhoneNumberFromString } from 'libphonenumber-js'
 
 // Initiate the authentication call from Twilio.
 export const initiateCall = async (caller: 'register' | 'demo') => {  
@@ -24,52 +24,47 @@ export const initiateCall = async (caller: 'register' | 'demo') => {
   const phoneDecrypted = decrypt(phone)
   if (!phoneDecrypted) throw new Error('Decrypting the phone number failed.')
 
-  console.log({phoneDecrypted})
+  const parsedPhone = parsePhoneNumberFromString(phoneDecrypted)
+  const country = parsedPhone && parsedPhone.isValid() && parsedPhone.country ? parsedPhone.country : ''
   
-  // Format the user's phone number for E.164.
-  const phoneFormatted = formatToE164(phoneDecrypted)
-  if (!phoneFormatted) throw new Error('Formatting the phone number failed.')
+  // Get the Twilio phone number for the user's country.
+  const envVar = `TWILIO_PHONE_NUMBER_${country}` as keyof typeof process.env
+  if (!process.env[envVar]) throw new Error(`No Twilio phone number found for country code: ${country}`)
+  const twilioPhoneNumber = process.env[envVar]
+  if (!twilioPhoneNumber) throw new Error(`No Twilio phone number found for country code: ${country}`)
 
-  console.log({phoneFormatted})
+  // Instantiate the Twilio instance.
+  const client = twilio(
+    process.env.TWILIO_ACCOUNT_SID!,
+    process.env.TWILIO_AUTH_TOKEN!
+  )
 
-  const country = getCountryFromPhoneNumber(phoneFormatted)
+  try {    
+    const call = await client.calls.create({
+      to: phoneDecrypted, // -> string with `+` prefix.
+      from: process.env.TWILIO_PHONE_NUMBER!,
+      url: process.env.BASE_URL + (caller === 'demo' ? '/api/voice/voice-entry' : '/api/voice/register-creds'),
+      method: 'POST',
+      statusCallback: `${process.env.BASE_URL}/api/voice/call-status`,
+      statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'],
+      statusCallbackMethod: 'POST',
+    })
 
-  console.log({country})
+    await db.voiceCall.upsert({
+      where: { callSid: call.sid },
+      update: { status: call.status },
+      create: {
+        userId: userInfo.userId,
+        callSid: call.sid,
+        status: call.status,
+      }
+    })
 
-  // const twilioPhoneNumber = ''
-
-  // // Instantiate the Twilio instance.
-  // const client = twilio(
-  //   process.env.TWILIO_ACCOUNT_SID!,
-  //   process.env.TWILIO_AUTH_TOKEN!
-  // )
-
-  // try {    
-  //   const call = await client.calls.create({
-  //     to: phoneFormatted, // -> string with `+` prefix.
-  //     from: process.env.TWILIO_PHONE_NUMBER!,
-  //     url: process.env.BASE_URL + (caller === 'demo' ? '/api/voice/voice-entry' : '/api/voice/register-creds'),
-  //     method: 'POST',
-  //     statusCallback: `${process.env.BASE_URL}/api/voice/call-status`,
-  //     statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'],
-  //     statusCallbackMethod: 'POST',
-  //   })
-
-  //   await db.voiceCall.upsert({
-  //     where: { callSid: call.sid },
-  //     update: { status: call.status },
-  //     create: {
-  //       userId: userInfo.userId,
-  //       callSid: call.sid,
-  //       status: call.status,
-  //     }
-  //   })
-
-  //   return call
-  // } catch (err) {
-  //   console.error('Call failed:', err)
-  //   throw new Error('Failed to initiate the call.')
-  // }
+    return call
+  } catch (err) {
+    console.error('Call failed:', err)
+    throw new Error('Failed to initiate the call.')
+  }
 }
 
 // Save the safe word to the DB.

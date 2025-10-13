@@ -1,4 +1,4 @@
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { parsePhoneNumberFromString, E164Number, CountryCode } from 'libphonenumber-js'
 
 // Helper of the format-headers function.
 const splitCamelCase = (string: string): string => {
@@ -32,16 +32,12 @@ export const getPlaceholders = (caller: string) => ({
 })
 
 // Format phone numbers to adhere to the E.164 standard, e.g., +14155552671.
-export const formatToE164 =(raw: string): string => {
-  const cleaned = raw.replace(/\D+/g, '') // Remove all non-digits.
-
-  // If number starts with country code (assumed to be entered), return with plus.
-  if (raw.trim().startsWith('+')) {
-    return `+${cleaned}`
+export const toE164 = async (raw: string, defaultCountry: CountryCode = 'US'): Promise<E164Number | null> => {
+  const parsed = parsePhoneNumberFromString(raw, defaultCountry)
+  if (parsed && parsed.isValid() && parsed.number) {
+    return parsed.number as E164Number
   }
-
-  // Default to US country code if none provided
-  return `+1${cleaned}`
+  return null
 }
 
 // Format phone numbers to be readable.
