@@ -10,7 +10,7 @@ import 'react-phone-number-input/style.css'
 
 const Login = ({ caller }: { caller: string }) => {
   const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
-    const [form, setForm] = useState({
+  const [form, setForm] = useState({
     username: '',
     password: '',
     phone: ''
@@ -86,7 +86,8 @@ const Login = ({ caller }: { caller: string }) => {
               international
               countryCallingCodeEditable={false}
               className='border shadow rounded py-2 px-3 text-black dark:text-white w-full'
-            />          
+            />
+             <input type="hidden" name="phone" value={form.phone || ''} />
           </div>
           {/* <div className='relative mb-4 w-full'>
             <input
