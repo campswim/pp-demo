@@ -21,7 +21,8 @@ export const SignupFormSchema = LoginFormSchema.extend({
     phone: z
     .string()
     .trim()
-    .regex(/^(?=(?:.*\d){10,15}$)\+?[0-9\s().-]{10,30}$/, {
+    // .regex(/^(?=(?:.*\d){10,15}$)\+?[0-9\s().-]{10,30}$/, {
+    .regex(/^\+[1-9]\d{1,14}$/, {
       message: 'Please enter a valid phone number.',
     }),
     // safeword: z
