@@ -11,6 +11,7 @@ import { generateAccessToken, generateRefreshToken, refreshAccessToken, refreshR
 import { getCookie, setCookie, deleteCookie, parseCookieValue } from './cookie'
 import { encrypt } from './encrypt-decrypt'
 import { clearCallCacheForUser } from '@/utils/call-limiter' 
+import { toE164 } from '@/utils/helpers'
 
 // Get user by ID.
 export const getUserById = async (id: string): Promise<Partial<User> | null> => {
@@ -25,7 +26,7 @@ export const getUserById = async (id: string): Promise<Partial<User> | null> => 
 // Get user by username.
 export const getUserByUsername = async(username: string) => {
   if (!username) throw new Error('No username was provided to the get-user-by-username function.')
-    return await db.user.findUnique({ where: { username }})
+  return await db.user.findUnique({ where: { username }})
 }
 
 // Get all users from the database.
@@ -89,10 +90,17 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   // const safeword = typeof formData.get('safeword') === 'string' ? (formData.get('safeword') as string) : ''
   // const pin = typeof formData.get('pin') === 'string' ? Number(formData.get('pin')) : undefined
 
+  // Format the phone number to E.164.
+  const phoneFormatted = await toE164(phone) || ''
+
+  console.log({phoneFormatted})
+
+  if (!phoneFormatted) return { errors: { phone: ['This phone number is not valid.'] }, values: { username, phone } }
+  
   // 1a. Validate form fields.
   const validatedFields = SignupFormSchema.safeParse({
     username,
-    phone,
+    phone: phoneFormatted,
     password,
     // safeword,
     // pin
