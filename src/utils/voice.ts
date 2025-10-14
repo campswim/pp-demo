@@ -42,7 +42,7 @@ export const initiateCall = async (caller: 'register' | 'demo') => {
   try {    
     const call = await client.calls.create({
       to: phoneDecrypted, // -> string with `+` prefix.
-      from: process.env.TWILIO_PHONE_NUMBER!,
+      from: twilioPhoneNumber!,
       url: process.env.BASE_URL + (caller === 'demo' ? '/api/voice/voice-entry' : '/api/voice/register-creds'),
       method: 'POST',
       statusCallback: `${process.env.BASE_URL}/api/voice/call-status`,
