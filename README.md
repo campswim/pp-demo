@@ -56,7 +56,7 @@ A unique system that allows users to log into accounts containing sensitive info
 - [For testing:](https://pp-demo-gules.vercel.app)
   - Deploys via git push to dev (preview) and push/pull to main (production).
   - [Empty]
-- The deployed demo: N/A
+- The deployed (production) demo: N/A
 
 ### Supabase
 
