@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Sheet, SheetTrigger, SheetContent, SheetTitle, SheetDescription, SheetClose } from '@/components/ui/sheet'
@@ -36,15 +37,24 @@ export default function DemoHeader() {
   if (!pathname.startsWith('/demo')) return null
 
   return (
-    <header className='w-full min-h-15 lg:min-h-25 flex items-center border-b bg-blue-100 dark:bg-white/70 backdrop-blur z-50'>
-      <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex justify-evenly items-center'>
-        <Link href='/demo/login' className='text-xl font-bold'>Client Logo</Link>
+    <header className='fixed w-full min-h-15 lg:min-h-25 flex items-center border-b bg-blue-100 dark:bg-gradient-to-b from-[#1e3a6a] to-[#173054] backdrop-blur z-50'>
+      <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex justify-center items-center'>
+        <Link href='/demo/login' className='text-xl font-bold mx-16'>
+          <Image 
+            src='/logos/Fortress_Demo_3-removebg-preview.png'
+            alt='Fortress Demo Logo'
+            width={373}
+            height={237}
+            className="w-30 h-auto"
+          />
+        </Link>
         <nav className='hidden md:flex justify-center gap-6 col-start-2'>
-          {demoNavItems.map(({ id, name, href }) => {            if (!shouldShowNavItem(href)) return null
-
-          const isActive = pathname === href ? 'border-b-2 border-blue-500' : ''
-          return (
-            <Link key={id} href={href} className={`text-sm hover:text-primary ${isActive}`}>
+          {demoNavItems.map(({ id, name, href }) => {            
+            if (!shouldShowNavItem(href)) return null
+            const isActive = pathname === href ? 'border-b-2 border-blue-500' : ''
+            
+            return (
+            <Link key={id} href={href} className={`text-xl hover:text-primary ${isActive}`}>
               {name}
             </Link>
           )})}

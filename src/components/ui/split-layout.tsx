@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 import Container from '@/components/global/container'
 import Navbar from '@/components/navbar/navbar'
 import DemoHeader from '@/components/demo/demo-header'
-import DemoBackground from '@/components/ui/demo-background'
+// import DemoBackground from '@/components/ui/demo-background'
 
 const ANIMATION_DURATION = 700
 
@@ -49,7 +49,8 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
   }, [isPersistent])
 
   return (
-    <div className='flex flex-col min-h-screen'>
+    // <div className='flex flex-col min-h-screen'>
+    <div className='flex flex-col min-h-screen dark:bg-[#173054]'>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
@@ -90,10 +91,10 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       {/* Main content area */}
       {pathname !== '/' ? (
         <div className='relative w-full min-h-screen flex flex-col'>
-          <DemoBackground />
+          {/* <DemoBackground /> */}
           <DemoHeader />
           <Container>
-            <main className={cn('flex justify-center overflow-y-auto', visible && 'pb-45')}>
+            <main className={cn('flex justify-center overflow-y-auto', visible && 'pb-32')}>
               {children}
             </main>
           </Container>
@@ -101,7 +102,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       )
       :
       (
-        <main className={cn('flex flex-1 justify-center overflow-y-auto', visible && pathname !== '/' && 'pb-45')}>
+        <main className={cn('flex flex-1 justify-center overflow-y-auto', visible && pathname !== '/' && 'pb-32')}>
           {children}
         </main>
       )}
