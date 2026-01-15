@@ -67,7 +67,7 @@ const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
       ) : (
         <div
           className={`absolute top-1/2 left-1/2 -translate-x-1/2 z-0 pointer-events-none flex items-center justify-center overflow-hidden md:top-3/8 ${
-            caller !== 'public homepage' ? 'fixed z-[-1]' : ''
+            caller && caller !== 'public homepage' ? 'fixed z-[-1]' : ''
           }`}
         >
           <Image src={FortressEmblem} alt="Fortress Emblem" />

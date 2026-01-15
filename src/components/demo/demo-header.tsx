@@ -12,6 +12,12 @@ export default function DemoHeader() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const shouldShowNavItem = (href: string) => {
+    if (pathname === '/demo/landing-page') {
+      // On landing page: hide everything but Log In.
+      if (href !== '/demo/login') return false
+      return true
+    }
+
     if (pathname === '/demo/login') {
       // On login page: hide Register & Log Out.
       if (href === '/demo/register-creds' || href === '/demo/logout') return false
@@ -37,7 +43,7 @@ export default function DemoHeader() {
   if (!pathname.startsWith('/demo')) return null
 
   return (
-    <header className='fixed w-full min-h-15 lg:min-h-25 flex items-center border-b bg-blue-100 dark:bg-gradient-to-b from-[#1e3a6a] to-[#173054] backdrop-blur z-50'>
+    <header className='fixed w-full min-h-15 lg:min-h-25 flex items-center border-b bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur z-50'>
       <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex justify-center items-center'>
         <Link href='/demo/login' className='text-xl font-bold mx-16'>
           <Image 
@@ -54,7 +60,7 @@ export default function DemoHeader() {
             const isActive = pathname === href ? 'border-b-2 border-blue-500' : ''
             
             return (
-            <Link key={id} href={href} className={`text-xl hover:text-primary ${isActive}`}>
+            <Link key={id} href={href} className={`text-xl text-white hover:text-primary ${isActive}`}>
               {name}
             </Link>
           )})}

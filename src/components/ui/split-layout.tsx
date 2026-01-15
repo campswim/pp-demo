@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils'
 import Container from '@/components/global/container'
 import Navbar from '@/components/navbar/navbar'
 import DemoHeader from '@/components/demo/demo-header'
-// import DemoBackground from '@/components/ui/demo-background'
 
 const ANIMATION_DURATION = 700
 
@@ -44,13 +43,13 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
     }
   }, [isPersistent])
 
+  // Close the drawer if switching to persistent mode.
   useEffect(() => {
     if (isPersistent) setOpen(false)
   }, [isPersistent])
 
   return (
-    // <div className='flex flex-col min-h-screen'>
-    <div className='flex flex-col min-h-screen dark:bg-[#173054]'>
+    <div className={`flex flex-col min-h-screen ${pathname.includes('demo') ? 'bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur ' : 'dark:bg-black'}`}>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
