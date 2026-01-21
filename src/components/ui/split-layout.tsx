@@ -90,10 +90,9 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       {/* Main content area */}
       {pathname !== '/' ? (
         <div className='relative w-full min-h-screen flex flex-col'>
-          {/* <DemoBackground /> */}
           <DemoHeader />
           <Container>
-            <main className={cn('flex justify-center overflow-y-auto', visible && 'pb-32')}>
+            <main className={cn('flex justify-center overflow-y-auto', visible && 'pt-6 pb-44')}>
               {children}
             </main>
           </Container>
@@ -101,7 +100,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       )
       :
       (
-        <main className={cn('flex flex-1 justify-center overflow-y-auto', visible && pathname !== '/' && 'pb-32')}>
+        <main className={cn('flex flex-1 justify-center overflow-y-auto', visible && pathname !== '/' && 'pb-')}>
           {children}
         </main>
       )}

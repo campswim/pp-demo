@@ -44,26 +44,30 @@ export default function DemoHeader() {
 
   return (
     <header className='fixed w-full min-h-15 lg:min-h-25 flex items-center border-b bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur z-50'>
-      <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex justify-center items-center'>
-        <Link href='/demo/login' className='text-xl font-bold mx-16'>
-          <Image 
-            src='/logos/Fortress_Demo_3-removebg-preview.png'
-            alt='Fortress Demo Logo'
-            width={373}
-            height={237}
-            className="w-30 h-auto"
-          />
-        </Link>
-        <nav className='hidden md:flex justify-center gap-6 col-start-2'>
-          {demoNavItems.map(({ id, name, href }) => {            
-            if (!shouldShowNavItem(href)) return null
-            const isActive = pathname === href ? 'border-b-2 border-blue-500' : ''
-            
-            return (
-            <Link key={id} href={href} className={`text-xl text-white hover:text-primary ${isActive}`}>
-              {name}
-            </Link>
-          )})}
+      <div className='w-full lg:max-w-7xl lg:mx-auto p-4 flex items-center'>
+        {/* <nav className='hidden md:flex justify-center gap-6 col-start-2'> */}
+        <nav className='relative w-full flex flex-col items-start sm:flex-row sm:items-center sm:justify-between lg:grid lg:grid-cols-3 lg:items-center py-4 xs:py-0'>
+          <Link href='/demo/landing-page' className='text-xl font-bold lg:justify-self-center lg:col-start-1'>
+            <Image 
+              src='/logos/Fortress_Demo_3-removebg-preview.png'
+              alt='Fortress Demo Logo'
+              width={373}
+              height={237}
+              className="w-30 h-auto"
+            />
+          </Link>
+          <div className="flex justify-center gap-6 lg:col-start-2">
+            {demoNavItems.map(({ id, name, href }) => {
+              if (!shouldShowNavItem(href)) return null
+                const isActive = pathname === href ? 'border-b-2 border-blue-500' : ''
+                
+                return (
+                <Link key={id} href={href} className={`text-xl text-white hover:text-primary ${isActive}`}>
+                  {name}
+                </Link>
+              )})}
+            </div>
+          <div className="lg:col-start-3 lg:justify-self-center"></div>
         </nav>
         <div className='md:hidden'>
           <Sheet open={open} onOpenChange={setOpen}>
