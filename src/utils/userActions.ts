@@ -93,8 +93,6 @@ export const signup = async (state: FormState, formData: FormData): Promise<Form
   // Format the phone number to E.164.
   const phoneFormatted = await toE164(phone) || ''
 
-  console.log({phoneFormatted})
-
   if (!phoneFormatted) return { errors: { phone: ['This phone number is not valid.'] }, values: { username, phone } }
   
   // 1a. Validate form fields.

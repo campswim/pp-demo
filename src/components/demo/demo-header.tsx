@@ -14,10 +14,6 @@ export default function DemoHeader() {
   const shouldShowNavItem = (name: string, auth: boolean = false) => {
     // On landing page: hide everything but Log In.
     if (pathname === '/demo/landing-page') {
-
-      console.log({name, auth})
-
-
       // if (name !== 'Log In') return false
       return auth === false ? true : false
     }
