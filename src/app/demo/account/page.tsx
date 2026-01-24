@@ -4,7 +4,7 @@ import { DollarSign } from 'lucide-react'
 
 export default function DemoAccount() {
   return (
-    <div className='w-full max-w-[90%] mb-6 min-h-screen'>      
+    <div className='w-full max-w-[90%] mb-6'>      
       <div className='mt-36 py-6 w-full max-w-none'>
         {/* <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6'>           */}
         <div className='flex flex-col justify-center w-[90%] m-auto'>          
@@ -13,9 +13,9 @@ export default function DemoAccount() {
             { type: 'Personal Checking', amount: '$12,562.34' },
             { type: 'Savings', amount: '$5,209.87' },
             { type: 'Business Checking', amount: '$23,400.51' },
-            // { type: 'CD', amount: '$15,421.30' },
-            // { type: 'Money Market', amount: '$10,378.44' },
-            // { type: 'Child\'s Savings', amount: '$3,290.11' },
+            { type: 'CD', amount: '$15,421.30' },
+            { type: 'Money Market', amount: '$10,378.44' },
+            { type: 'Child\'s Savings', amount: '$3,290.11' },
           ].map((account, index, arr) => (
             <Link
               key={index}
