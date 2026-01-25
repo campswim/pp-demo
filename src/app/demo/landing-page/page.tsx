@@ -10,7 +10,7 @@ export default function DemoLandingPage() {
   const [showHint, setShowHint] = useState(false)
 
   return (
-    <div className='mt-35 min-h-screen flex flex-col justify-center md:mt-0'>
+    <div className='mt-36 landscape:mt-30 min-h-screen flex flex-col md:mt-0'>
       <div className='flex flex-col items-center justify-between md:w-[80%] mx-auto'>
         <h2 className='text-white text-5xl md:text-7xl text-center font-heading my-8'>
           Modern banking, tailored to you.

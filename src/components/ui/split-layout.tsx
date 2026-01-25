@@ -17,8 +17,8 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
 
   const [open, setOpen] = useState(false)
   const [visible, setVisible] = useState(isPersistent)
-  const [animatingIn, setAnimatingIn] = useState(false)
-  const [animatingOut, setAnimatingOut] = useState(false)
+  // const [animatingIn, setAnimatingIn] = useState(false)
+  // const [animatingOut, setAnimatingOut] = useState(false)
 
   // Set the visibility of the persistent drawer.
   useEffect(() => {
@@ -33,9 +33,9 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
     
     // Only run animations if we're transitioning to persistent mode
     if (isPersistent) {
-      setAnimatingIn(true)
-      const inTimer = setTimeout(() => setAnimatingIn(false), ANIMATION_DURATION)
-      return () => clearTimeout(inTimer)
+      // setAnimatingIn(true)
+      // const inTimer = setTimeout(() => setAnimatingIn(false), ANIMATION_DURATION)
+      // return () => clearTimeout(inTimer)
     }
 
     return undefined
@@ -47,7 +47,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
   }, [isPersistent])
 
   return (
-    <div className={`flex flex-col min-h-screen ${pathname.includes('demo') ? 'bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur ' : 'dark:bg-black'}`}>
+    <div className={`flex flex-col portrait:h-screen ${pathname.includes('demo') ? 'bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur ' : 'dark:bg-black'}`}>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
@@ -84,11 +84,13 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
 
       {/* Main content area */}
       {pathname !== '/' ? (
-        <div className='relative w-full flex flex-col'>
+        <div className='relative w-full flex flex-col flex-1 overflow-hidden'>
           <DemoHeader />
-          <Container>
-            <main className={cn('flex justify-center items-center md:items-center w-full', visible && 'py-0')}>
-              {children}
+          <Container className='flex-1 flex flow-col'>
+            <main className={cn('flex justify-center w-full', visible && 'py-6')}>
+              <div className='w-full max-w-full'>
+                {children}
+              </div>
             </main>
           </Container>
         </div>

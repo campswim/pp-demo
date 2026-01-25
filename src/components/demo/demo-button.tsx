@@ -4,7 +4,7 @@ const DemoButton = () => {
   const router = useRouter()
 
   return (
-    <div className='flex items-center justify-center'>
+    <div className='flex items-center justify-center w-full my-10'>
       <button
         type='button'
         onClick={() => router.push('/demo/landing-page')}
