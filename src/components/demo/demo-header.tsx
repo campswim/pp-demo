@@ -61,7 +61,7 @@ export default function DemoHeader() {
             />
           </Link>
           {/* Center-aligned navigation items */}
-          <div className="flex justify-center gap-6 lg:col-start-2">
+          <div className="hidden md:flex justify-center gap-6 lg:col-start-2">
             {demoNavItems
               .filter(({ name, auth }) => {
                 if (pathname === '/demo/account') {
@@ -84,7 +84,7 @@ export default function DemoHeader() {
           </div>
 
           {/* Right-aligned navigation items */}
-          <div className="flex justify-end gap-6 lg:col-start-3 lg:justify-self-end">
+          <div className="hidden md:flex justify-end gap-6 lg:col-start-3 lg:justify-self-end">
             {demoNavItems
               .filter(({ name }) => {
                 return name === 'Log In' || name === 'Log Out' || name === 'Profile'
@@ -100,6 +100,7 @@ export default function DemoHeader() {
               })}
           </div>
         </nav>
+        {/* Mobile hamburger menu */}
         <div className='md:hidden'>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -111,9 +112,7 @@ export default function DemoHeader() {
               <div className='mt-8 flex flex-col space-y-4'>
                 {demoNavItems.map(({ id, name, href, auth }) => {
                   if (pathname === '/demo/account' && !auth) return null
-
                   if (!shouldShowNavItem(href)) return null
-
                   return (
                     <SheetClose asChild key={id}>
                       <Link href={href}>{name}</Link>

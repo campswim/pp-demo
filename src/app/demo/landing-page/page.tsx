@@ -10,12 +10,12 @@ export default function DemoLandingPage() {
   const [showHint, setShowHint] = useState(false)
 
   return (
-    <div className='min-h-screen flex flex-col justify-center'>
-      <div className='flex flex-col items-center justify-between w-[80%] mx-auto'>
-        <h2 className='text-white text-7xl text-center font-heading my-8'>
+    <div className='mt-35 min-h-screen flex flex-col justify-center md:mt-0'>
+      <div className='flex flex-col items-center justify-between md:w-[80%] mx-auto'>
+        <h2 className='text-white text-5xl md:text-7xl text-center font-heading my-8'>
           Modern banking, tailored to you.
         </h2>
-        <h6 className='text-white text-3xl text-center leading-relaxed w-[70%] mx-auto my-10'>
+        <h6 className='text-white text-2xl md:text-3xl text-center leading-relaxed md:w-[70%] mx-auto my-10'>
           Experience the future of banking with our innovative financial solutions and exceptional personal service.
         </h6>
         <div className="relative my-10 flex flex-col items-center">

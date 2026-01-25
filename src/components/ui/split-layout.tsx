@@ -20,27 +20,25 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
   const [animatingIn, setAnimatingIn] = useState(false)
   const [animatingOut, setAnimatingOut] = useState(false)
 
-  // Set the visibiilty of the persistent drawer.
+  // Set the visibility of the persistent drawer.
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false
-      if (isPersistent) setVisible(true)
+      setVisible(isPersistent)
       return
     }
 
+    // Immediately update visibility based on the route
+    setVisible(isPersistent)
+    
+    // Only run animations if we're transitioning to persistent mode
     if (isPersistent) {
-      setVisible(true)
       setAnimatingIn(true)
       const inTimer = setTimeout(() => setAnimatingIn(false), ANIMATION_DURATION)
       return () => clearTimeout(inTimer)
-    } else {
-      setAnimatingOut(true)
-      const outTimer = setTimeout(() => {
-        setAnimatingOut(false)
-        setVisible(false)
-      }, ANIMATION_DURATION)
-      return () => clearTimeout(outTimer)
     }
+
+    return undefined
   }, [isPersistent])
 
   // Close the drawer if switching to persistent mode.
@@ -53,12 +51,9 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
-          className={pathname !== '/' ? cn(
-            'fixed bottom-0 inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-0 lg:p-4 transition-transform duration-700 ease-in-out',
-            animatingIn && 'translate-y-full',
-            animatingOut && 'translate-y-full',
-            !animatingIn && !animatingOut && 'translate-y-0'
-          ) : 'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 transition-transform duration-700 ease-in-out'}        
+          className={pathname !== '/' ? (
+            'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-0 lg:p-4'
+          ) : 'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4'}        
         >
           <Navbar isDrawer={false} />
         </div>
@@ -92,7 +87,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
         <div className='relative w-full flex flex-col'>
           <DemoHeader />
           <Container>
-            <main className={cn('flex justify-center overflow-y-auto', visible && 'pt-6 pb-44')}>
+            <main className={cn('flex justify-center items-center min-h-[calc(100vh-4rem)] overflow-y-auto', visible && 'py-6')}>
               {children}
             </main>
           </Container>

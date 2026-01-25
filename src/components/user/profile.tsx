@@ -10,15 +10,16 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
   const excludedCallHeaders = ['id', 'userId']
 
   return (
-    <div>
-      {headers.map((header, idx) => {
+    <div className="w-full max-w-4xl px-4 sm:px-6 lg:px-8 mx-auto">
+<ul className="space-y-4">
+        {headers.map((header, idx) => {
         if (header === 'safeword') {
           const value = user && user[header] ? decrypt(String(user[header as keyof UserWithVoiceCalls])) : 'Not Set'
 
           return (
-            <div key={idx}>
-              {formatHeader(header)}: {value}
-            </div>
+            <li key={idx} className="text-left">
+              <span className="font-medium">{formatHeader(header)}:</span> {value}
+            </li>
           )
         }
 
@@ -26,9 +27,9 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
           const value = user && user[header] ? decrypt(String(user[header as keyof UserWithVoiceCalls])) : 'Not Set'
 
           return (
-            <div key={idx}>
-              {formatHeader(header)}: {value}
-            </div>
+            <li key={idx} className="text-left">
+              <span className="font-medium">{formatHeader(header)}:</span> {value}
+            </li>
           )
         }
 
@@ -36,8 +37,8 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
           const value = user ? formatPhoneDashed(decrypt(String(user[header as keyof UserWithVoiceCalls]))) : 'N/A'
           
           return (
-            <li key={idx} className='flex gap-2'>
-              {formatHeader(header)}: {value}
+            <li key={idx} className="text-left">
+              <span className="font-medium">{formatHeader(header)}:</span> {value}
             </li>
           )
         }
@@ -61,7 +62,8 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
           return (
             <li key={idx} className='flex flex-col gap-2'>
               {formatHeader(header)}:
-              <table className='table-auto min-w-full'>
+              <div className="overflow-x-auto -mx-4 sm:mx-0">
+                <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr className='bg-blue-500'>
                     {callHeadersFormatted.map((header, idx) => (
@@ -103,7 +105,8 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
                 (
                   'None'
                 )}
-              </table>
+                </table>
+              </div>
             </li>
           )
         }
@@ -111,14 +114,15 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
         if (!excludedHeaders.includes(header)) {
           const value = String(user?.[header as keyof UserWithVoiceCalls] ?? 'N/A')
           return (
-            <li key={idx} className='flex gap-2'>
-              {formatHeader(header)}: {value}
+            <li key={idx} className="text-left">
+              <span className="font-medium">{formatHeader(header)}:</span> {value}
             </li>
           )
         }
 
         return null
-      })}
+        })}
+      </ul>
     </div>
   )
 }
