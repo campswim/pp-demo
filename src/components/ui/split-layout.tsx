@@ -87,7 +87,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
         <div className='relative w-full flex flex-col'>
           <DemoHeader />
           <Container>
-            <main className={cn('flex justify-center items-center min-h-[calc(100vh-4rem)] overflow-y-auto', visible && 'py-6')}>
+            <main className={cn('flex justify-center items-center md:items-center w-full', visible && 'py-0')}>
               {children}
             </main>
           </Container>
@@ -95,7 +95,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       )
       :
       (
-        <main className={cn('flex flex-1 justify-center overflow-y-auto', visible && pathname !== '/' && 'pb-')}>
+        <main className={cn('flex flex-1 justify-center overflow-y-auto', visible && 'pb-')}>
           {children}
         </main>
       )}

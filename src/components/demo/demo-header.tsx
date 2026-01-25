@@ -48,8 +48,8 @@ export default function DemoHeader() {
 
   return (
     <header className='fixed inset-x-0 w-full min-h-15 lg:min-h-25 flex items-center border-b bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur z-50'>
-      <div className='w-full p-4 flex items-center'>
-        <nav className='relative w-full flex flex-col items-start sm:flex-row sm:items-center sm:justify-between lg:grid lg:grid-cols-3 lg:items-center py-4 xs:py-0'>
+      <div className='w-full p-4'>
+        <nav className='relative w-full flex flex-col items-start sm:flex-row sm:items-center sm:justify-between lg:grid lg:grid-cols-[1.5fr_3fr_1.5fr] lg:items-center py-4 xs:py-0'>
           {/* Left-aligned navigation items */}
           <Link href='/demo/landing-page' className='text-xl font-bold lg:justify-self-start lg:col-start-1'>
             <Image 
@@ -61,7 +61,7 @@ export default function DemoHeader() {
             />
           </Link>
           {/* Center-aligned navigation items */}
-          <div className="hidden md:flex justify-center gap-6 lg:col-start-2">
+          <div className="hidden md:flex justify-center gap-8 lg:col-start-2">
             {demoNavItems
               .filter(({ name, auth }) => {
                 if (pathname === '/demo/account') {
