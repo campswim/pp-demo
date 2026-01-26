@@ -47,7 +47,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
   }, [isPersistent])
 
   return (
-    <div className={`flex flex-col portrait:h-screen ${pathname.includes('demo') ? 'bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur ' : 'dark:bg-black'}`}>
+    <div className={`flex flex-col min-h-screen ${pathname.includes('demo') ? 'bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur ' : 'dark:bg-black'}`}>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
