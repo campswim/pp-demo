@@ -100,6 +100,7 @@ export default function DemoHeader() {
               })}
           </div>
         </nav>
+
         {/* Mobile hamburger menu */}
         <div className='md:hidden'>
           <Sheet open={open} onOpenChange={setOpen}>
@@ -111,6 +112,7 @@ export default function DemoHeader() {
               <SheetDescription className='sr-only'>This is the demo navigation menu.</SheetDescription>
               <div className='mt-8 flex flex-col space-y-4'>
                 {demoNavItems.map(({ id, name, href, auth }) => {
+                  if (pathname === '/demo/landing-page' && auth) return null
                   if (pathname === '/demo/account' && !auth) return null
                   if (!shouldShowNavItem(href)) return null
                   return (

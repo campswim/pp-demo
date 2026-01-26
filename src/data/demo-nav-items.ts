@@ -10,5 +10,5 @@ export const demoNavItems: NavItem[] = [
   { id: 7, type: 'demo', auth: true, name: 'Profile', href: '#'},
   { id: 8, type: 'demo', auth: false, name: 'Log In', href: '/demo/login'},
   { id: 10, type: 'demo', auth: true, name: 'Log Out', href: '/demo/logout' },
-  { id: 11, type: 'demo', auth: false, name: 'Register', href: '/demo/register-creds' },
+  // { id: 11, type: 'demo', auth: false, name: 'Register', href: '/demo/register-creds' },
 ]
