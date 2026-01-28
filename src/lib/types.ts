@@ -31,6 +31,7 @@ export type UserWithVoiceCalls = Prisma.UserGetPayload<{ include: { voiceCalls: 
 export interface NavItem {
   id: number
   type: 'public' | 'user' | 'admin' | 'demo'
+  auth?: boolean
   name: string
   href: string
   subItems?: NavItem[]

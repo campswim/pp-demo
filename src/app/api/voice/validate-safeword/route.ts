@@ -12,8 +12,6 @@ export async function POST(req: NextRequest) {
   const response = new twiml.VoiceResponse()
   const safeword = await getSafeWord(callSid)
 
-  console.log({safeword, transcript})
-
   if ( safeword && transcript?.includes(safeword)) {
     response.say('Your safe word has been accepted.')
     response.say('Now, using your phone\'s keypad, please enter your four-digit PIN.')

@@ -1,3 +1,7 @@
+/**
+ * Fortress logo component supporting light/dark mode PNGs and all layout logic.
+ */
+
 'use client'
 
 import Link from 'next/link'
@@ -8,9 +12,7 @@ import Image from 'next/image'
 import FortressLogoLight from '../../../public/logos/Fortress-white-text.png'
 import FortressLogoDark from '../../../public/logos/Fortress-dark-text.png'
 import FortressEmblem from '../../../public/logos/Fortress-Emblem.png'
-/**
- * Fortress logo component supporting light/dark mode PNGs and all layout logic.
- */
+
 const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
   hrefBoolean = false,
   caller = null,
@@ -26,7 +28,7 @@ const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
     caller === 'inline'
       ? 200
       : hrefBoolean
-      ? 200
+      ? 150
       : 100
 
   // Wrapper for dual PNGs with dark/light support
@@ -37,7 +39,7 @@ const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
         src={FortressLogoDark}
         alt="Fortress Logo"
         style={{ height: logoHeight, width: 'auto' }}
-        className="block dark:hidden object-contain"
+        className="block py-2 dark:hidden object-contain lg:landscape:max-w-none lg:max-w-none"
         priority
       />
       {/* Dark mode PNG */}
@@ -45,7 +47,7 @@ const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
         src={FortressLogoLight}
         alt="Fortress Logo"
         style={{ height: logoHeight, width: 'auto' }}
-        className="hidden dark:block object-contain"
+        className="hidden py-2 dark:block object-contain lg:landscape:max-w-none lg:max-w-none"
         priority
       />
     </span>
@@ -56,7 +58,7 @@ const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
       {hrefBoolean ? (
         <Link
           href={href}
-          className="flex items-center hover:text-blue-500 my-6"
+          className="flex items-center hover:text-blue-500"
         >
           {FortressLogoDual}
         </Link>
@@ -67,7 +69,7 @@ const Logo: React.FC<{ hrefBoolean?: boolean; caller?: string }> = ({
       ) : (
         <div
           className={`absolute top-1/2 left-1/2 -translate-x-1/2 z-0 pointer-events-none flex items-center justify-center overflow-hidden md:top-3/8 ${
-            caller !== 'public homepage' ? 'fixed z-[-1]' : ''
+            caller && caller !== 'public homepage' ? 'fixed z-[-1]' : ''
           }`}
         >
           <Image src={FortressEmblem} alt="Fortress Emblem" />

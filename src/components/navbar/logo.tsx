@@ -33,7 +33,7 @@ const Logo: React.FC<{ hrefBoolean?: boolean, caller?: string }> = ({ hrefBoolea
       )
       :
       (
-        <div className={`inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden ${caller !== 'public homepage' ? 'fixed z-[-1] opacity-10' : ''}`}>
+        <div className={`inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden ${caller && caller !== 'public homepage' ? 'fixed z-[-1] opacity-10' : ''}`}>
           <PhoneWithText className='w-[80vw] h-auto max-w-none' />
           <TbAmpersand className='w-[33%] h-auto' />
           <MdFiberPin className='w-[80vw] h-auto max-w-none' />      

@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils'
 import Container from '@/components/global/container'
 import Navbar from '@/components/navbar/navbar'
 import DemoHeader from '@/components/demo/demo-header'
-import DemoBackground from '@/components/ui/demo-background'
 
 const ANIMATION_DURATION = 700
 
@@ -18,47 +17,43 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
 
   const [open, setOpen] = useState(false)
   const [visible, setVisible] = useState(isPersistent)
-  const [animatingIn, setAnimatingIn] = useState(false)
-  const [animatingOut, setAnimatingOut] = useState(false)
+  // const [animatingIn, setAnimatingIn] = useState(false)
+  // const [animatingOut, setAnimatingOut] = useState(false)
 
-  // Set the visibiilty of the persistent drawer.
+  // Set the visibility of the persistent drawer.
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false
-      if (isPersistent) setVisible(true)
+      setVisible(isPersistent)
       return
     }
 
+    // Immediately update visibility based on the route
+    setVisible(isPersistent)
+    
+    // Only run animations if we're transitioning to persistent mode
     if (isPersistent) {
-      setVisible(true)
-      setAnimatingIn(true)
-      const inTimer = setTimeout(() => setAnimatingIn(false), ANIMATION_DURATION)
-      return () => clearTimeout(inTimer)
-    } else {
-      setAnimatingOut(true)
-      const outTimer = setTimeout(() => {
-        setAnimatingOut(false)
-        setVisible(false)
-      }, ANIMATION_DURATION)
-      return () => clearTimeout(outTimer)
+      // setAnimatingIn(true)
+      // const inTimer = setTimeout(() => setAnimatingIn(false), ANIMATION_DURATION)
+      // return () => clearTimeout(inTimer)
     }
+
+    return undefined
   }, [isPersistent])
 
+  // Close the drawer if switching to persistent mode.
   useEffect(() => {
     if (isPersistent) setOpen(false)
   }, [isPersistent])
 
   return (
-    <div className='flex flex-col min-h-screen'>
+    <div className={`flex flex-col min-h-screen ${pathname.includes('demo') ? 'bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur ' : 'dark:bg-black'}`}>
       {/* Persistent drawer (not ShadCN) */}
       {visible && (
         <div 
-          className={pathname !== '/' ? cn(
-            'fixed bottom-0 inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-0 lg:p-4 transition-transform duration-700 ease-in-out',
-            animatingIn && 'translate-y-full',
-            animatingOut && 'translate-y-full',
-            !animatingIn && !animatingOut && 'translate-y-0'
-          ) : 'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 transition-transform duration-700 ease-in-out'}        
+          className={pathname !== '/' ? (
+            'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-0 lg:p-4'
+          ) : 'static inset-x-0 z-50 bg-blue-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4'}        
         >
           <Navbar isDrawer={false} />
         </div>
@@ -89,19 +84,20 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
 
       {/* Main content area */}
       {pathname !== '/' ? (
-        <div className='relative w-full min-h-screen flex flex-col'>
-          <DemoBackground />
+        <div className='relative w-full flex flex-col flex-1 overflow-hidden'>
           <DemoHeader />
-          <Container>
-            <main className={cn('flex justify-center overflow-y-auto', visible && 'pb-45')}>
-              {children}
+          <Container className='flex-1 flex flow-col'>
+            <main className={cn('flex justify-center w-full', visible && 'py-6')}>
+              <div className='w-full max-w-full'>
+                {children}
+              </div>
             </main>
           </Container>
         </div>
       )
       :
       (
-        <main className={cn('flex flex-1 justify-center overflow-y-auto', visible && pathname !== '/' && 'pb-45')}>
+        <main className={cn('flex flex-1 justify-center overflow-y-auto', visible && 'pb-')}>
           {children}
         </main>
       )}

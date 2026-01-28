@@ -44,7 +44,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
   }, [userId])
   
   return (
-    <div className='flex justify-center items-center'>
+    <div className='flex justify-center items-center pt-4'>
       <div className="flex items-center gap-8">
         {navItems && navItems.length > 0 && navItems.map(item => (
           canRender(item) && (
