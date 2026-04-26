@@ -48,17 +48,14 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
   const role = user?.role ?? ''
   const initial = username[0]?.toUpperCase() ?? 'U'
 
+  
   return (
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
-        Your Profile
-      </h1>
-
       <div className="flex flex-col lg:flex-row gap-6 items-start">
         {/* Left: Profile Info Card */}
         <div className="w-full lg:w-2/5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm overflow-hidden">
           {/* Card header with avatar */}
-          <div className="bg-gradient-to-br from-blue-500 to-blue-700 px-6 pt-8 pb-12" />
+          <div className="bg-blue-100 dark:bg-gray-900 px-6 pt-8 pb-12" />
           <div className="px-6 pb-6 -mt-8">
             <div className="flex items-end gap-4 mb-5">
               <div className="w-16 h-16 rounded-full bg-blue-500 ring-4 ring-white dark:ring-gray-900 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
@@ -107,11 +104,18 @@ const Profile = ({ user }: { user: Partial<UserWithVoiceCalls> | null }) => {
             <h2 className="text-base font-semibold text-gray-900 dark:text-white">
               Voice Calls
             </h2>
-            {voiceCalls.length > 0 && (
-              <span className="text-xs text-gray-400 dark:text-gray-500">
-                {voiceCalls.length} {voiceCalls.length === 1 ? 'record' : 'records'}
-              </span>
-            )}
+            <div className="flex items-center gap-3">
+              {voiceCalls.length > 0 && (
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                  {voiceCalls.length} {voiceCalls.length === 1 ? 'record' : 'records'}
+                </span>
+              )}
+              {voiceCalls.length > 0 && (
+                <button className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium transition-colors">
+                  Clear All
+                </button>
+              )}
+            </div>
           </div>
 
           {voiceCalls.length === 0 ? (
