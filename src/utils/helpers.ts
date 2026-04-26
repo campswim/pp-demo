@@ -86,5 +86,5 @@ export const formatDate = (input: string | Date, timeZone: string = 'America/Los
   const minute = get('minute')
   const second = get('second')
 
-  return `${day} ${month} ${year} at ${hour}${minute}:${second}`
+  return `${day} ${month} ${year} at ${hour}:${minute}:${second}`
 }
