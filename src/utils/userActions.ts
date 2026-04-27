@@ -23,6 +23,16 @@ export const getUserById = async (id: string): Promise<Partial<User> | null> => 
   return user
 }
 
+// Delete all voice calls for a user.
+export const deleteAllVoiceCalls = async(formData: FormData) => {
+  const userId = formData.get('userId') as string
+  if (!userId) throw new Error('No user ID was provided to the delete-all-voice-calls function.')
+  await db.voiceCall.deleteMany({ where: { userId } })
+  
+  // Revalidate the profile page to refresh the data
+  revalidatePath('/user/profile')
+}
+
 // Get user by username.
 export const getUserByUsername = async(username: string) => {
   if (!username) throw new Error('No username was provided to the get-user-by-username function.')
