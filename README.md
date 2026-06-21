@@ -49,7 +49,8 @@ A unique system that allows users to log into accounts containing sensitive info
 ### Development Environment
 
 - Run `npm run dev` in the terminal to spin up a development version of the frontend on <http://localhost:3000>.
-- Run `ngrok http 3000`--if it's not installed globally, run `npx ngrok http 3000`--in the terminal to expose the backend via an ngrok tunnel to the TWilio API (the port should match the frontend's); then, copy the URL from the terminal's output and use it as the value of the BASE_URL in the .env file.
+- Run `ngrok http 3000`--if it's not installed globally, run `npx ngrok http 3000`--in the terminal to expose the backend via an ngrok tunnel to the TWilio API (the port should match the frontend's);
+- Copy grok's forwarding URL from the terminal's output and use it as the value of the BASE_URL in the .env file.
 
 ### Production Environment
 

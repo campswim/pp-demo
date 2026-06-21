@@ -39,11 +39,26 @@ export const initiateCall = async (caller: 'register' | 'demo') => {
     process.env.TWILIO_AUTH_TOKEN!
   )
 
-  try {    
+  // Initiate the call.
+  try {
+    // Determine the webhook URL based on the caller.
+    const webhookUrl = process.env.BASE_URL + (caller === 'demo' ? '/api/voice/voice-entry' : '/api/voice/register-creds')
+    
+    // Test if webhook URL is accessible before making the call
+    try {
+      const webhookTest = await fetch(webhookUrl, { method: 'HEAD' })
+      if (!webhookTest.ok) {
+        throw new Error(`Webhook URL not accessible (status: ${webhookTest.status})`)
+      }
+    } catch (webhookError) {
+      console.error('Webhook URL test failed:', webhookError)
+      throw new Error(`Webhook URL not accessible. Check ngrok tunnel and BASE_URL.`)
+    }
+    
     const call = await client.calls.create({
       to: phoneDecrypted, // -> string with `+` prefix.
       from: twilioPhoneNumber!,
-      url: process.env.BASE_URL + (caller === 'demo' ? '/api/voice/voice-entry' : '/api/voice/register-creds'),
+      url: webhookUrl,
       method: 'POST',
       statusCallback: `${process.env.BASE_URL}/api/voice/call-status`,
       statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'],
@@ -63,7 +78,10 @@ export const initiateCall = async (caller: 'register' | 'demo') => {
     return call
   } catch (err) {
     console.error('Call failed:', err)
-    throw new Error('Failed to initiate the call.')
+    if (err instanceof Error) {
+      throw new Error(`Call failed: ${err.message}`)
+    }
+    throw new Error('Call failed.')
   }
 }
 
