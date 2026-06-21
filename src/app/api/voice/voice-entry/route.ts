@@ -1,15 +1,12 @@
 import { twiml } from 'twilio'
 
-export async function POST(req: Request) {  
-  // Get the current URL.
-  const url = new URL(req.url)
-
-  // Get the retry count from the URL.
-  const retryCount = Number(url.searchParams.get('retry') || '0')
-
-  // Generate a TwiML response.
-  const response = new twiml.VoiceResponse()
-
+export async function POST(req: Request) {
+    // Get the current URL.
+    const url = new URL(req.url)
+    // Get the retry count from the URL.
+    const retryCount = Number(url.searchParams.get('retry') || '0')
+    // Generate a TwiML response.
+    const response = new twiml.VoiceResponse()
   // Hang up when the number of attempts exceeds the limit.
   if (retryCount >= 2) {
     response.say('You have exceeded the number of attempts allowed. Please try logging in again.')

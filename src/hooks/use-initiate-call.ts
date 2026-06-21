@@ -12,8 +12,11 @@ export function useInitiateCall(userId: string | null, caller: 'register' | 'dem
 
         setCallStatus('success')
       } catch (err) {
+        console.log('DEBUG: Setting error state in useInitiateCall')
+        console.log('DEBUG: Error message:', err instanceof Error ? err.message : 'Error during call initiation.')
         setCallStatus('error')
         setErrorMessage(err instanceof Error ? err.message : 'Error during call initiation.')
+        console.log('DEBUG: Error state set')
       }
     }
 

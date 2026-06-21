@@ -17,6 +17,8 @@ export default function DemoStart() {
   const showMessageTwo = useRef(true)
   const { userId } = useLoggedIn()
 
+  console.log('DEBUG: DemoStart render - callStatus:', callStatus, 'errorMessage:', errorMessage)
+
   // Trigger the call when the component mounts and the userId is available.
   useInitiateCall(userId, 'demo', setCallStatus, setErrorMessage)
 
