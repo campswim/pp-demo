@@ -44,7 +44,7 @@ export default function DemoHeader() {
     return true
   }
   
-  if (!pathname.startsWith('/demo')) return null
+  if (!pathname.startsWith('/demo') || pathname.startsWith('/demo/veritas')) return null
 
   return (
     <header className='fixed inset-x-0 w-full min-h-15 lg:min-h-25 flex items-center border-b bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur z-50'>
