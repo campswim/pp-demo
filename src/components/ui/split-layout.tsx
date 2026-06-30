@@ -64,7 +64,7 @@ export default function SplitLayout({ children }: { children: React.ReactNode })
       {!isPersistent && (
         <DrawerTrigger asChild>
           <button
-              className='fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-transparent p-0 border-none'
+              className='fixed bottom-4 left-1/2 -translate-x-1/2 z-[110] bg-transparent p-0 border-none'
               aria-label='Open drawer'
             >
             <div
