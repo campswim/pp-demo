@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import { LoggedInProvider } from '@/context/loggedIn'
+import { DemoSplitProvider } from '@/context/demoSplit'
 import { ThemeProvider } from '@/context/theme'
 import { getUserSession } from '@/utils/userActions'
 import SplitLayout from '@/components/ui/split-layout'
@@ -39,7 +40,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           disableTransitionOnChange
         >
           <LoggedInProvider user={user || null}>
-            <SplitLayout>{children}</SplitLayout>
+            <DemoSplitProvider>
+              <SplitLayout>{children}</SplitLayout>
+            </DemoSplitProvider>
           </LoggedInProvider>
         </ThemeProvider>
       </body>

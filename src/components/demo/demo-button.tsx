@@ -1,29 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-
-type Phase = 'idle' | 'splitting' | 'split'
+import { useDemoSplit } from '@/context/demoSplit'
 
 const DemoButton = () => {
   const router = useRouter()
-  const [phase, setPhase] = useState<Phase>('idle')
+  const { phase, toggle } = useDemoSplit()
 
-  useEffect(() => {
-    if (phase !== 'splitting') return
-    const t = setTimeout(() => setPhase('split'), 30)
-    return () => clearTimeout(t)
-  }, [phase])
-
-  const circleBase = 'bg-[#081025] dark:bg-orange-400 text-white rounded-full shadow-xl w-44 h-44 flex items-center justify-center filter dark:brightness-70 transition-transform duration-500 hover:scale-105 drop-shadow-lg cursor-pointer'
+  const circleBase = 'bg-[#081025] dark:bg-gradient-to-tr dark:from-[#5E4420] dark:to-[#C4A04A] text-white rounded-full shadow-xl w-44 h-44 flex items-center justify-center filter dark:brightness-100 transition-transform duration-500 hover:scale-105 drop-shadow-lg cursor-pointer'
 
   if (phase === 'idle') {
     return (
       <div className='flex items-center justify-center w-full my-10'>
         <button
           type='button'
-          onClick={() => setPhase('splitting')}
-          className='bg-[#081025] dark:bg-orange-400 text-white text-2xl lg:text-5xl rounded-full shadow-xl w-60 h-60 flex items-center justify-center filter dark:brightness-70 animate-fade-in transition-transform duration-500 hover:scale-105 drop-shadow-lg z-10'
+          onClick={toggle}
+          className='bg-[#081025] dark:bg-gradient-to-tr dark:from-[#5E4420] dark:to-[#C4A04A] text-white text-2xl lg:text-5xl rounded-full shadow-xl w-60 h-60 flex items-center justify-center filter dark:brightness-100 animate-fade-in transition-transform duration-500 hover:scale-105 drop-shadow-lg z-10'
         >
           <span className='dark:text-white text-7xl transition-transform duration-800 hover:scale-120'>Demo</span>
         </button>

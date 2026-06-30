@@ -2,19 +2,22 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { NavItem } from '@/lib/types'
 import { useLoggedIn } from '@/context/loggedIn'
+import { useDemoSplit } from '@/context/demoSplit'
 import { logout } from '@/utils/userActions'
 import { navItems } from '@/data/navItems'
 import { DrawerClose } from '@/components/ui/drawer'
 import { GridLoader } from 'react-spinners'
 
 const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
-  const pathname = usePathname() // Get the current pathname from Next.js router
+  const pathname = usePathname()
+  const router = useRouter() // Get the current pathname from Next.js router
   const [activeItemId, setActiveItemId] = useState<number | null>(null)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const { userId, role } = useLoggedIn()
+  const { toggle: toggleDemoSplit } = useDemoSplit()
 
   // Check if the current pathname matches the item URL.
   const isActive = (pagename: string) => pathname === pagename ? 'text-blue-500 border-b-2 border-blue-500' : ''
@@ -55,12 +58,13 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
               onMouseLeave={handleGroupMouseLeave}
             >
               <div className={`cursor-pointer text-lg font-semibold`}>
-                { item.href !== '/user/logout' ? 
+                { item.href !== '/user/logout' ?
                 ( isDrawer ?
                   (
                     <DrawerClose asChild>
                       <Link
                         href={item.href}
+                        onClick={item.name === 'Demo' ? (e) => { e.preventDefault(); pathname.startsWith('/demo') ? router.push('/user/home') : toggleDemoSplit() } : undefined}
                         className={`text-lg font-semibold ${isActive(item.href)}`}
                       >
                         {item.name}
@@ -71,6 +75,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                   (
                     <Link
                       href={item.href}
+                      onClick={item.name === 'Demo' ? (e) => { e.preventDefault(); pathname.startsWith('/demo') ? router.push('/user/home') : toggleDemoSplit() } : undefined}
                       className={`text-lg font-semibold ${isActive(item.href)}`}
                     >
                       {item.name}

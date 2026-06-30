@@ -4,7 +4,7 @@ import { useActionState } from 'react'
 import Image from 'next/image'
 import { demoLogin } from '@/utils/demoActions'
 import { GridLoader } from 'react-spinners'
-import { Mail, Lock } from 'lucide-react'
+import { UserRound, Lock } from 'lucide-react'
 import VeritasHeader from '@/components/demo/veritas-header'
 
 
@@ -61,11 +61,11 @@ export default function VeritasLogin() {
               className="flex items-center gap-3 mb-4 px-4 py-3.5 rounded-xl border"
               style={{ borderColor: '#d5cbad', backgroundColor: '#f9f5ea' }}
             >
-              <Mail size={15} style={{ color: '#b8943a', flexShrink: 0 }} />
+              <UserRound size={15} style={{ color: '#b8943a', flexShrink: 0 }} />
               <input
                 type="text"
                 name="username"
-                placeholder="Email"
+                placeholder="Username"
                 className="flex-1 bg-transparent text-sm focus:outline-none placeholder:text-[#aaaabc]"
                 style={{ color: '#1e2340' }}
                 autoComplete="username"
