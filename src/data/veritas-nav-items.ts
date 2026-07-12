@@ -8,6 +8,6 @@ export const veritasNavItems: NavItem[] = [
   { id: 5, type: 'demo', auth: true,  name: 'My Health', href: '#' },
   { id: 6, type: 'demo', auth: true,  name: 'Appointments', href: '#' },
   { id: 7, type: 'demo', auth: true,  name: 'Profile', href: '#' },
-  { id: 8, type: 'demo', auth: false, name: 'Log In', href: '/demo/veritas' },
+  { id: 8, type: 'demo', auth: false, name: 'Log In', href: '/demo/health-care' },
   { id: 9, type: 'demo', auth: true,  name: 'Log Out', href: '/demo/logout' },
 ]

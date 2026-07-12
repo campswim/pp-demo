@@ -32,7 +32,7 @@ export default function VeritasHeader() {
         <nav className="relative w-full flex items-center justify-between lg:grid lg:grid-cols-3 lg:items-center">
 
           {/* Left — Veritas logo */}
-          <Link href="/demo/veritas" className="lg:justify-self-start lg:col-start-1 flex items-center">
+          <Link href="/demo/health-care" className="lg:justify-self-start lg:col-start-1 flex items-center">
             <Image
               src="/logos/veritas-logo.svg"
               alt="Veritas Private Health"
