@@ -1,5 +1,11 @@
 import { twiml } from 'twilio'
 
+// Answers the reachability check in initiateCall() (src/utils/voice.ts), which
+// HEADs this URL before placing the Twilio call.
+export async function HEAD() {
+  return new Response(null, { status: 200 })
+}
+
 export async function POST(req: Request) {
     // Get the current URL.
     const url = new URL(req.url)

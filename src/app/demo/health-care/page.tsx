@@ -7,8 +7,7 @@ import { GridLoader } from 'react-spinners'
 import { UserRound, Lock } from 'lucide-react'
 import VeritasHeader from '@/components/demo/veritas-header'
 
-
-export default function VeritasLogin() {
+export default function HealthCareLogin() {
   const [state, action, pending] = useActionState(demoLogin, undefined)
 
   return (

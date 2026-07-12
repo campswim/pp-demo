@@ -8,7 +8,7 @@ export const demoNavItems: NavItem[] = [
   { id: 5, type: 'demo', auth: true, name: 'Transfer', href: '#' },
   { id: 6, type: 'demo', auth: true, name: 'Rewards', href: '#' },
   { id: 7, type: 'demo', auth: true, name: 'Profile', href: '#'},
-  { id: 8, type: 'demo', auth: false, name: 'Log In', href: '/demo/login'},
+  { id: 8, type: 'demo', auth: false, name: 'Log In', href: '/demo/banking'},
   { id: 10, type: 'demo', auth: true, name: 'Log Out', href: '/demo/logout' },
   // { id: 11, type: 'demo', auth: false, name: 'Register', href: '/demo/register-creds' },
 ]
