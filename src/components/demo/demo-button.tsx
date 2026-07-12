@@ -38,7 +38,7 @@ const DemoButton = () => {
         >
           <button
             type='button'
-            onClick={() => router.push('/demo/landing-page')}
+            onClick={() => router.push('/demo/banking')}
             className={circleBase}
           >
             <span className='dark:text-white text-xl font-medium tracking-wide transition-transform duration-800 hover:scale-120'>Banking</span>
@@ -56,7 +56,7 @@ const DemoButton = () => {
         >
           <button
             type='button'
-            onClick={() => router.push('/demo/veritas')}
+            onClick={() => router.push('/demo/health-care')}
             className={circleBase}
           >
             <span className='dark:text-white text-xl font-medium tracking-wide transition-transform duration-800 hover:scale-120'>Health Care</span>

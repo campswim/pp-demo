@@ -13,7 +13,7 @@ export default function DemoHeader() {
   const [open, setOpen] = useState(false)
   const shouldShowNavItem = (name: string, auth: boolean = false) => {
     // On landing page: hide everything but Log In.
-    if (pathname === '/demo/landing-page') {
+    if (pathname === '/demo/banking') {
       // if (name !== 'Log In') return false
       return auth === false ? true : false
     }
@@ -44,14 +44,14 @@ export default function DemoHeader() {
     return true
   }
   
-  if (!pathname.startsWith('/demo') || pathname.startsWith('/demo/veritas')) return null
+  if (!pathname.startsWith('/demo') || pathname.startsWith('/demo/health-care')) return null
 
   return (
     <header className='fixed inset-x-0 w-full min-h-15 lg:min-h-25 flex items-center border-b bg-gradient-to-r from-[#1e3a6a] to-[#173054] backdrop-blur z-50'>
       <div className='w-full p-4 flex items-center'>
         <nav className='relative w-full flex flex-col items-start sm:flex-row sm:items-center sm:justify-between lg:grid lg:grid-cols-3 lg:items-center py-4 xs:py-0'>
           {/* Left-aligned navigation items */}
-          <Link href='/demo/landing-page' className='text-xl font-bold lg:justify-self-start lg:col-start-1'>
+          <Link href='/demo/banking' className='text-xl font-bold lg:justify-self-start lg:col-start-1'>
             <Image 
               src='/logos/Fortress_Demo_3-removebg-preview.png'
               alt='Fortress Demo Logo'
@@ -67,7 +67,7 @@ export default function DemoHeader() {
                 if (pathname === '/demo/account') {
                   return auth && name !== 'Log In' && name !== 'Log Out' && name !== 'Profile' && name !== 'Register'
                 }
-                if (pathname === '/demo/landing-page') {
+                if (pathname === '/demo/banking') {
                   return !auth && name !== 'Log In' && name !== 'Log Out' && name !== 'Profile' && name !== 'Register'
                 }
                 return pathname !== '/demo/login' 
@@ -112,7 +112,7 @@ export default function DemoHeader() {
               <SheetDescription className='sr-only'>This is the demo navigation menu.</SheetDescription>
               <div className='mt-8 flex flex-col space-y-4'>
                 {demoNavItems.map(({ id, name, href, auth }) => {
-                  if ((pathname === '/demo/landing-page' || pathname === '/demo/login') && auth) return null
+                  if ((pathname === '/demo/banking' || pathname === '/demo/login') && auth) return null
                   if (pathname === '/demo/account' && !auth) return null
                   if (!shouldShowNavItem(href)) return null
                   return (
