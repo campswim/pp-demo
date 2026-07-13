@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { GridLoader } from 'react-spinners'
 
-export default function GridLoaderClient() {
+export default function GridLoaderClient({ color = '#36d7b7' }: { color?: string }) {
   const [showLoader, setShowLoader] = useState(false)
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function GridLoaderClient() {
 
   return (
     <div className="flex justify-center items-center h-40">
-      <GridLoader color="#36d7b7" />
+      <GridLoader color={color} />
     </div>
   )
 }

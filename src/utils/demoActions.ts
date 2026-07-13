@@ -3,8 +3,10 @@ import { redirect } from 'next/navigation'
 import { getUserByUsername } from '@/utils/userActions'
 import { DemoSignupFormSchema, FormState } from '@/lib/schemata'
 
-// Log a demo user in: no real auth, just email and password validation checks. 
-export const demoLogin = async (state: FormState, formData: FormData): Promise<FormState> => {
+export type DemoBrand = 'banking' | 'health-care'
+
+// Log a demo user in: no real auth, just email and password validation checks.
+export const demoLogin = async (brand: DemoBrand, state: FormState, formData: FormData): Promise<FormState> => {
   // Validate form fields.
   const validateFields = DemoSignupFormSchema.safeParse({
     username: formData.get('username'),
@@ -23,11 +25,11 @@ export const demoLogin = async (state: FormState, formData: FormData): Promise<F
   const isPasswordValid = await bcrypt.compare(password, user.password)
   if (!isPasswordValid) return { errors: { password: ['is incorrect.'] } }
 
-  // If no safe word and PIN, redirect to /demo/register-creds; else redirect to /demo/start.
+  // If no safe word and PIN, redirect to register-creds; else redirect to start.
   if (!user.safeword || !user.pin) {
-    redirect('/demo/register-creds')
+    redirect(brand === 'health-care' ? '/demo/health-care/register-creds' : '/demo/register-creds')
   } else {
-    redirect('/demo/start')
+    redirect(brand === 'health-care' ? '/demo/health-care/start' : '/demo/start')
   }
 }
 

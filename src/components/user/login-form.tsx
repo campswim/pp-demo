@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 import { useActionState } from 'react'
 import { signup, login } from '@/utils/userActions'
 import { demoLogin } from '@/utils/demoActions'
+import type { DemoBrand } from '@/utils/demoActions'
 import { GridLoader } from 'react-spinners'
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 
-const Login = ({ caller }: { caller: string }) => {
-  const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin : login, undefined)
+const Login = ({ caller, brand = 'banking' }: { caller: string; brand?: DemoBrand }) => {
+  const [state, action, pending] = useActionState(caller === 'register' ? signup : caller === 'demo' ? demoLogin.bind(null, brand) : login, undefined)
   const [form, setForm] = useState({
     username: '',
     password: '',
