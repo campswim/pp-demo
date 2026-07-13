@@ -64,7 +64,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                     <DrawerClose asChild>
                       <Link
                         href={item.href}
-                        onClick={item.name === 'Demo' ? (e) => { e.preventDefault(); pathname.startsWith('/demo') ? router.push('/user/home') : toggleDemoSplit() } : undefined}
+                        onClick={item.name === 'Demo' ? (e) => { e.preventDefault(); pathname === '/user/home' ? toggleDemoSplit() : router.push('/user/home') } : undefined}
                         className={`text-lg font-semibold ${isActive(item.href)}`}
                       >
                         {item.name}
@@ -75,7 +75,7 @@ const NavLinks= ({ isDrawer }: { isDrawer: boolean }) => {
                   (
                     <Link
                       href={item.href}
-                      onClick={item.name === 'Demo' ? (e) => { e.preventDefault(); pathname.startsWith('/demo') ? router.push('/user/home') : toggleDemoSplit() } : undefined}
+                      onClick={item.name === 'Demo' ? (e) => { e.preventDefault(); pathname === '/user/home' ? toggleDemoSplit() : router.push('/user/home') } : undefined}
                       className={`text-lg font-semibold ${isActive(item.href)}`}
                     >
                       {item.name}

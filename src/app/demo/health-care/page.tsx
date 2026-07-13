@@ -8,7 +8,7 @@ import { UserRound, Lock } from 'lucide-react'
 import VeritasHeader from '@/components/demo/veritas-header'
 
 export default function HealthCareLogin() {
-  const [state, action, pending] = useActionState(demoLogin, undefined)
+  const [state, action, pending] = useActionState(demoLogin.bind(null, 'health-care'), undefined)
 
   return (
     <div
